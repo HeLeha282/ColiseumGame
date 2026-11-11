@@ -25,7 +25,7 @@ MonoBehaviour:
   swordDamage: 30
   swordRange: 2.8
   swordArc: 130
-  swordVerticalReach: 2
+  swordVerticalReach: 2.5
   swordCooldown: 0.45
   bowMinDamage: 10
   bowMaxDamage: 45

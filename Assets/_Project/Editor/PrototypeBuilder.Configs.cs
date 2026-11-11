@@ -1,4 +1,4 @@
-using UnityEditor;
+﻿using UnityEditor;
 using UnityEngine;
 using static ColiseumGame.EditorTools.BuilderUtil;
 
@@ -24,7 +24,7 @@ namespace ColiseumGame.EditorTools
             {
                 e.displayName = "Легионер";
                 e.maxHP = 60f; e.moveSpeed = 3.5f;
-                e.attackDamage = 10f; e.attackInterval = 1.2f; e.attackRange = 1.2f;
+                e.attackDamage = 6f; e.attackInterval = 1.5f; e.attackRange = 1.2f;
                 e.essenceReward = 5;
                 e.towerAggroRange = 6f; e.towerAggroChance = 0.15f;
             }, out _);
@@ -33,7 +33,7 @@ namespace ColiseumGame.EditorTools
             {
                 e.displayName = "Щитоносец";
                 e.maxHP = 100f; e.moveSpeed = 2.8f;
-                e.attackDamage = 14f; e.attackInterval = 1.4f; e.attackRange = 1.2f;
+                e.attackDamage = 8f; e.attackInterval = 1.5f; e.attackRange = 1.2f;
                 e.essenceReward = 9;
                 e.hasShield = true; e.shieldHalfAngle = 70f;
                 e.towerAggroRange = 6f; e.towerAggroChance = 0.25f;
@@ -44,10 +44,10 @@ namespace ColiseumGame.EditorTools
                 e.displayName = "Гарпия";
                 e.isFlying = true;
                 e.maxHP = 40f; e.moveSpeed = 7f;
-                e.attackDamage = 8f; e.attackInterval = 1f;
+                e.attackDamage = 5f; e.attackInterval = 1.2f;
                 e.essenceReward = 7;
                 e.bodyRadius = 0.7f; e.aimHeight = 0f;
-                e.cruiseHeight = 0f; e.hoverHeight = 2.5f; e.hoverRadius = 3f; e.diveDistance = 18f;
+                e.cruiseHeight = 0f; e.hoverHeight = 0.5f; e.hoverRadius = 3f; e.diveDistance = 18f;
                 e.towerAggroRange = 14f; e.towerAggroChance = 0.2f;
                 e.playerAggroRange = 0f;
             }, out _);
@@ -57,7 +57,7 @@ namespace ColiseumGame.EditorTools
                 e.displayName = "Минотавр";
                 e.maxHP = 900f; e.armor = 300f; e.armorTowerDamageMultiplier = 0.15f;
                 e.moveSpeed = 2.2f;
-                e.attackDamage = 40f; e.attackInterval = 1.6f; e.attackRange = 1.4f;
+                e.attackDamage = 30f; e.attackInterval = 2f; e.attackRange = 1.4f;
                 e.essenceReward = 100;
                 e.playerAggroRange = 4f; e.playerLeashRange = 10f;
                 e.towerAggroRange = 7f; e.towerAggroChance = 0.3f;

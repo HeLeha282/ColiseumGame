@@ -34,6 +34,6 @@ MonoBehaviour:
   towerAggroCheckInterval: 2
   towerAggroDuration: 8
   cruiseHeight: 0
-  hoverHeight: 2.5
+  hoverHeight: 0.5
   hoverRadius: 3
   diveDistance: 18

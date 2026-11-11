@@ -32,7 +32,7 @@ namespace ColiseumGame
         [Tooltip("Ширина дуги удара, градусы")]
         public float swordArc = 130f;
         [Tooltip("Насколько выше/ниже центра игрока достаёт меч")]
-        public float swordVerticalReach = 2f;
+        public float swordVerticalReach = 2.5f;
         public float swordCooldown = 0.45f;
 
         [Header("Лук (удерживать ЛКМ)")]
