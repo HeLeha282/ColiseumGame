@@ -46,6 +46,23 @@ namespace ColiseumGame.EditorTools
             Debug.Log("[ColiseumGame] Прототип собран.");
         }
 
+        /// <summary>Перезаписать все конфиги баланса значениями из кода генератора (ручные правки баланса пропадут).</summary>
+        [MenuItem("ColiseumGame/Reset Balance To Defaults")]
+        public static void ResetBalance()
+        {
+            OverwriteConfigs = true;
+            try
+            {
+                CreateConfigs();
+                AssetDatabase.SaveAssets();
+                Debug.Log("[ColiseumGame] Баланс сброшен к значениям генератора.");
+            }
+            finally
+            {
+                OverwriteConfigs = false;
+            }
+        }
+
         [MenuItem("ColiseumGame/Rebake NavMesh")]
         public static void RebakeNavMesh()
         {

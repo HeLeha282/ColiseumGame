@@ -56,7 +56,8 @@ namespace ColiseumGame
         public void Init(Route route, float hpMultiplier)
         {
             Health.Init(config.maxHP * hpMultiplier);
-            maxArmor = config.armor * hpMultiplier;
+            // Броня не растёт с волной: её снимает только игрок, и на поздних волнах она превращалась в стену.
+            maxArmor = config.armor;
             Armor = maxArmor;
             if (armorVisual != null) armorVisual.SetActive(Armor > 0f);
             RefreshBar();

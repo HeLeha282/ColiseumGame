@@ -25,7 +25,7 @@ namespace ColiseumGame.EditorTools
                 e.displayName = "Легионер";
                 e.maxHP = 60f; e.moveSpeed = 3.5f;
                 e.attackDamage = 6f; e.attackInterval = 1.5f; e.attackRange = 1.2f;
-                e.essenceReward = 5;
+                e.essenceReward = 4;
                 e.towerAggroRange = 6f; e.towerAggroChance = 0.15f;
             }, out _);
 
@@ -34,7 +34,7 @@ namespace ColiseumGame.EditorTools
                 e.displayName = "Щитоносец";
                 e.maxHP = 100f; e.moveSpeed = 2.8f;
                 e.attackDamage = 8f; e.attackInterval = 1.5f; e.attackRange = 1.2f;
-                e.essenceReward = 9;
+                e.essenceReward = 7;
                 e.hasShield = true; e.shieldHalfAngle = 70f;
                 e.towerAggroRange = 6f; e.towerAggroChance = 0.25f;
             }, out _);
@@ -45,7 +45,7 @@ namespace ColiseumGame.EditorTools
                 e.isFlying = true;
                 e.maxHP = 40f; e.moveSpeed = 7f;
                 e.attackDamage = 5f; e.attackInterval = 1.2f;
-                e.essenceReward = 7;
+                e.essenceReward = 6;
                 e.bodyRadius = 0.7f; e.aimHeight = 0f;
                 e.cruiseHeight = 0f; e.hoverHeight = 0.5f; e.hoverRadius = 3f; e.diveDistance = 18f;
                 e.towerAggroRange = 14f; e.towerAggroChance = 0.2f;
@@ -55,7 +55,7 @@ namespace ColiseumGame.EditorTools
             c.Boss = LoadOrCreate<EnemyConfig>(SODir + "/Enemies/Enemy_Boss.asset", e =>
             {
                 e.displayName = "Минотавр";
-                e.maxHP = 900f; e.armor = 300f; e.armorTowerDamageMultiplier = 0.15f;
+                e.maxHP = 1200f; e.armor = 450f; e.armorTowerDamageMultiplier = 0.15f;
                 e.moveSpeed = 2.2f;
                 e.attackDamage = 30f; e.attackInterval = 2f; e.attackRange = 1.4f;
                 e.essenceReward = 100;
@@ -112,13 +112,14 @@ namespace ColiseumGame.EditorTools
                 (1.0f, 40, new[] { G(W, 8, 2.5f) }),
                 (1.05f, 45, new[] { G(W, 10, 2.2f), G(S, 3, 5f, 8f) }),
                 (1.1f, 50, new[] { G(W, 12, 2f), G(S, 4, 5f, 6f), G(F, 4, 4f, 10f) }),
-                (1.15f, 55, new[] { G(W, 16, 1.8f), G(S, 6, 4f, 5f), G(F, 6, 3.5f, 8f) }),
-                (1.2f, 90, new[] { G(B, 1, 1f, 4f, 0), G(W, 12, 2f), G(S, 4, 5f, 10f), G(F, 4, 4f, 12f) }),
-                (1.3f, 65, new[] { G(W, 20, 1.5f), G(S, 8, 3.5f, 5f), G(F, 8, 3f, 8f) }),
-                (1.4f, 70, new[] { G(W, 24, 1.4f), G(S, 10, 3f, 5f), G(F, 10, 3f, 6f) }),
-                (1.5f, 75, new[] { G(W, 28, 1.2f), G(S, 12, 3f, 4f), G(F, 12, 2.5f, 6f) }),
-                (1.65f, 80, new[] { G(W, 32, 1.1f), G(S, 14, 2.5f, 4f), G(F, 16, 2.2f, 5f) }),
-                (1.8f, 150, new[] { G(B, 2, 20f, 3f), G(W, 30, 1.1f), G(S, 14, 2.5f, 6f), G(F, 16, 2.2f, 8f) }),
+                // С 4-й волны — резкий рост: плейтест показал, что игрок + башни проходили 1–6 волны без урона порталу.
+                (1.25f, 55, new[] { G(W, 18, 1.5f), G(S, 8, 3f, 4f), G(F, 8, 3f, 6f) }),
+                (1.4f, 90, new[] { G(B, 1, 1f, 4f, 0), G(W, 16, 1.6f), G(S, 6, 4f, 8f), G(F, 6, 3.5f, 10f) }),
+                (1.75f, 65, new[] { G(W, 26, 1.2f), G(S, 10, 2.8f, 4f), G(F, 10, 2.5f, 6f) }),
+                (2f, 70, new[] { G(W, 30, 1.1f), G(S, 12, 2.5f, 4f), G(F, 14, 2.2f, 5f) }),
+                (2.3f, 75, new[] { G(W, 34, 1f), G(S, 16, 2.2f, 3f), G(F, 16, 2f, 5f) }),
+                (2.6f, 80, new[] { G(W, 40, 0.9f), G(S, 18, 2f, 3f), G(F, 20, 1.8f, 4f) }),
+                (2.6f, 150, new[] { G(B, 2, 20f, 3f), G(W, 40, 0.9f), G(S, 20, 2f, 5f), G(F, 22, 1.8f, 6f) }),
             };
 
             var result = new WaveConfig[defs.Length];

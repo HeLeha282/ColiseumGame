@@ -89,8 +89,17 @@ namespace ColiseumGame.EditorTools
                 init(asset);
                 AssetDatabase.CreateAsset(asset, path);
             }
+            else if (OverwriteConfigs)
+            {
+                // Сброс баланса к значениям из кода (ассет и его GUID сохраняются).
+                init(asset);
+                EditorUtility.SetDirty(asset);
+            }
             return asset;
         }
+
+        /// <summary>Если true — LoadOrCreate перезаписывает значения существующих конфигов.</summary>
+        public static bool OverwriteConfigs;
 
         public static GameObject SavePrefab(GameObject go, string path)
         {

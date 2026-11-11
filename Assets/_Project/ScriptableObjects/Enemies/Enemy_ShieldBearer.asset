@@ -26,7 +26,7 @@ MonoBehaviour:
   attackDamage: 8
   attackInterval: 1.5
   attackRange: 1.2
-  essenceReward: 9
+  essenceReward: 7
   playerAggroRange: 3
   playerLeashRange: 8
   towerAggroRange: 6

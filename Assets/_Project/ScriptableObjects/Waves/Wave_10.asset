@@ -19,19 +19,19 @@ MonoBehaviour:
     interval: 20
     arch: -1
   - enemy: {fileID: 11400000, guid: 454d50e87dafb22478161fbeb615e44e, type: 2}
-    count: 30
+    count: 40
     startDelay: 0
-    interval: 1.1
+    interval: 0.9
     arch: -1
   - enemy: {fileID: 11400000, guid: ad7f3e484e5fe324b9a662ae96e53885, type: 2}
-    count: 14
-    startDelay: 6
-    interval: 2.5
+    count: 20
+    startDelay: 5
+    interval: 2
     arch: -1
   - enemy: {fileID: 11400000, guid: 9a422a9ba41a32d43be2569fe0af904e, type: 2}
-    count: 16
-    startDelay: 8
-    interval: 2.2
+    count: 22
+    startDelay: 6
+    interval: 1.8
     arch: -1
-  hpMultiplier: 1.8
+  hpMultiplier: 2.6
   completionBonus: 150

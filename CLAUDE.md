@@ -65,9 +65,9 @@
 ## План
 0. Концепт и мини-GDD — в процессе.
 1. Настройка репозитория и Unity-проекта — готово.
-2. **Серый прототип** ← следующий шаг (кубы/капсулы): персонаж с переключением 1-го/3-го лица, меч и лук,
-   1 Колизей с ярусами, 3 типа врагов (пеший, щитоносец, летающий), 2 башни, баррикады,
-   волны, валюта, ремонт. Вопрос этапа: «весело ли это на кубах?»
+2. **Серый прототип** — готов (см. DEVLOG): персонаж с переключением 1-го/3-го лица, меч и лук,
+   Колизей с 2 ярусами, 4 типа врагов (пеший, щитоносец, летающий, босс), 2 башни, баррикады,
+   10 волн, валюта, ремонт. ← **следующий шаг: живой плейтест людьми** — «весело ли это на кубах?»
 3. Вертикальный срез: выбранный стиль, первые модели (асcет-паки + ИИ: GPT-концепт → image-to-3D → Blender → Unity).
 4. Контент: все башни и ветки, враги, боссы, прокачка персонажа.
 5. Баланс, полировка, VFX, звук, меню, плейтесты.
@@ -82,3 +82,18 @@
 - Стартовая сцена: `Assets/_Project/Scenes/Prototype.unity` (в Build Settings).
 - MCP для связи Claude Code с редактором: **CoplayDev/unity-mcp** (пакет `com.coplaydev.unity-mcp`,
   сервер запускается через `uvx`, конфиг в `.mcp.json`). Требует Python 3.10+ и `uv`.
+  В окне Window → MCP for Unity транспорт должен быть **Stdio** (не HTTPLocal), «Configure Clients» не нажимать.
+
+Шаг 2 (серый прототип) выполнен — играбельный цикл из 10 волн в `Prototype.unity`.
+- Код: `Assets/_Project/Scripts` (сборка `ColiseumGame.asmdef`, неймспейс `ColiseumGame`), по папкам Core/Player/Enemies/Towers/Waves/UI/Combat.
+- **Генератор**: меню **ColiseumGame → Build Prototype** (`Assets/_Project/Editor/PrototypeBuilder*.cs`) пересоздаёт
+  материалы, все префабы и сцену + запекает NavMesh. Конфиги в `ScriptableObjects/` он создаёт только если их нет.
+  ⚠ Ручные правки сцены/префабов генератор затрёт — либо правьте его код, либо перестаньте его запускать (решить вдвоём).
+- Баланс: `ScriptableObjects/GameBalance.asset` (эссенция, метка, портал, баррикады, ремонт, списки башен и волн),
+  `Enemies/*`, `Towers/*` (уровни 1–3), `Waves/Wave_01..10`, `Player/PlayerConfig`.
+- Маршруты врагов — объекты `Routes/Route_N`, точки маршрута = дочерние объекты по порядку. После правки геометрии —
+  ColiseumGame → Rebake NavMesh.
+- Ввод: `Assets/_Project/Settings/ColiseumControls.inputactions`, читается через `InputReader`.
+- Автотесты через MCP: `PlaytestBot` (только в редакторе) — бот-игрок, жмёт клавиши через очередь Input System.
+  Для тестов без фокуса окна Game: `Application.runInBackground = true` и
+  `InputSystem.settings.editorInputBehaviorInPlayMode = AllDeviceInputAlwaysGoesToGameView` (только в памяти).

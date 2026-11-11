@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   displayName: "\u041C\u0438\u043D\u043E\u0442\u0430\u0432\u0440"
   prefab: {fileID: 8488864580064028773, guid: bc39291933f41024bb8b50a3004f425a, type: 3}
-  maxHP: 900
-  armor: 300
+  maxHP: 1200
+  armor: 450
   armorTowerDamageMultiplier: 0.15
   hasShield: 0
   shieldHalfAngle: 70

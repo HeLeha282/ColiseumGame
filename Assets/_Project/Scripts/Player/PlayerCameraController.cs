@@ -64,6 +64,13 @@ namespace ColiseumGame
             }
         }
 
+        /// <summary>Задать наклон головы в 1-м лице (используется ботом для автотестов).</summary>
+        public void SetPitch(float value)
+        {
+            pitch = Mathf.Clamp(value, -maxPitch, maxPitch);
+            if (FirstPerson) head.localRotation = Quaternion.Euler(pitch, 0f, 0f);
+        }
+
         public void SetFirstPerson(bool value)
         {
             FirstPerson = value;
