@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a3daa4e661b48dc468770b8ce4ca992f, type: 3}
+  m_Name: PlayerConfig
+  m_EditorClassIdentifier: 
+  maxHP: 200
+  respawnTime: 5
+  walkSpeed: 6
+  sprintSpeed: 9.5
+  jumpHeight: 1.4
+  gravity: -22
+  turnSpeed: 720
+  firstPersonSensitivity: 0.1
+  orbitSensitivityX: 0.12
+  orbitSensitivityY: 0.0015
+  swordDamage: 30
+  swordRange: 2.8
+  swordArc: 130
+  swordVerticalReach: 2
+  swordCooldown: 0.45
+  bowMinDamage: 10
+  bowMaxDamage: 45
+  bowChargeTime: 1
+  arrowMinSpeed: 25
+  arrowMaxSpeed: 65
+  arrowGravity: 6
+  bowCooldown: 0.25
+  interactDistance: 6

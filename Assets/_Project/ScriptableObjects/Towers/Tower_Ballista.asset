@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 17f84ae5ca591ce438bb6d162e0d1fb9, type: 3}
+  m_Name: Tower_Ballista
+  m_EditorClassIdentifier: 
+  displayName: "\u0411\u0430\u043B\u043B\u0438\u0441\u0442\u0430"
+  prefab: {fileID: 5515044792424761837, guid: 98c918b3841130f4fbda78282ca18b12, type: 3}
+  targetsGround: 1
+  targetsAir: 0
+  projectileSpeed: 28
+  levels:
+  - cost: 90
+    damage: 30
+    fireInterval: 2.2
+    range: 18
+    maxHP: 200
+    aoeRadius: 3
+  - cost: 70
+    damage: 45
+    fireInterval: 1.9
+    range: 20
+    maxHP: 280
+    aoeRadius: 3.5
+  - cost: 110
+    damage: 65
+    fireInterval: 1.6
+    range: 22
+    maxHP: 360
+    aoeRadius: 4

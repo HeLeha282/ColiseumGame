@@ -1,0 +1,42 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e93904c5e12dbbb46a6514cd305b5e3e, type: 3}
+  m_Name: GameBalance
+  m_EditorClassIdentifier: 
+  startEssence: 150
+  orbLifetime: 10
+  orbPickupRadius: 1.5
+  orbMagnetRadius: 4
+  orbMagnetSpeed: 14
+  markDuration: 4
+  markTowerDamageMultiplier: 1.5
+  portalMaxHP: 800
+  barricadeCost: 30
+  barricadeHP: 250
+  repairHpPerSecond: 40
+  repairCostPerHP: 0.25
+  repairRadius: 4.5
+  towerTypes:
+  - {fileID: 11400000, guid: 495442004b2275f488d3810f64243d07, type: 2}
+  - {fileID: 11400000, guid: 1f5d045d6088c484486e7d090c8c63b8, type: 2}
+  sellRefund: 0.5
+  waves:
+  - {fileID: 11400000, guid: 0de52bb09bb8a7445ba2c914945ad8ed, type: 2}
+  - {fileID: 11400000, guid: 02b5b65cd088cc64f969d528c42a950a, type: 2}
+  - {fileID: 11400000, guid: 9e4391f7e3f8abc4f9bebb0032c53af5, type: 2}
+  - {fileID: 11400000, guid: 9b4f60ff105c3df498665315fe19e0b6, type: 2}
+  - {fileID: 11400000, guid: ca930b1175e718c4b80387c551cd3196, type: 2}
+  - {fileID: 11400000, guid: 2c2fc5c4243025e43a325be59626edf3, type: 2}
+  - {fileID: 11400000, guid: 6f66cb0d98bdf734289e7c6a0f154f23, type: 2}
+  - {fileID: 11400000, guid: 4653e1bfe4ffb5747b2f64659797c0e1, type: 2}
+  - {fileID: 11400000, guid: 93372a9fcaaec27449e196b831fbd4af, type: 2}
+  - {fileID: 11400000, guid: 49371b5f2446e994e9cdc7dc670e5a19, type: 2}
