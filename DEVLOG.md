@@ -28,7 +28,9 @@
 **Что сделать каждому у себя (один раз):**
 1. Blender 3.0+ (у Davidik31 — Blender 5.3).
 2. Установить аддон той же версии. Файл берётся из пакета: `mcp_for_blender-2.2.6-py3-none-any.whl` на PyPI →
-   внутри `blender_mcp/bundled/addon.py` (у Davidik31 уже лежит в `Tools/BlenderMCP/`, папка в .gitignore).
+   внутри `blender_mcp/bundled/addon.py` (у Davidik31 уже лежит как `Tools/BlenderMCP/mcp_for_blender.py`, папка в .gitignore).
+   ⚠ В имени файла не должно быть точек, кроме `.py`: Blender берёт имя модуля до первой точки,
+   и `addon_2.2.6.py` падает с «No module named …_2».
    Blender → Edit → Preferences → Add-ons → ⌄ → **Install from Disk…** → выбрать файл → включить **Interface: MCP for Blender**.
 3. В Blender: N в 3D-вьюпорте → вкладка **MCP for Blender** → **Start MCP Server** (если не запустился сам).
 4. Перезапустить Claude Code и разрешить сервер `blender`. Если Blender не открыт — сервер просто не подключится, это не ошибка.
