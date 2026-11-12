@@ -130,10 +130,9 @@ namespace ColiseumGame.EditorTools
             Box("Guard", sword, new Vector3(0f, 0f, 0.05f), new Vector3(0.3f, 0.06f, 0.06f), Mats["Wood"]);
             sword.localRotation = Quaternion.Euler(-10f, -15f, 0f);
 
+            // Лук строится и анимируется кодом (BowVisual), здесь только объект и материалы
             var bow = Empty("Bow", holder, new Vector3(-0.1f, 0.1f, 0.15f));
-            Box("Grip", bow, Vector3.zero, new Vector3(0.06f, 0.35f, 0.06f), Mats["Wood"]);
-            Box("LimbTop", bow, new Vector3(0f, 0.38f, -0.08f), new Vector3(0.05f, 0.45f, 0.05f), Mats["Wood"], false, Quaternion.Euler(-20f, 0f, 0f));
-            Box("LimbBottom", bow, new Vector3(0f, -0.38f, -0.08f), new Vector3(0.05f, 0.45f, 0.05f), Mats["Wood"], false, Quaternion.Euler(20f, 0f, 0f));
+            SetupBowVisual(bow.gameObject);
 
             var arrowSpawn = Empty("ArrowSpawn", head, new Vector3(0.15f, -0.1f, 0.7f));
 
@@ -151,6 +150,24 @@ namespace ColiseumGame.EditorTools
             var interactor = root.AddComponent<PlayerInteractor>();
             Assign(interactor, ("config", config));
             return root;
+        }
+
+        /// <summary>Добавить BowVisual на объект лука и назначить ему материалы (вызывается и для готового префаба).</summary>
+        public static void SetupBowVisual(GameObject bow)
+        {
+            string dir = MatDir;
+            var bv = bow.GetComponent<BowVisual>();
+            if (bv == null) bv = bow.AddComponent<BowVisual>();
+            Assign(bv,
+                ("wood", Material(dir, "BowWood", new Color(0.48f, 0.27f, 0.13f), 0f, 0.35f)),
+                ("leather", Material(dir, "BowLeather", new Color(0.25f, 0.14f, 0.08f), 0f, 0.2f)),
+                ("gold", Material(dir, "BowGold", new Color(0.95f, 0.72f, 0.3f), 0f, 0.75f)),
+                ("stringMat", Material(dir, "BowString", new Color(0.93f, 0.89f, 0.78f), 0f, 0.1f)),
+                ("steel", Material(dir, "Steel", new Color(0.8f, 0.82f, 0.86f), 0f, 0.7f)),
+                ("feather", Material(dir, "BowFeather", new Color(0.72f, 0.12f, 0.1f), 0f, 0.1f)));
+            var gold = AssetDatabase.LoadAssetAtPath<Material>($"{dir}/M_BowGold.mat");
+            gold.SetFloat("_Metallic", 1f);
+            EditorUtility.SetDirty(gold);
         }
 
         private static GameObject BuildCameraRig()
