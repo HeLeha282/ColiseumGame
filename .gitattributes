@@ -28,6 +28,9 @@
 *.uss       text
 *.uxml      text
 
+# Запечённая сетка навигации Unity хранится в бинарном формате.
+/Assets/_Project/Scenes/Prototype_NavMesh.asset -text
+
 # ===== Git LFS: тяжёлые бинарные файлы =====
 # 3D-модели
 *.fbx   filter=lfs diff=lfs merge=lfs -text

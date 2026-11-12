@@ -18,7 +18,7 @@ namespace ColiseumGame
         public float aoeRadius = 0f;
     }
 
-    /// <summary>Тип башни (лучник, баллиста ...). Уровни 1→2→3 — массив levels.</summary>
+    /// <summary>Тип башни (лучник, катапульта ...). Уровни 1→2→3 — массив levels.</summary>
     [CreateAssetMenu(menuName = "Coliseum/Tower Config", fileName = "Tower")]
     public class TowerConfig : ScriptableObject
     {

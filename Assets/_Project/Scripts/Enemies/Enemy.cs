@@ -29,7 +29,7 @@ namespace ColiseumGame
         public float Armor { get; private set; }
         /// <summary>Насколько враг продвинулся к порталу. Башни бьют самого продвинутого.</summary>
         public float Progress { get; set; }
-        /// <summary>Текущая скорость (для упреждения у баллисты).</summary>
+        /// <summary>Текущая скорость (для упреждения у катапульты).</summary>
         public Vector3 Velocity { get; set; }
 
         private float maxArmor;

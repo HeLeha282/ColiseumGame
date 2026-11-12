@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace ColiseumGame
 {
-    /// <summary>Простой эффект: объект быстро сжимается и исчезает (вспышка взрыва баллисты).</summary>
+    /// <summary>Простой эффект: объект быстро сжимается и исчезает (вспышка взрыва катапульты).</summary>
     public class ShrinkAndDestroy : MonoBehaviour
     {
         [SerializeField] private float duration = 0.3f;

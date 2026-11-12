@@ -1,4 +1,5 @@
 using Cinemachine;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UI;
@@ -13,7 +14,7 @@ namespace ColiseumGame.EditorTools
             public GameObject Coliseum, Portal, Routes, TowerSlot, BarricadeSpot, Barricade, Orb;
             public GameObject Player, CameraRig, Arrow;
             public GameObject Walker, Shield, Flyer, Boss;
-            public GameObject Archer, Ballista, ProjArrow, ProjBolt, Explosion;
+            public GameObject Archer, Catapult, ProjArrow, ProjRock, Explosion;
             public GameObject GameSystems, HUD;
         }
 
@@ -44,9 +45,9 @@ namespace ColiseumGame.EditorTools
 
             p.Explosion = SavePrefab(BuildExplosion(), tw + "FX_Explosion.prefab");
             p.ProjArrow = SavePrefab(BuildProjectile("Projectile_Arrow", new Vector3(0.08f, 0.08f, 0.7f), Mats["ArrowTower"], null), tw + "Projectile_Arrow.prefab");
-            p.ProjBolt = SavePrefab(BuildProjectile("Projectile_Bolt", new Vector3(0.25f, 0.25f, 1.2f), Mats["Wood"], p.Explosion), tw + "Projectile_Bolt.prefab");
+            p.ProjRock = SavePrefab(CatapultIntegration.CreateProjectile(p.Explosion), tw + "Projectile_Rock.prefab");
             p.Archer = SavePrefab(BuildArcherTower(c.Archer, p.ProjArrow), tw + "Tower_Archer.prefab");
-            p.Ballista = SavePrefab(BuildBallistaTower(c.Ballista, p.ProjBolt), tw + "Tower_Ballista.prefab");
+            p.Catapult = SavePrefab(BuildCatapultTower(c.Catapult, p.ProjRock), tw + "Tower_Catapult.prefab");
 
             p.GameSystems = SavePrefab(BuildGameSystems(c.Balance, p.Orb, p.Barricade), PrefabDir + "/Systems/GameSystems.prefab");
             p.HUD = SavePrefab(BuildHUD(), PrefabDir + "/UI/HUD.prefab");
@@ -349,39 +350,45 @@ namespace ColiseumGame.EditorTools
             return marks;
         }
 
+        private const string ArcherArtDir = Root + "/Art/ArcherTowers";
+        private static readonly Vector3 ArcherColliderSize = new Vector3(1.6f, 3.63f, 1.66f);
+
         private static GameObject BuildArcherTower(TowerConfig cfg, GameObject projectile)
         {
-            var (root, tower) = TowerBase("Tower_Archer", new Vector3(2f, 4.4f, 2f));
+            var (root, tower) = TowerBase("Tower_Archer", ArcherColliderSize);
             var t = root.transform;
-            Box("Base", t, new Vector3(0f, 1.5f, 0f), new Vector3(1.8f, 3f, 1.8f), Mats["TowerArcher"]);
-            Box("Platform", t, new Vector3(0f, 3.2f, 0f), new Vector3(2.3f, 0.4f, 2.3f), Mats["TowerTop"]);
             var head = Empty("Head", t, new Vector3(0f, 3.8f, 0f));
-            Box("Bow", head, Vector3.zero, new Vector3(1.2f, 0.15f, 0.25f), Mats["Wood"]);
-            Box("Body", head, new Vector3(0f, 0f, -0.2f), new Vector3(0.5f, 0.6f, 0.5f), Mats["TowerArcher"]);
             var muzzle = Empty("Muzzle", head, new Vector3(0f, 0f, 0.5f));
-            var marks = LevelMarkers(t, 0.92f);
-            var bar = BuildWorldBar(t, 5f, 1.6f, false, false, new Color(0.3f, 0.9f, 0.3f));
+            var bar = BuildWorldBar(t, 4.15f, 1.6f, false, false, new Color(0.3f, 0.9f, 0.3f));
             Assign(tower, ("config", cfg), ("head", head), ("muzzle", muzzle), ("projectilePrefab", projectile.GetComponent<TowerProjectile>()),
                 ("healthBar", bar));
-            AssignArray(tower, "levelMarkers", marks);
+            AddArcherLevelModels(tower);
             return root;
         }
 
-        private static GameObject BuildBallistaTower(TowerConfig cfg, GameObject projectile)
+        private static void AddArcherLevelModels(Tower tower)
         {
-            var (root, tower) = TowerBase("Tower_Ballista", new Vector3(2.6f, 2.8f, 2.6f));
-            var t = root.transform;
-            Box("Base", t, new Vector3(0f, 0.8f, 0f), new Vector3(2.6f, 1.6f, 2.6f), Mats["TowerBallista"]);
-            var head = Empty("Head", t, new Vector3(0f, 2.1f, 0f));
-            Box("Rail", head, Vector3.zero, new Vector3(0.35f, 0.35f, 2.4f), Mats["Wood"]);
-            Box("Arms", head, new Vector3(0f, 0f, 0.6f), new Vector3(2.4f, 0.18f, 0.3f), Mats["Wood"]);
-            Box("Bolt", head, new Vector3(0f, 0.25f, 0.4f), new Vector3(0.12f, 0.12f, 1.4f), Mats["Steel"]);
-            var muzzle = Empty("Muzzle", head, new Vector3(0f, 0.25f, 1.3f));
-            var marks = LevelMarkers(t, 1.32f);
-            var bar = BuildWorldBar(t, 3.6f, 1.8f, false, false, new Color(0.3f, 0.9f, 0.3f));
-            Assign(tower, ("config", cfg), ("head", head), ("muzzle", muzzle), ("projectilePrefab", projectile.GetComponent<TowerProjectile>()),
-                ("healthBar", bar));
-            AssignArray(tower, "levelMarkers", marks);
+            var models = new GameObject[3];
+            for (int i = 0; i < models.Length; i++)
+            {
+                string path = $"{ArcherArtDir}/ArcherTower_L{i + 1}.fbx";
+                var model = AssetDatabase.LoadAssetAtPath<GameObject>(path);
+                if (model == null)
+                    throw new System.InvalidOperationException($"Не найдена модель башни лучников: {path}");
+
+                models[i] = (GameObject)PrefabUtility.InstantiatePrefab(model, tower.transform);
+                models[i].SetActive(i == 0);
+            }
+            AssignArray(tower, "levelModels", models);
+        }
+
+        private static GameObject BuildCatapultTower(TowerConfig cfg, GameObject projectile)
+        {
+            var (root, tower) = TowerBase("Tower_Catapult", CatapultIntegration.ColliderSize);
+            var head = Empty("Head", root.transform, Vector3.zero);
+            var bar = BuildWorldBar(root.transform, 3f, 1.8f, false, false, new Color(0.3f, 0.9f, 0.3f));
+            Assign(tower, ("config", cfg), ("head", head), ("projectilePrefab", projectile.GetComponent<TowerProjectile>()), ("healthBar", bar));
+            CatapultIntegration.AddModels(tower, head);
             return root;
         }
 

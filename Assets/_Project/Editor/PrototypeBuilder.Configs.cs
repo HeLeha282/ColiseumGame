@@ -11,7 +11,7 @@ namespace ColiseumGame.EditorTools
             public GameBalance Balance;
             public PlayerConfig Player;
             public EnemyConfig Walker, Shield, Flyer, Boss;
-            public TowerConfig Archer, Ballista;
+            public TowerConfig Archer, Catapult;
         }
 
         /// <summary>Стартовый баланс. Создаётся один раз; дальше правится в инспекторе.</summary>
@@ -75,9 +75,9 @@ namespace ColiseumGame.EditorTools
                 };
             }, out _);
 
-            c.Ballista = LoadOrCreate<TowerConfig>(SODir + "/Towers/Tower_Ballista.asset", t =>
+            c.Catapult = LoadOrCreate<TowerConfig>(SODir + "/Towers/Tower_Catapult.asset", t =>
             {
-                t.displayName = "Баллиста";
+                t.displayName = "Катапульта";
                 t.targetsGround = true; t.targetsAir = false; t.projectileSpeed = 28f;
                 t.levels = new[]
                 {
@@ -91,7 +91,7 @@ namespace ColiseumGame.EditorTools
 
             c.Balance = LoadOrCreate<GameBalance>(SODir + "/GameBalance.asset", b =>
             {
-                b.towerTypes = new[] { c.Archer, c.Ballista };
+                b.towerTypes = new[] { c.Archer, c.Catapult };
                 b.waves = waves;
             }, out _);
 
@@ -149,7 +149,7 @@ namespace ColiseumGame.EditorTools
             Link(c.Flyer, p.Flyer.GetComponent<Enemy>());
             Link(c.Boss, p.Boss.GetComponent<Enemy>());
             Link(c.Archer, p.Archer.GetComponent<Tower>());
-            Link(c.Ballista, p.Ballista.GetComponent<Tower>());
+            Link(c.Catapult, p.Catapult.GetComponent<Tower>());
         }
     }
 }

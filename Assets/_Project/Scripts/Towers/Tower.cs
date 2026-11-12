@@ -20,7 +20,10 @@ namespace ColiseumGame
         [SerializeField] private Collider hitCollider;
         [Tooltip("Отметки уровня: включаются по одной на каждый уровень")]
         [SerializeField] private GameObject[] levelMarkers;
+        [Tooltip("Модели по уровням: видна только модель текущего уровня")]
+        [SerializeField] private GameObject[] levelModels;
         [SerializeField] private float retargetInterval = 0.2f;
+        [SerializeField] private bool horizontalAim;
 
         public TowerConfig Config => config;
         public Health Health { get; private set; }
@@ -38,6 +41,8 @@ namespace ColiseumGame
         private Enemy target;
         private float fireTimer;
         private float retargetTimer;
+        private CatapultVisual catapult;
+        private Enemy pendingTarget;
 
         private void Awake()
         {
@@ -75,8 +80,23 @@ namespace ColiseumGame
 
         private void RefreshLevelVisuals()
         {
-            for (int i = 0; i < levelMarkers.Length; i++)
-                if (levelMarkers[i] != null) levelMarkers[i].SetActive(i <= Level);
+            if (catapult != null) catapult.ResetPose();
+            pendingTarget = null;
+            catapult = null;
+            if (levelMarkers != null)
+            {
+                for (int i = 0; i < levelMarkers.Length; i++)
+                    if (levelMarkers[i] != null) levelMarkers[i].SetActive(i <= Level);
+            }
+
+            if (levelModels != null)
+            {
+                for (int i = 0; i < levelModels.Length; i++)
+                    if (levelModels[i] != null) levelModels[i].SetActive(i == Level);
+                if (Level < levelModels.Length && levelModels[Level] != null)
+                    catapult = levelModels[Level].GetComponent<CatapultVisual>();
+            }
+            if (catapult != null) catapult.ResetPose();
         }
 
         private void Update()
@@ -88,18 +108,35 @@ namespace ColiseumGame
                 target = FindTarget();
             }
 
-            if (target != null && head != null)
+            if (target != null && head != null && (catapult == null || !catapult.IsCycling))
             {
                 Vector3 dir = target.AimPoint - head.position;
+                if (horizontalAim) dir.y = 0f;
                 if (dir.sqrMagnitude > 0.01f)
                     head.rotation = Quaternion.Slerp(head.rotation, Quaternion.LookRotation(dir), 12f * Time.deltaTime);
             }
 
             fireTimer -= Time.deltaTime;
-            if (target != null && fireTimer <= 0f)
+            if (catapult != null && catapult.Tick(Time.deltaTime))
             {
+                if (IsValidTarget(pendingTarget)) Fire(pendingTarget, catapult.ShotPosition);
+                pendingTarget = null;
+            }
+            if (target != null && fireTimer <= 0f && (catapult == null || !catapult.IsCycling))
+            {
+                if (catapult != null && head != null)
+                {
+                    Vector3 direction = target.AimPoint - head.position;
+                    direction.y = 0f;
+                    if (direction.sqrMagnitude > 0.01f && Vector3.Angle(head.forward, direction) > 8f) return;
+                }
                 fireTimer = Stats.fireInterval;
-                Fire(target);
+                if (catapult != null)
+                {
+                    pendingTarget = target;
+                    catapult.BeginShot(Stats.fireInterval);
+                }
+                else Fire(target, Muzzle);
             }
         }
 
@@ -110,7 +147,7 @@ namespace ColiseumGame
             return Vector3.Distance(Muzzle, e.AimPoint) <= Stats.range;
         }
 
-        private Vector3 Muzzle => muzzle != null ? muzzle.position : transform.position + Vector3.up * 3f;
+        private Vector3 Muzzle => catapult != null ? catapult.Muzzle : muzzle != null ? muzzle.position : transform.position + Vector3.up * 3f;
 
         /// <summary>Цель — тот, кто дальше всех продвинулся к порталу.</summary>
         private Enemy FindTarget()
@@ -129,9 +166,9 @@ namespace ColiseumGame
             return best;
         }
 
-        private void Fire(Enemy e)
+        private void Fire(Enemy e, Vector3 position)
         {
-            var p = Instantiate(projectilePrefab, Muzzle, Quaternion.identity);
+            var p = Instantiate(projectilePrefab, position, Quaternion.identity);
             p.Launch(e, Stats.damage, config.projectileSpeed, Stats.aoeRadius, config.targetsAir, transform.position);
         }
 

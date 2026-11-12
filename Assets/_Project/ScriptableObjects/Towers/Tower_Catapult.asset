@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 17f84ae5ca591ce438bb6d162e0d1fb9, type: 3}
-  m_Name: Tower_Ballista
+  m_Name: Tower_Catapult
   m_EditorClassIdentifier: 
-  displayName: "\u0411\u0430\u043B\u043B\u0438\u0441\u0442\u0430"
+  displayName: "\u041A\u0430\u0442\u0430\u043F\u0443\u043B\u044C\u0442\u0430"
   prefab: {fileID: 5515044792424761837, guid: 98c918b3841130f4fbda78282ca18b12, type: 3}
   targetsGround: 1
   targetsAir: 0

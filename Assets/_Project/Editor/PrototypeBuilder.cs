@@ -103,7 +103,7 @@ namespace ColiseumGame.EditorTools
             M("Boss", new Color(0.45f, 0.08f, 0.08f));
             M("Armor", new Color(0.55f, 0.58f, 0.62f), 0f, 0.8f);
             M("TowerArcher", new Color(0.3f, 0.6f, 0.3f));
-            M("TowerBallista", new Color(0.55f, 0.38f, 0.22f));
+            M("TowerCatapult", new Color(0.55f, 0.38f, 0.22f));
             M("TowerTop", new Color(0.4f, 0.4f, 0.42f));
             M("LevelMark", new Color(1f, 0.85f, 0.2f), 1.5f);
             M("Slot", new Color(1f, 0.85f, 0.2f), 0.6f);
