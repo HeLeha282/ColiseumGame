@@ -69,7 +69,7 @@ namespace ColiseumGame
 
         private void OnPhaseChanged()
         {
-            readyButton.gameObject.SetActive(gm.Phase == GamePhase.Preparation);
+            
             bool finished = gm.Phase == GamePhase.Victory || gm.Phase == GamePhase.Defeat;
             resultPanel.SetActive(finished);
             if (finished)
@@ -77,10 +77,12 @@ namespace ColiseumGame
                 bool win = gm.Phase == GamePhase.Victory;
                 resultTitle.text = win ? "ПОБЕДА!" : "ПОРАЖЕНИЕ";
                 resultTitle.color = win ? new Color(0.5f, 1f, 0.5f) : new Color(1f, 0.4f, 0.35f);
-                int wavesDone = win ? gm.WaveCount : gm.WaveIndex;
+                int wavesDone = Mathf.Max(0, gm.WaveIndex - 1);
                 resultText.text = win
                     ? $"Портал выстоял все {gm.WaveCount} волн.\nУбито врагов: {gm.Kills}"
-                    : $"Портал разрушен на волне {gm.WaveIndex + 1}.\nПройдено волн: {wavesDone}. Убито врагов: {gm.Kills}";
+                    : gm.Endless
+                        ? $"Бесконечный режим: портал пал на волне {gm.WaveIndex}.\nУбито врагов: {gm.Kills}"
+                        : $"Портал разрушен на волне {gm.WaveIndex}.\nПройдено волн: {wavesDone}. Убито врагов: {gm.Kills}";
             }
         }
 
@@ -113,26 +115,29 @@ namespace ColiseumGame
 
             string phase = gm.Phase switch
             {
-                GamePhase.Preparation => "Подготовка — ставьте башни, затем «Готов» (G)",
-                GamePhase.Wave => $"Бой — врагов: {gm.Spawner.Alive + gm.Spawner.RemainingToSpawn}",
+                GamePhase.Setup => "Выбор сложности",
+                GamePhase.Preparation => "Подготовка — 3: молоток, Tab: герой, G: начать волну",
+                GamePhase.Wave => $"Бой — врагов: {gm.Spawner.Alive + gm.Spawner.RemainingToSpawn}" + (gm.CanCallEarly ? "  ·  <color=#FFD36B>G — следующая волна досрочно (+бонус)</color>" : ""),
                 GamePhase.Victory => "Победа",
                 _ => "Поражение"
             };
-            int waveNumber = Mathf.Min(gm.WaveIndex + 1, gm.WaveCount);
-            waveText.text = $"Волна {waveNumber}/{gm.WaveCount}\n<size=70%>{phase}</size>";
+            string total = gm.Endless ? "∞" : gm.WaveCount.ToString();
+            waveText.text = $"Волна {gm.DisplayWave}/{total}\n<size=70%>{phase}</size>";
+            bool showReady = gm.Phase == GamePhase.Preparation || gm.CanCallEarly;
+            if (readyButton.gameObject.activeSelf != showReady) readyButton.gameObject.SetActive(showReady);
 
             var combat = player != null ? player.GetComponent<PlayerCombat>() : null;
             if (combat != null)
             {
-                weaponText.text = combat.Weapon == WeaponType.Sword ? "Оружие: меч [1]" : "Оружие: лук [2]";
+                weaponText.text = combat.Weapon switch { WeaponType.Sword => "Оружие: меч [1]", WeaponType.Bow => "Оружие: лук [2]", _ => "Молоток [3]" };
                 chargeBar.SetActive(combat.IsCharging);
                 SetFill(chargeFill, combat.Charge01);
             }
             crosshair.SetActive(!UIState.MenuOpen && !UIState.ResultOpen);
 
             var interactor = player != null ? player.GetComponent<PlayerInteractor>() : null;
-            if (interactor != null && interactor.Repairing != null)
-                promptText.text = $"Ремонт… {interactor.Repairing.Health.Current:0}/{interactor.Repairing.Health.Max:0}";
+            if (interactor != null && interactor.UsePrompt != null && !UIState.MenuOpen)
+                promptText.text = $"<color=#FFD36B>{interactor.UsePrompt}</color>";
             else if (interactor != null && interactor.Current != null && !UIState.MenuOpen)
                 promptText.text = interactor.Current.Prompt;
             else

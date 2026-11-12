@@ -1,0 +1,60 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 72362d2ea93827d49b608b5341dd87b7, type: 3}
+  m_Name: Wave_14
+  m_EditorClassIdentifier: 
+  title: "\u0410\u043A\u0442 II \u2014 \u0440\u0430\u0437\u0432\u0438\u043B\u043A\u0438"
+  act: 2
+  groups:
+  - enemy: {fileID: 11400000, guid: 454d50e87dafb22478161fbeb615e44e, type: 2}
+    count: 11
+    startDelay: 0
+    interval: 1.2727273
+    arch: -1
+    squad: 0
+    altRouteChance: 0
+    elite: 0
+  - enemy: {fileID: 11400000, guid: 0ed7de7b6679b9b43bea72bad5254246, type: 2}
+    count: 5
+    startDelay: 4
+    interval: 3.2
+    arch: -1
+    squad: 0
+    altRouteChance: 0.35
+    elite: 0
+  - enemy: {fileID: 11400000, guid: 653a6215cb40f6f4080aac03ffe24401, type: 2}
+    count: 4
+    startDelay: 7
+    interval: 4
+    arch: -1
+    squad: 0
+    altRouteChance: 0.35
+    elite: 0
+  - enemy: {fileID: 11400000, guid: ad7f3e484e5fe324b9a662ae96e53885, type: 2}
+    count: 3
+    startDelay: 10
+    interval: 4
+    arch: -1
+    squad: 0
+    altRouteChance: 0.35
+    elite: 0
+  - enemy: {fileID: 11400000, guid: 3fe9b1a423d1179408f4dac3e8cbe4c5, type: 2}
+    count: 1
+    startDelay: 13
+    interval: 4
+    arch: -1
+    squad: 0
+    altRouteChance: 0.35
+    elite: 0
+  hpMultiplier: 2.17
+  completionBonus: 92
+  gloryBonus: 57

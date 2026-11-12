@@ -12,26 +12,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 72362d2ea93827d49b608b5341dd87b7, type: 3}
   m_Name: Wave_05
   m_EditorClassIdentifier: 
+  title: "\u0411\u041E\u0421\u0421: \u041C\u0438\u043D\u043E\u0442\u0430\u0432\u0440"
+  act: 1
   groups:
-  - enemy: {fileID: 11400000, guid: 20e14cd58d222784daa89cff5c69c46a, type: 2}
+  - enemy: {fileID: 11400000, guid: a5be9b3268e14574aa274fd9b1cfadb5, type: 2}
     count: 1
     startDelay: 4
     interval: 1
     arch: 0
+    squad: 0
+    altRouteChance: 0
+    elite: 0
   - enemy: {fileID: 11400000, guid: 454d50e87dafb22478161fbeb615e44e, type: 2}
-    count: 16
+    count: 12
     startDelay: 0
-    interval: 1.6
+    interval: 1.8
     arch: -1
+    squad: 0
+    altRouteChance: 0
+    elite: 0
   - enemy: {fileID: 11400000, guid: ad7f3e484e5fe324b9a662ae96e53885, type: 2}
-    count: 6
-    startDelay: 8
+    count: 4
+    startDelay: 10
     interval: 4
     arch: -1
-  - enemy: {fileID: 11400000, guid: 9a422a9ba41a32d43be2569fe0af904e, type: 2}
-    count: 6
-    startDelay: 10
-    interval: 3.5
-    arch: -1
-  hpMultiplier: 1.4
-  completionBonus: 90
+    squad: 0
+    altRouteChance: 0
+    elite: 0
+  hpMultiplier: 1.36
+  completionBonus: 56
+  gloryBonus: 30

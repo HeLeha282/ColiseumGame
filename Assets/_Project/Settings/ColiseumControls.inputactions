@@ -14,10 +14,17 @@
                 { "name": "Weapon2", "type": "Button", "id": "a1f0c001-0000-4000-8000-000000000107", "expectedControlType": "Button", "processors": "", "interactions": "", "initialStateCheck": false },
                 { "name": "SwitchCamera", "type": "Button", "id": "a1f0c001-0000-4000-8000-000000000108", "expectedControlType": "Button", "processors": "", "interactions": "", "initialStateCheck": false },
                 { "name": "Interact", "type": "Button", "id": "a1f0c001-0000-4000-8000-000000000109", "expectedControlType": "Button", "processors": "", "interactions": "", "initialStateCheck": false },
-                { "name": "Repair", "type": "Button", "id": "a1f0c001-0000-4000-8000-000000000110", "expectedControlType": "Button", "processors": "", "interactions": "", "initialStateCheck": false },
+                { "name": "Use", "type": "Button", "id": "a1f0c001-0000-4000-8000-000000000110", "expectedControlType": "Button", "processors": "", "interactions": "", "initialStateCheck": false },
                 { "name": "Ready", "type": "Button", "id": "a1f0c001-0000-4000-8000-000000000111", "expectedControlType": "Button", "processors": "", "interactions": "", "initialStateCheck": false },
                 { "name": "FreeCursor", "type": "Button", "id": "a1f0c001-0000-4000-8000-000000000112", "expectedControlType": "Button", "processors": "", "interactions": "", "initialStateCheck": false },
-                { "name": "Cancel", "type": "Button", "id": "a1f0c001-0000-4000-8000-000000000113", "expectedControlType": "Button", "processors": "", "interactions": "", "initialStateCheck": false }
+                { "name": "Cancel", "type": "Button", "id": "a1f0c001-0000-4000-8000-000000000113", "expectedControlType": "Button", "processors": "", "interactions": "", "initialStateCheck": false },
+                { "name": "Weapon3", "type": "Button", "id": "a1f0c001-0000-4000-8000-000000000114", "expectedControlType": "Button", "processors": "", "interactions": "", "initialStateCheck": false },
+                { "name": "Ability1", "type": "Button", "id": "a1f0c001-0000-4000-8000-000000000115", "expectedControlType": "Button", "processors": "", "interactions": "", "initialStateCheck": false },
+                { "name": "Ability2", "type": "Button", "id": "a1f0c001-0000-4000-8000-000000000116", "expectedControlType": "Button", "processors": "", "interactions": "", "initialStateCheck": false },
+                { "name": "Ultimate", "type": "Button", "id": "a1f0c001-0000-4000-8000-000000000117", "expectedControlType": "Button", "processors": "", "interactions": "", "initialStateCheck": false },
+                { "name": "Menu", "type": "Button", "id": "a1f0c001-0000-4000-8000-000000000118", "expectedControlType": "Button", "processors": "", "interactions": "", "initialStateCheck": false },
+                { "name": "Scroll", "type": "Value", "id": "a1f0c001-0000-4000-8000-000000000119", "expectedControlType": "Vector2", "processors": "", "interactions": "", "initialStateCheck": false },
+                { "name": "AltFire", "type": "Button", "id": "a1f0c001-0000-4000-8000-000000000120", "expectedControlType": "Button", "processors": "", "interactions": "", "initialStateCheck": false }
             ],
             "bindings": [
                 { "name": "WASD", "id": "a1f0c001-0000-4000-8000-000000000201", "path": "2DVector", "interactions": "", "processors": "", "groups": "", "action": "Move", "isComposite": true, "isPartOfComposite": false },
@@ -33,10 +40,17 @@
                 { "name": "", "id": "a1f0c001-0000-4000-8000-000000000211", "path": "<Keyboard>/2", "interactions": "", "processors": "", "groups": "", "action": "Weapon2", "isComposite": false, "isPartOfComposite": false },
                 { "name": "", "id": "a1f0c001-0000-4000-8000-000000000212", "path": "<Keyboard>/v", "interactions": "", "processors": "", "groups": "", "action": "SwitchCamera", "isComposite": false, "isPartOfComposite": false },
                 { "name": "", "id": "a1f0c001-0000-4000-8000-000000000213", "path": "<Keyboard>/f", "interactions": "", "processors": "", "groups": "", "action": "Interact", "isComposite": false, "isPartOfComposite": false },
-                { "name": "", "id": "a1f0c001-0000-4000-8000-000000000214", "path": "<Keyboard>/e", "interactions": "", "processors": "", "groups": "", "action": "Repair", "isComposite": false, "isPartOfComposite": false },
+                { "name": "", "id": "a1f0c001-0000-4000-8000-000000000214", "path": "<Keyboard>/e", "interactions": "", "processors": "", "groups": "", "action": "Use", "isComposite": false, "isPartOfComposite": false },
                 { "name": "", "id": "a1f0c001-0000-4000-8000-000000000215", "path": "<Keyboard>/g", "interactions": "", "processors": "", "groups": "", "action": "Ready", "isComposite": false, "isPartOfComposite": false },
                 { "name": "", "id": "a1f0c001-0000-4000-8000-000000000216", "path": "<Keyboard>/leftAlt", "interactions": "", "processors": "", "groups": "", "action": "FreeCursor", "isComposite": false, "isPartOfComposite": false },
-                { "name": "", "id": "a1f0c001-0000-4000-8000-000000000217", "path": "<Keyboard>/escape", "interactions": "", "processors": "", "groups": "", "action": "Cancel", "isComposite": false, "isPartOfComposite": false }
+                { "name": "", "id": "a1f0c001-0000-4000-8000-000000000217", "path": "<Keyboard>/escape", "interactions": "", "processors": "", "groups": "", "action": "Cancel", "isComposite": false, "isPartOfComposite": false },
+                { "name": "", "id": "a1f0c001-0000-4000-8000-000000000218", "path": "<Keyboard>/3", "interactions": "", "processors": "", "groups": "", "action": "Weapon3", "isComposite": false, "isPartOfComposite": false },
+                { "name": "", "id": "a1f0c001-0000-4000-8000-000000000219", "path": "<Keyboard>/q", "interactions": "", "processors": "", "groups": "", "action": "Ability1", "isComposite": false, "isPartOfComposite": false },
+                { "name": "", "id": "a1f0c001-0000-4000-8000-000000000220", "path": "<Keyboard>/r", "interactions": "", "processors": "", "groups": "", "action": "Ability2", "isComposite": false, "isPartOfComposite": false },
+                { "name": "", "id": "a1f0c001-0000-4000-8000-000000000221", "path": "<Keyboard>/x", "interactions": "", "processors": "", "groups": "", "action": "Ultimate", "isComposite": false, "isPartOfComposite": false },
+                { "name": "", "id": "a1f0c001-0000-4000-8000-000000000222", "path": "<Keyboard>/tab", "interactions": "", "processors": "", "groups": "", "action": "Menu", "isComposite": false, "isPartOfComposite": false },
+                { "name": "", "id": "a1f0c001-0000-4000-8000-000000000223", "path": "<Mouse>/scroll", "interactions": "", "processors": "", "groups": "", "action": "Scroll", "isComposite": false, "isPartOfComposite": false },
+                { "name": "", "id": "a1f0c001-0000-4000-8000-000000000224", "path": "<Mouse>/rightButton", "interactions": "", "processors": "", "groups": "", "action": "AltFire", "isComposite": false, "isPartOfComposite": false }
             ]
         }
     ],

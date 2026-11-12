@@ -2,11 +2,26 @@ using UnityEngine;
 
 namespace ColiseumGame
 {
-    /// <summary>Параметры типа врага (пеший, щитоносец, летающий, босс).</summary>
+    public enum BossKind
+    {
+        None,
+        Minotaur,
+        Cerberus,
+        Hydra,
+        Medusa,
+        HarpyQueen,
+        Titan
+    }
+
+    /// <summary>Параметры типа врага. Все числа — здесь, а не в коде.</summary>
     [CreateAssetMenu(menuName = "Coliseum/Enemy Config", fileName = "Enemy")]
     public class EnemyConfig : ScriptableObject
     {
         public string displayName = "Враг";
+        [Tooltip("Кто это (показывается при первом появлении и в превью волны)")]
+        [TextArea] public string description = "";
+        [Tooltip("Чем контрить — подсказка игроку")]
+        [TextArea] public string counterHint = "";
         [Tooltip("Префаб, который спавнит волна")]
         public Enemy prefab;
 
@@ -17,44 +32,60 @@ namespace ColiseumGame
         [Range(0f, 1f)] public float armorTowerDamageMultiplier = 0.15f;
         [Tooltip("Щит спереди: башни не наносят урона, если стреляют в переднюю полусферу")]
         public bool hasShield;
-        [Tooltip("Половина угла, который закрывает щит, градусы")]
         public float shieldHalfAngle = 70f;
+        [Tooltip("Стихия врага: противоположная бьёт ×1.5, своя — не действует")]
+        public Element element = Element.None;
 
         [Header("Движение")]
         public bool isFlying;
         public float moveSpeed = 3.5f;
-        [Tooltip("Радиус тела, нужен для дальности меча и атак")]
         public float bodyRadius = 0.5f;
-        [Tooltip("Высота точки прицеливания (центр тела)")]
         public float aimHeight = 1f;
+        [Tooltip("Перепрыгивает баррикады вместо того, чтобы ломать их")]
+        public bool jumpsBarricades;
 
         [Header("Атака")]
-        public float attackDamage = 10f;
-        public float attackInterval = 1.2f;
-        public float attackRange = 1.5f;
+        public float attackDamage = 6f;
+        public float attackInterval = 1.5f;
+        [Tooltip("Дистанция атаки. Больше 4 — враг стреляет снарядами издалека")]
+        public float attackRange = 1.2f;
+        public float projectileSpeed = 18f;
+        [Tooltip("Радиус взрыва снаряда (маги). 0 — одиночный урон")]
+        public float splashRadius = 0f;
+        [Range(0f, 0.9f)] public float slowPlayerOnHit = 0f;
+        public float knockbackPlayer = 0f;
+
+        [Header("Особенности")]
+        [Tooltip("Лечит союзников вокруг: доля их макс. HP в секунду")]
+        public float healRadius = 0f;
+        public float healPercentPerSecond = 0f;
+        [Tooltip("Невидим, пока его не подсветит игрок или Священное пламя")]
+        public bool invisible;
+        public float deathExplosionRadius = 0f;
+        public float deathExplosionDamage = 0f;
+        [Tooltip("После смерти делится на этих врагов (если не добит огнём)")]
+        public EnemyConfig splitInto;
+        public int splitCount = 0;
 
         [Header("Награда")]
-        public int essenceReward = 6;
+        public int essenceReward = 4;
+        public int gloryReward = 3;
 
-        [Header("Агрессия")]
-        [Tooltip("Если игрок ближе — враг отвлекается на него")]
+        [Header("Агрессия на игрока")]
         public float playerAggroRange = 3f;
-        [Tooltip("Если игрок убежал дальше — враг возвращается на маршрут")]
         public float playerLeashRange = 8f;
-        [Tooltip("Башни ближе этого расстояния могут стать целью")]
-        public float towerAggroRange = 7f;
-        [Range(0f, 1f)] public float towerAggroChance = 0.2f;
-        public float towerAggroCheckInterval = 2f;
-        [Tooltip("Сколько секунд враг бьёт башню, прежде чем вернуться на маршрут")]
-        public float towerAggroDuration = 8f;
 
         [Header("Полёт (только для летающих)")]
-        [Tooltip("Высота полёта над точкой спавна")]
         public float cruiseHeight = 0f;
-        [Tooltip("На какой высоте над целью зависает для атаки")]
-        public float hoverHeight = 3f;
-        public float hoverRadius = 3.5f;
-        [Tooltip("С какого горизонтального расстояния до цели начинается пике")]
-        public float diveDistance = 16f;
+        public float hoverHeight = 0.5f;
+        public float hoverRadius = 3f;
+        public float diveDistance = 18f;
+
+        [Header("Босс")]
+        public BossKind bossKind = BossKind.None;
+        [Tooltip("Подсказка на экране, что делать с боссом")]
+        [TextArea] public string bossHint = "";
+
+        public bool IsBoss => bossKind != BossKind.None;
     }
 }

@@ -19,16 +19,57 @@ MonoBehaviour:
   orbMagnetSpeed: 14
   markDuration: 4
   markTowerDamageMultiplier: 1.5
+  elementAuraDuration: 5
+  shatterMultiplier: 2
+  overloadMultiplier: 1.2
+  overloadRadius: 3.5
+  overloadKnockback: 5
+  brittleDuration: 5
+  brittleDamageMultiplier: 1.4
+  decayPercent: 0.06
+  decayBossPercent: 0.02
+  elementWeaknessMultiplier: 1.5
   portalMaxHP: 800
+  portalRegenPercent: 0.05
   barricadeCost: 30
   barricadeHP: 250
-  repairHpPerSecond: 40
-  repairCostPerHP: 0.25
-  repairRadius: 4.5
+  minTowerDistance: 4
+  routeClearance: 1.6
+  portalClearance: 7
+  barricadeClearance: 3
+  maxBuildDistance: 16
+  sellRefund: 0.5
+  cleanWaveBonus: 0.2
+  earlyCallBonus: 0.25
+  difficulties:
+  - name: "\u041B\u0435\u0433\u0438\u043E\u043D\u0435\u0440"
+    description: "\u0414\u043B\u044F \u0437\u043D\u0430\u043A\u043E\u043C\u0441\u0442\u0432\u0430
+      \u0441 \u0438\u0433\u0440\u043E\u0439: \u0432\u0440\u0430\u0433\u0438 \u0441\u043B\u0430\u0431\u0435\u0435,
+      \u044D\u0441\u0441\u0435\u043D\u0446\u0438\u0438 \u0431\u043E\u043B\u044C\u0448\u0435"
+    enemyHp: 0.8
+    enemyDamage: 0.8
+    income: 1.15
+  - name: "\u0426\u0435\u043D\u0442\u0443\u0440\u0438\u043E\u043D"
+    description: "\u0417\u0430\u0434\u0443\u043C\u0430\u043D\u043D\u044B\u0439 \u0431\u0430\u043B\u0430\u043D\u0441"
+    enemyHp: 1
+    enemyDamage: 1
+    income: 1
+  - name: "\u0418\u043C\u043F\u0435\u0440\u0430\u0442\u043E\u0440"
+    description: "\u0414\u043B\u044F \u0432\u0435\u0442\u0435\u0440\u0430\u043D\u043E\u0432
+      \u0430\u0440\u0435\u043D\u044B: \u0432\u0440\u0430\u0433\u0438 \u043A\u0440\u0435\u043F\u0447\u0435
+      \u0438 \u0437\u043B\u0435\u0435"
+    enemyHp: 1.3
+    enemyDamage: 1.25
+    income: 0.9
+  defaultDifficulty: 1
   towerTypes:
   - {fileID: 11400000, guid: 495442004b2275f488d3810f64243d07, type: 2}
   - {fileID: 11400000, guid: 1f5d045d6088c484486e7d090c8c63b8, type: 2}
-  sellRefund: 0.5
+  - {fileID: 11400000, guid: 4b492f41c3566f349bc06a80f455c8d8, type: 2}
+  - {fileID: 11400000, guid: 30175d922c856b54c80a66dfe8feac52, type: 2}
+  - {fileID: 11400000, guid: 26db35ae59dbcf440bc7247ba095d929, type: 2}
+  - {fileID: 11400000, guid: 19be5faa7c423e748b94cbcc73f5dc4e, type: 2}
+  hero: {fileID: 11400000, guid: 36cc24c4e7014dd459ef692e83b05be9, type: 2}
   waves:
   - {fileID: 11400000, guid: 0de52bb09bb8a7445ba2c914945ad8ed, type: 2}
   - {fileID: 11400000, guid: 02b5b65cd088cc64f969d528c42a950a, type: 2}
@@ -40,3 +81,47 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 4653e1bfe4ffb5747b2f64659797c0e1, type: 2}
   - {fileID: 11400000, guid: 93372a9fcaaec27449e196b831fbd4af, type: 2}
   - {fileID: 11400000, guid: 49371b5f2446e994e9cdc7dc670e5a19, type: 2}
+  - {fileID: 11400000, guid: 3230e0c31ef978344920c5b1e21637c3, type: 2}
+  - {fileID: 11400000, guid: 7aee3cbca6100af43927d655cc8e4985, type: 2}
+  - {fileID: 11400000, guid: 2b9a95a801760d544bb19a19ae93372e, type: 2}
+  - {fileID: 11400000, guid: 38420a74c03d61f4e916b7209fc0027a, type: 2}
+  - {fileID: 11400000, guid: 9a5c0e9dd299b9646a445f316c352abd, type: 2}
+  - {fileID: 11400000, guid: d409355e455e57b419d5d9205271df40, type: 2}
+  - {fileID: 11400000, guid: b04bbf05449c2934fbbc8d520f072994, type: 2}
+  - {fileID: 11400000, guid: fb8f1614080fece48a4fbb9636c7c5e7, type: 2}
+  - {fileID: 11400000, guid: 9137bcb6a5ec5e04d8d201911656398a, type: 2}
+  - {fileID: 11400000, guid: 5f7cb69c2659db4448eb94e56989694f, type: 2}
+  - {fileID: 11400000, guid: cb3af7c5e3fa6d141b0663a059a86cbd, type: 2}
+  - {fileID: 11400000, guid: 57978d5b5f8812845954dd66a36b7b79, type: 2}
+  - {fileID: 11400000, guid: 325289c58846fef4da72afa35e0b9e23, type: 2}
+  - {fileID: 11400000, guid: 52dff29597e1ade43ad97d7c9adf3ba9, type: 2}
+  - {fileID: 11400000, guid: 97edd65a1db90ce46b5c74c3b3c3d3b2, type: 2}
+  - {fileID: 11400000, guid: 6345f9490f97b8c46a0bd3c7e903cdf0, type: 2}
+  - {fileID: 11400000, guid: 1e9ee89118ce87c4d85cf40d4393b4c6, type: 2}
+  - {fileID: 11400000, guid: 43caf9aa4417af042989bb2681135e3f, type: 2}
+  - {fileID: 11400000, guid: 5e9cc89db9f75d54da4b5f4b9ae21037, type: 2}
+  - {fileID: 11400000, guid: 4722112ee01cce7498cba07d4f2adfe0, type: 2}
+  endlessPool:
+  - {fileID: 11400000, guid: 454d50e87dafb22478161fbeb615e44e, type: 2}
+  - {fileID: 11400000, guid: 3cbde9ee56e50864b9bd50927aa1be45, type: 2}
+  - {fileID: 11400000, guid: ad7f3e484e5fe324b9a662ae96e53885, type: 2}
+  - {fileID: 11400000, guid: 0a4b3ae930f882f4cac7539a5a763d86, type: 2}
+  - {fileID: 11400000, guid: 6453c772b418ab745aa4bb28f41bc739, type: 2}
+  - {fileID: 11400000, guid: 3fe9b1a423d1179408f4dac3e8cbe4c5, type: 2}
+  - {fileID: 11400000, guid: 0ed7de7b6679b9b43bea72bad5254246, type: 2}
+  - {fileID: 11400000, guid: 3da1a02f95c3c0b4383b49d273cdc715, type: 2}
+  - {fileID: 11400000, guid: 653a6215cb40f6f4080aac03ffe24401, type: 2}
+  - {fileID: 11400000, guid: 77274ed681c53cd468eda5dc750403c3, type: 2}
+  - {fileID: 11400000, guid: 7d68a90feb8e9a34bbee102c73f2e691, type: 2}
+  - {fileID: 11400000, guid: afdeaaabffbd8b8439a7cfc2ef00304b, type: 2}
+  - {fileID: 11400000, guid: 925d251ad16864445978c8d4b8185dfd, type: 2}
+  - {fileID: 11400000, guid: 994e638929c849b47b8a916106b280b5, type: 2}
+  - {fileID: 11400000, guid: 011dd485be713e94fb132514a043962b, type: 2}
+  bossPool:
+  - {fileID: 11400000, guid: a5be9b3268e14574aa274fd9b1cfadb5, type: 2}
+  - {fileID: 11400000, guid: bdef7794a930a8a4194e518c5a7fda1c, type: 2}
+  - {fileID: 11400000, guid: fc9f0183b6bb124478494be34b46c104, type: 2}
+  - {fileID: 11400000, guid: 629107978cc50db4887434efa3356911, type: 2}
+  - {fileID: 11400000, guid: c146dc51d5a887645add16991c989dd5, type: 2}
+  - {fileID: 11400000, guid: 5d01029ebec08fa439a3c3ba731343c8, type: 2}
+  endlessHpGrowth: 0.12

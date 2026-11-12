@@ -13,27 +13,48 @@ MonoBehaviour:
   m_Name: Enemy_ShieldBearer
   m_EditorClassIdentifier: 
   displayName: "\u0429\u0438\u0442\u043E\u043D\u043E\u0441\u0435\u0446"
+  description: "\u0429\u0438\u0442 \u0441\u043F\u0435\u0440\u0435\u0434\u0438: \u0431\u0430\u0448\u043D\u0438,
+    \u0441\u0442\u0440\u0435\u043B\u044F\u044E\u0449\u0438\u0435 \u0435\u043C\u0443
+    \u0432 \u043B\u0438\u0446\u043E, \u043D\u0435 \u043D\u0430\u043D\u043E\u0441\u044F\u0442
+    \u0443\u0440\u043E\u043D\u0430."
+  counterHint: "\u0433\u0435\u0440\u043E\u0439 \u0431\u044C\u0451\u0442 \u0441 \u043B\u044E\u0431\u043E\u0439
+    \u0441\u0442\u043E\u0440\u043E\u043D\u044B; \u0431\u0430\u0448\u043D\u0438, \u0441\u0442\u0440\u0435\u043B\u044F\u044E\u0449\u0438\u0435
+    \u0432 \u0441\u043F\u0438\u043D\u0443; \u0425\u0440\u0443\u043F\u043A\u043E\u0441\u0442\u044C
+    (\u043B\u0451\u0434+\u043C\u043E\u043B\u043D\u0438\u044F) \u043F\u0440\u043E\u0431\u0438\u0432\u0430\u0435\u0442
+    \u0449\u0438\u0442."
   prefab: {fileID: 6820316442876034442, guid: 46ee848812f149749b8c1b5c32f4fcc0, type: 3}
   maxHP: 100
   armor: 0
   armorTowerDamageMultiplier: 0.15
   hasShield: 1
   shieldHalfAngle: 70
+  element: 0
   isFlying: 0
   moveSpeed: 2.8
   bodyRadius: 0.5
   aimHeight: 1
+  jumpsBarricades: 0
   attackDamage: 8
   attackInterval: 1.5
   attackRange: 1.2
+  projectileSpeed: 18
+  splashRadius: 0
+  slowPlayerOnHit: 0
+  knockbackPlayer: 0
+  healRadius: 0
+  healPercentPerSecond: 0
+  invisible: 0
+  deathExplosionRadius: 0
+  deathExplosionDamage: 0
+  splitInto: {fileID: 0}
+  splitCount: 0
   essenceReward: 7
+  gloryReward: 5
   playerAggroRange: 3
   playerLeashRange: 8
-  towerAggroRange: 6
-  towerAggroChance: 0.25
-  towerAggroCheckInterval: 2
-  towerAggroDuration: 8
   cruiseHeight: 0
   hoverHeight: 3
   hoverRadius: 3.5
   diveDistance: 16
+  bossKind: 0
+  bossHint: 

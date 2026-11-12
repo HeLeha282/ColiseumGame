@@ -1,0 +1,284 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c2c835381ccc9354db0de55d2e0f3003, type: 3}
+  m_Name: HeroConfig
+  m_EditorClassIdentifier: 
+  xpBase: 50
+  xpGrowth: 1.2
+  choicesPerLevel: 3
+  baseTowerLimit: 4
+  focusPerHit: 2
+  focusPerKill: 3
+  focusPerReaction: 6
+  focusMax: 100
+  ultimateDamage: 300
+  ultimateDamagePerWave: 0.15
+  ultimateLength: 40
+  ultimateWidth: 2.4
+  ultimateChargeTime: 0.9
+  weaponUpgradeCosts: 4600000078000000b400000004010000
+  weaponDamagePerLevel: 0.3
+  enchantCost: 50
+  enchantSwitchCost: 20
+  abilities:
+  - id: reap
+    name: "\u0416\u0430\u0442\u0432\u0430"
+    description: "\u041A\u0440\u0443\u0433\u043E\u0432\u043E\u0439 \u0443\u0434\u0430\u0440;
+      30% \u0443\u0440\u043E\u043D\u0430 \u0432\u043E\u0437\u0432\u0440\u0430\u0449\u0430\u0435\u0442\u0441\u044F
+      \u0437\u0434\u043E\u0440\u043E\u0432\u044C\u0435\u043C"
+    cooldown: 9
+    damageMul: 2.2
+    radius: 3.8
+    duration: 0
+    element: 0
+  - id: skyslam
+    name: "\u0423\u0434\u0430\u0440 \u0441 \u043D\u0435\u0431\u0430"
+    description: "\u041F\u0440\u044B\u0436\u043E\u043A \u0432\u043F\u0435\u0440\u0451\u0434
+      \u0438 \u0443\u0434\u0430\u0440 \u043F\u043E \u043E\u0431\u043B\u0430\u0441\u0442\u0438
+      \u043F\u0440\u0438 \u043F\u0440\u0438\u0437\u0435\u043C\u043B\u0435\u043D\u0438\u0438
+      (\u0441\u0438\u043B\u044C\u043D\u0435\u0435 \u0441 \u0432\u044B\u0441\u043E\u0442\u044B)"
+    cooldown: 11
+    damageMul: 3
+    radius: 4.5
+    duration: 0
+    element: 0
+  - id: firedash
+    name: "\u041E\u0433\u043D\u0435\u043D\u043D\u044B\u0439 \u0440\u044B\u0432\u043E\u043A"
+    description: "\u0420\u044B\u0432\u043E\u043A, \u043E\u0441\u0442\u0430\u0432\u043B\u044F\u044E\u0449\u0438\u0439
+      \u0433\u043E\u0440\u044F\u0449\u0438\u0439 \u0441\u043B\u0435\u0434"
+    cooldown: 8
+    damageMul: 1.2
+    radius: 7
+    duration: 3
+    element: 1
+  - id: frostnova
+    name: "\u041B\u0435\u0434\u044F\u043D\u0430\u044F \u043D\u043E\u0432\u0430"
+    description: "\u0417\u0430\u043C\u043E\u0440\u0430\u0436\u0438\u0432\u0430\u0435\u0442
+      \u0432\u0441\u0435\u0445 \u0432\u043E\u043A\u0440\u0443\u0433"
+    cooldown: 14
+    damageMul: 1
+    radius: 6
+    duration: 2.2
+    element: 2
+  - id: chain
+    name: "\u0426\u0435\u043F\u043D\u0430\u044F \u043C\u043E\u043B\u043D\u0438\u044F"
+    description: "\u041C\u043E\u043B\u043D\u0438\u044F \u043E\u0442 \u0432\u0440\u0430\u0433\u0430
+      \u043F\u043E\u0434 \u043F\u0440\u0438\u0446\u0435\u043B\u043E\u043C \u043D\u0430
+      7 \u0446\u0435\u043B\u0435\u0439; \u0441\u0431\u0438\u0432\u0430\u0435\u0442
+      \u043B\u0435\u0442\u0443\u043D\u043E\u0432"
+    cooldown: 10
+    damageMul: 1.4
+    radius: 7
+    duration: 0
+    element: 3
+  - id: meteor
+    name: "\u041C\u0435\u0442\u0435\u043E\u0440"
+    description: "\u041C\u0435\u0442\u0435\u043E\u0440 \u0432 \u0442\u043E\u0447\u043A\u0443
+      \u043F\u0440\u0438\u0446\u0435\u043B\u0430, \u043F\u043E\u0434\u0436\u0438\u0433\u0430\u0435\u0442"
+    cooldown: 16
+    damageMul: 4
+    radius: 5
+    duration: 3
+    element: 1
+  perks:
+  - id: tower
+    name: "+1 \u0431\u0430\u0448\u043D\u044F"
+    description: "\u041B\u0438\u043C\u0438\u0442 \u0431\u0430\u0448\u0435\u043D +1"
+    branch: 0
+    kind: 0
+    abilityId: 
+    value: 1
+    maxStacks: 8
+    minLevel: 1
+  - id: vigor
+    name: "\u0417\u0430\u043A\u0430\u043B\u043A\u0430"
+    description: "+30 \u043A \u043C\u0430\u043A\u0441\u0438\u043C\u0430\u043B\u044C\u043D\u043E\u043C\u0443
+      \u0437\u0434\u043E\u0440\u043E\u0432\u044C\u044E"
+    branch: 0
+    kind: 2
+    abilityId: 
+    value: 30
+    maxStacks: 3
+    minLevel: 1
+  - id: swift
+    name: "\u0411\u044B\u0441\u0442\u0440\u044B\u0435 \u043D\u043E\u0433\u0438"
+    description: "+10% \u043A \u0441\u043A\u043E\u0440\u043E\u0441\u0442\u0438 \u0431\u0435\u0433\u0430"
+    branch: 0
+    kind: 3
+    abilityId: 
+    value: 0.1
+    maxStacks: 2
+    minLevel: 1
+  - id: focus
+    name: "\u0421\u043E\u0441\u0440\u0435\u0434\u043E\u0442\u043E\u0447\u0435\u043D\u0438\u0435"
+    description: "+25% \u043A \u043D\u0430\u043A\u043E\u043F\u043B\u0435\u043D\u0438\u044E
+      \u0424\u043E\u043A\u0443\u0441\u0430"
+    branch: 0
+    kind: 4
+    abilityId: 
+    value: 0.25
+    maxStacks: 2
+    minLevel: 1
+  - id: reap
+    name: "\u0416\u0430\u0442\u0432\u0430"
+    description: "\u041D\u0430\u0432\u044B\u043A: \u043A\u0440\u0443\u0433\u043E\u0432\u043E\u0439
+      \u0443\u0434\u0430\u0440 \u0441 \u0432\u0430\u043C\u043F\u0438\u0440\u0438\u0437\u043C\u043E\u043C"
+    branch: 1
+    kind: 1
+    abilityId: reap
+    value: 1
+    maxStacks: 1
+    minLevel: 1
+  - id: skyslam
+    name: "\u0423\u0434\u0430\u0440 \u0441 \u043D\u0435\u0431\u0430"
+    description: "\u041D\u0430\u0432\u044B\u043A: \u043F\u0440\u044B\u0436\u043E\u043A
+      \u0438 \u0443\u0434\u0430\u0440 \u043F\u043E \u043E\u0431\u043B\u0430\u0441\u0442\u0438"
+    branch: 1
+    kind: 1
+    abilityId: skyslam
+    value: 1
+    maxStacks: 1
+    minLevel: 1
+  - id: berserk
+    name: "\u0411\u0435\u0440\u0441\u0435\u0440\u043A"
+    description: "\u0427\u0435\u043C \u043C\u0435\u043D\u044C\u0448\u0435 \u0437\u0434\u043E\u0440\u043E\u0432\u044C\u044F,
+      \u0442\u0435\u043C \u0441\u0438\u043B\u044C\u043D\u0435\u0435 \u0443\u0434\u0430\u0440\u044B
+      (\u0434\u043E +60%)"
+    branch: 1
+    kind: 10
+    abilityId: 
+    value: 1
+    maxStacks: 1
+    minLevel: 1
+  - id: heavy
+    name: "\u0422\u044F\u0436\u0451\u043B\u0430\u044F \u0440\u0443\u043A\u0430"
+    description: "+20% \u043A \u0443\u0440\u043E\u043D\u0443 \u043C\u0435\u0447\u0430"
+    branch: 1
+    kind: 5
+    abilityId: 
+    value: 0.2
+    maxStacks: 3
+    minLevel: 1
+  - id: breaker
+    name: "\u0420\u0430\u0437\u0440\u0443\u0448\u0438\u0442\u0435\u043B\u044C \u0431\u0440\u043E\u043D\u0438"
+    description: "\u0411\u0440\u043E\u043D\u044F \u0431\u043E\u0441\u0441\u043E\u0432
+      \u0441\u043D\u0438\u043C\u0430\u0435\u0442\u0441\u044F \u0432\u0434\u0432\u043E\u0435
+      \u0431\u044B\u0441\u0442\u0440\u0435\u0435"
+    branch: 1
+    kind: 7
+    abilityId: 
+    value: 1
+    maxStacks: 1
+    minLevel: 1
+  - id: huntmark
+    name: "\u041E\u0445\u043E\u0442\u043D\u0438\u0447\u044C\u044F \u043C\u0435\u0442\u043A\u0430"
+    description: "\u041C\u0435\u0442\u043A\u0430 \u0434\u0435\u0440\u0436\u0438\u0442\u0441\u044F
+      8 \u0441 \u0438 \u0434\u0430\u0451\u0442 \u0431\u0430\u0448\u043D\u044F\u043C
+      \xD72 \u0443\u0440\u043E\u043D\u0430"
+    branch: 2
+    kind: 8
+    abilityId: 
+    value: 1
+    maxStacks: 1
+    minLevel: 1
+  - id: execute
+    name: "\u041A\u0430\u0437\u043D\u044C"
+    description: "\u0423\u0434\u0430\u0440 \u043F\u043E \u043F\u043E\u043C\u0435\u0447\u0435\u043D\u043D\u043E\u043C\u0443
+      \u0432\u0440\u0430\u0433\u0443 \u043D\u0438\u0436\u0435 15% HP \u0443\u0431\u0438\u0432\u0430\u0435\u0442
+      \u0435\u0433\u043E"
+    branch: 2
+    kind: 9
+    abilityId: 
+    value: 1
+    maxStacks: 1
+    minLevel: 1
+  - id: steady
+    name: "\u0422\u0432\u0451\u0440\u0434\u0430\u044F \u0440\u0443\u043A\u0430"
+    description: "+20% \u043A \u0443\u0440\u043E\u043D\u0443 \u043B\u0443\u043A\u0430
+      \u0438 \u0431\u044B\u0441\u0442\u0440\u0435\u0435 \u043D\u0430\u0442\u044F\u0436\u0435\u043D\u0438\u0435"
+    branch: 2
+    kind: 6
+    abilityId: 
+    value: 0.2
+    maxStacks: 3
+    minLevel: 1
+  - id: firedash
+    name: "\u041E\u0433\u043D\u0435\u043D\u043D\u044B\u0439 \u0440\u044B\u0432\u043E\u043A"
+    description: "\u041D\u0430\u0432\u044B\u043A: \u0440\u044B\u0432\u043E\u043A
+      \u0441 \u0433\u043E\u0440\u044F\u0449\u0438\u043C \u0441\u043B\u0435\u0434\u043E\u043C"
+    branch: 3
+    kind: 1
+    abilityId: firedash
+    value: 1
+    maxStacks: 1
+    minLevel: 1
+  - id: frostnova
+    name: "\u041B\u0435\u0434\u044F\u043D\u0430\u044F \u043D\u043E\u0432\u0430"
+    description: "\u041D\u0430\u0432\u044B\u043A: \u0437\u0430\u043C\u043E\u0440\u043E\u0437\u043A\u0430
+      \u0432\u043E\u043A\u0440\u0443\u0433"
+    branch: 3
+    kind: 1
+    abilityId: frostnova
+    value: 1
+    maxStacks: 1
+    minLevel: 1
+  - id: chain
+    name: "\u0426\u0435\u043F\u043D\u0430\u044F \u043C\u043E\u043B\u043D\u0438\u044F"
+    description: "\u041D\u0430\u0432\u044B\u043A: \u043C\u043E\u043B\u043D\u0438\u044F
+      \u043D\u0430 7 \u0446\u0435\u043B\u0435\u0439"
+    branch: 3
+    kind: 1
+    abilityId: chain
+    value: 1
+    maxStacks: 1
+    minLevel: 1
+  - id: meteor
+    name: "\u041C\u0435\u0442\u0435\u043E\u0440"
+    description: "\u041D\u0430\u0432\u044B\u043A: \u043C\u0435\u0442\u0435\u043E\u0440
+      \u0432 \u0442\u043E\u0447\u043A\u0443 \u043F\u0440\u0438\u0446\u0435\u043B\u0430"
+    branch: 3
+    kind: 1
+    abilityId: meteor
+    value: 1
+    maxStacks: 1
+    minLevel: 3
+  - id: affinity
+    name: "\u0421\u0442\u0438\u0445\u0438\u0439\u043D\u043E\u0435 \u0441\u0440\u043E\u0434\u0441\u0442\u0432\u043E"
+    description: "+30% \u043A \u0441\u0438\u043B\u0435 \u0443\u043B\u044C\u0442\u0438\u043C\u0435\u0439\u0442\u0430
+      \u0438 \u0440\u0435\u0430\u043A\u0446\u0438\u0439 \u0433\u0435\u0440\u043E\u044F"
+    branch: 3
+    kind: 11
+    abilityId: 
+    value: 0.3
+    maxStacks: 2
+    minLevel: 1
+  - id: ult_storm
+    name: "\u0410\u043B\u0430\u044F \u0431\u0443\u0440\u044F"
+    description: "\u0423\u043B\u044C\u0442\u0438\u043C\u0435\u0439\u0442 \u043C\u0435\u043D\u044F\u0435\u0442\u0441\u044F:
+      \u043E\u0433\u043D\u0435\u043D\u043D\u043E-\u0433\u0440\u043E\u0437\u043E\u0432\u0430\u044F
+      \u0431\u0443\u0440\u044F \u0432\u043E\u043A\u0440\u0443\u0433 \u0433\u0435\u0440\u043E\u044F"
+    branch: 3
+    kind: 12
+    abilityId: storm
+    value: 1
+    maxStacks: 1
+    minLevel: 6
+  - id: ult_zero
+    name: "\u0410\u0431\u0441\u043E\u043B\u044E\u0442\u043D\u044B\u0439 \u043D\u043E\u043B\u044C"
+    description: "\u0423\u043B\u044C\u0442\u0438\u043C\u0435\u0439\u0442 \u043C\u0435\u043D\u044F\u0435\u0442\u0441\u044F:
+      \u0432\u0441\u0451 \u0432\u043E\u043A\u0440\u0443\u0433 \u0437\u0430\u043C\u0435\u0440\u0437\u0430\u0435\u0442"
+    branch: 3
+    kind: 12
+    abilityId: zero
+    value: 1
+    maxStacks: 1
+    minLevel: 6

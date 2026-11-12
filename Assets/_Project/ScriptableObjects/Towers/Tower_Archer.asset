@@ -13,26 +13,120 @@ MonoBehaviour:
   m_Name: Tower_Archer
   m_EditorClassIdentifier: 
   displayName: "\u041B\u0443\u0447\u043D\u0438\u043A"
+  description: "\u041E\u0434\u0438\u043D\u043E\u0447\u043D\u0430\u044F \u0446\u0435\u043B\u044C,
+    \u0431\u044C\u0451\u0442 \u0438 \u0437\u0435\u043C\u043B\u044E, \u0438 \u0432\u043E\u0437\u0434\u0443\u0445."
   prefab: {fileID: 8326014179470179814, guid: b8693d94b1ff68240a7657b764935527, type: 3}
+  kind: 0
+  element: 0
   targetsGround: 1
   targetsAir: 1
   projectileSpeed: 45
+  chainJumps: 3
+  footprint: 1.3
   levels:
   - cost: 60
     damage: 12
     fireInterval: 0.8
     range: 16
-    maxHP: 150
     aoeRadius: 0
+    auraBonus: 0
   - cost: 50
     damage: 18
     fireInterval: 0.65
     range: 18
-    maxHP: 220
     aoeRadius: 0
+    auraBonus: 0
   - cost: 80
     damage: 26
     fireInterval: 0.5
     range: 20
-    maxHP: 300
     aoeRadius: 0
+    auraBonus: 0
+  perks:
+  - id: rapid
+    name: "\u0421\u043A\u043E\u0440\u043E\u0441\u0442\u0440\u0435\u043B"
+    description: "+70% \u043A \u0441\u043A\u043E\u0440\u043E\u0441\u0442\u0438 \u0430\u0442\u0430\u043A\u0438"
+    tier: 4
+    parent: 
+    cost: 120
+    damageMul: 1
+    intervalMul: 0.6
+    rangeMul: 1
+    aoeAdd: 0
+    element: 0
+    special: 0
+    value: 0
+  - id: flurry
+    name: "\u0428\u043A\u0432\u0430\u043B"
+    description: "\u0421\u0442\u0440\u0435\u043B\u044F\u0435\u0442 \u0441\u0440\u0430\u0437\u0443
+      \u043F\u043E 3 \u0446\u0435\u043B\u044F\u043C"
+    tier: 5
+    parent: rapid
+    cost: 170
+    damageMul: 1
+    intervalMul: 1
+    rangeMul: 1
+    aoeAdd: 0
+    element: 0
+    special: 1
+    value: 0
+  - id: rampup
+    name: "\u0420\u0430\u0437\u043E\u0433\u0440\u0435\u0432"
+    description: "\u041F\u043E\u043A\u0430 \u0441\u0442\u0440\u0435\u043B\u044F\u0435\u0442
+      \u0431\u0435\u0437 \u043F\u0435\u0440\u0435\u0440\u044B\u0432\u0430, \u0441\u043A\u043E\u0440\u043E\u0441\u0442\u044C
+      \u0440\u0430\u0441\u0442\u0451\u0442 \u0434\u043E \xD72"
+    tier: 5
+    parent: rapid
+    cost: 160
+    damageMul: 1
+    intervalMul: 1
+    rangeMul: 1
+    aoeAdd: 0
+    element: 0
+    special: 2
+    value: 0
+  - id: sniper
+    name: "\u0421\u043D\u0430\u0439\u043F\u0435\u0440"
+    description: "+60% \u0434\u0430\u043B\u044C\u043D\u043E\u0441\u0442\u0438, 25%
+      \u0448\u0430\u043D\u0441 \u043A\u0440\u0438\u0442\u0430 \xD72"
+    tier: 4
+    parent: 
+    cost: 120
+    damageMul: 1.2
+    intervalMul: 1
+    rangeMul: 1.6
+    aoeAdd: 0
+    element: 0
+    special: 3
+    value: 0
+  - id: pierce
+    name: "\u041F\u0440\u043E\u0431\u0438\u0432\u043D\u0430\u044F \u0441\u0442\u0440\u0435\u043B\u0430"
+    description: "\u0421\u0442\u0440\u0435\u043B\u0430 \u043F\u0440\u043E\u0431\u0438\u0432\u0430\u0435\u0442
+      \u0432\u0441\u044E \u043B\u0438\u043D\u0438\u044E \u0432\u0440\u0430\u0433\u043E\u0432"
+    tier: 5
+    parent: sniper
+    cost: 170
+    damageMul: 1.3
+    intervalMul: 1
+    rangeMul: 1
+    aoeAdd: 0
+    element: 0
+    special: 4
+    value: 0
+  - id: net
+    name: "\u041B\u043E\u0432\u0447\u0430\u044F \u0441\u0435\u0442\u044C"
+    description: "\u041A\u0430\u0436\u0434\u044B\u0439 3-\u0439 \u0432\u044B\u0441\u0442\u0440\u0435\u043B
+      \u0441\u0431\u0438\u0432\u0430\u0435\u0442 \u043B\u0435\u0442\u0443\u043D\u0430
+      \u043D\u0430 \u0437\u0435\u043C\u043B\u044E \u043D\u0430 3 \u0441 \u2014 \u0435\u0433\u043E
+      \u043C\u043E\u0436\u043D\u043E \u0431\u0438\u0442\u044C \u043C\u0435\u0447\u043E\u043C"
+    tier: 5
+    parent: sniper
+    cost: 150
+    damageMul: 1
+    intervalMul: 1
+    rangeMul: 1
+    aoeAdd: 0
+    element: 0
+    special: 5
+    value: 0
+  hybridCost: 220

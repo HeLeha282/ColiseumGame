@@ -12,11 +12,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 72362d2ea93827d49b608b5341dd87b7, type: 3}
   m_Name: Wave_01
   m_EditorClassIdentifier: 
+  title: "\u041F\u0435\u0440\u0432\u0430\u044F \u043A\u0440\u043E\u0432\u044C"
+  act: 1
   groups:
   - enemy: {fileID: 11400000, guid: 454d50e87dafb22478161fbeb615e44e, type: 2}
     count: 8
     startDelay: 0
-    interval: 2.5
+    interval: 2.2
     arch: -1
+    squad: 0
+    altRouteChance: 0
+    elite: 0
   hpMultiplier: 1
   completionBonus: 40
+  gloryBonus: 18

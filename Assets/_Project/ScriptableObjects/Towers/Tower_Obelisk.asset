@@ -1,0 +1,135 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 17f84ae5ca591ce438bb6d162e0d1fb9, type: 3}
+  m_Name: Tower_Obelisk
+  m_EditorClassIdentifier: 
+  displayName: "\u041C\u043E\u043B\u043D\u0438\u0435\u0432\u044B\u0439 \u043E\u0431\u0435\u043B\u0438\u0441\u043A"
+  description: "\u041C\u043E\u043B\u043D\u0438\u044F \u0446\u0435\u043F\u044C\u044E
+    \u043F\u0435\u0440\u0435\u0441\u043A\u0430\u043A\u0438\u0432\u0430\u0435\u0442
+    \u043C\u0435\u0436\u0434\u0443 \u0432\u0440\u0430\u0433\u0430\u043C\u0438 (\u0437\u0435\u043C\u043B\u044F
+    \u0438 \u0432\u043E\u0437\u0434\u0443\u0445)."
+  prefab: {fileID: 1473584593561126066, guid: e215a779d1ad41542bd99a727f7cdec2, type: 3}
+  kind: 1
+  element: 3
+  targetsGround: 1
+  targetsAir: 1
+  projectileSpeed: 40
+  chainJumps: 3
+  footprint: 1.1
+  levels:
+  - cost: 100
+    damage: 18
+    fireInterval: 1.4
+    range: 14
+    aoeRadius: 0
+    auraBonus: 0
+  - cost: 80
+    damage: 26
+    fireInterval: 1.2
+    range: 15
+    aoeRadius: 0
+    auraBonus: 0
+  - cost: 120
+    damage: 36
+    fireInterval: 1
+    range: 16
+    aoeRadius: 0
+    auraBonus: 0
+  perks:
+  - id: chain
+    name: "\u0426\u0435\u043F\u044C"
+    description: "+3 \u043F\u0440\u044B\u0436\u043A\u0430 \u043C\u043E\u043B\u043D\u0438\u0438"
+    tier: 4
+    parent: 
+    cost: 130
+    damageMul: 1
+    intervalMul: 1
+    rangeMul: 1
+    aoeAdd: 0
+    element: 0
+    special: 13
+    value: 3
+  - id: grid
+    name: "\u042D\u043B\u0435\u043A\u0442\u0440\u043E\u0441\u0435\u0442\u044C"
+    description: "\u041B\u0443\u0447 \u043C\u0435\u0436\u0434\u0443 \u0434\u0432\u0443\u043C\u044F
+      \u043E\u0431\u0435\u043B\u0438\u0441\u043A\u0430\u043C\u0438 \u0431\u044C\u0451\u0442
+      \u0432\u0441\u0435\u0445, \u043A\u0442\u043E \u043F\u0440\u043E\u0445\u043E\u0434\u0438\u0442
+      \u043C\u0435\u0436\u0434\u0443 \u043D\u0438\u043C\u0438"
+    tier: 5
+    parent: chain
+    cost: 170
+    damageMul: 1
+    intervalMul: 1
+    rangeMul: 1
+    aoeAdd: 0
+    element: 0
+    special: 15
+    value: 0
+  - id: shock
+    name: "\u0428\u043E\u043A\u043E\u0432\u0430\u044F \u0446\u0435\u043F\u044C"
+    description: "\u041A\u0430\u0436\u0434\u044B\u0439 \u0443\u0434\u0430\u0440 \u043E\u0433\u043B\u0443\u0448\u0430\u0435\u0442
+      \u043D\u0430 0,4 \u0441"
+    tier: 5
+    parent: chain
+    cost: 160
+    damageMul: 1
+    intervalMul: 1
+    rangeMul: 1
+    aoeAdd: 0
+    element: 0
+    special: 14
+    value: 0
+  - id: storm
+    name: "\u0411\u0443\u0440\u044F"
+    description: "\u0420\u0430\u0437 \u0432 8 \u0441 \u2014 \u0440\u0430\u0437\u0440\u044F\u0434
+      \u043F\u043E \u043E\u0431\u043B\u0430\u0441\u0442\u0438 (\u0443\u0440\u043E\u043D
+      \xD73)"
+    tier: 4
+    parent: 
+    cost: 130
+    damageMul: 1
+    intervalMul: 1
+    rangeMul: 1
+    aoeAdd: 0
+    element: 0
+    special: 16
+    value: 0
+  - id: eye
+    name: "\u041E\u043A\u043E \u0431\u0443\u0440\u0438"
+    description: "\u0411\u0443\u0440\u044F \u0440\u0430\u0437 \u0432 5 \u0441 \u0438
+      \u0448\u0438\u0440\u0435"
+    tier: 5
+    parent: storm
+    cost: 170
+    damageMul: 1
+    intervalMul: 1
+    rangeMul: 1
+    aoeAdd: 0
+    element: 0
+    special: 17
+    value: 0
+  - id: rod
+    name: "\u0413\u0440\u043E\u043C\u043E\u043E\u0442\u0432\u043E\u0434"
+    description: "\u0411\u0443\u0440\u044F \u0441\u0431\u0438\u0432\u0430\u0435\u0442
+      \u043B\u0435\u0442\u0443\u043D\u043E\u0432 \u043D\u0430 \u0437\u0435\u043C\u043B\u044E
+      \u043D\u0430 3 \u0441"
+    tier: 5
+    parent: storm
+    cost: 160
+    damageMul: 1
+    intervalMul: 1
+    rangeMul: 1
+    aoeAdd: 0
+    element: 0
+    special: 18
+    value: 0
+  hybridCost: 220

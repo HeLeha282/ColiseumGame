@@ -162,32 +162,34 @@ namespace ColiseumGame.EditorTools
             var root = new GameObject("Routes");
             for (int i = 0; i < ArchAngles.Length; i++)
             {
-                var routeGo = new GameObject($"Route_{i}");
-                routeGo.transform.SetParent(root.transform, false);
-                var route = routeGo.AddComponent<Route>();
-                SetValue(route, "archIndex", i);
-                var so = new UnityEditor.SerializedObject(route);
-                so.FindProperty("gizmoColor").colorValue = RouteColors[i];
-                so.ApplyModifiedPropertiesWithoutUndo();
-
-                var pts = RoutePoints(ArchAngles[i]);
-                for (int k = 0; k < pts.Count; k++) Empty($"WP_{k:00}", routeGo.transform, pts[k]);
+                float a = ArchAngles[i];
+                MakeRoute(root.transform, "Route_" + i, i, 0, RouteColors[i], RoutePoints(a));
+                // Развилка (акт II+): идти по 2-му ярусу дальше и спуститься по пандусу соседней арки
+                var alt = RoutePoints(a).GetRange(0, 4);
+                alt.Add(Polar(42f, a - 75f, Tier2Y));
+                alt.Add(Polar(42f, a - 95f, Tier2Y));
+                alt.Add(Polar(42f, a - 115f, Tier2Y));
+                alt.Add(Polar(42f, a - 135f, Tier2Y));
+                alt.AddRange(RoutePoints(a - 90f).GetRange(3, RoutePoints(a - 90f).Count - 3));
+                MakeRoute(root.transform, "Route_" + i + "_Fork", i, 1, RouteColors[i], alt);
             }
             return root;
         }
 
-        // ---------- Слоты и места под баррикады ----------
-
-        private static IEnumerable<Vector3> SlotPositions()
+        private static void MakeRoute(Transform parent, string name, int arch, int variant, Color color, List<Vector3> pts)
         {
-            // 4 на арене, 2 на 1-м ярусе, 2 на 2-м ярусе — в стороне от маршрутов.
-            foreach (var deg in new[] { 55f, 145f, 235f, 325f }) yield return Polar(12f, deg, 0f);
-            yield return Polar(36.4f, 10f, Tier1Y);
-            yield return Polar(36.4f, 190f, Tier1Y);
-            yield return Polar(39.7f, 100f, Tier2Y);
-            yield return Polar(39.7f, 280f, Tier2Y);
+            var routeGo = new GameObject(name);
+            routeGo.transform.SetParent(parent, false);
+            var route = routeGo.AddComponent<Route>();
+            SetValue(route, "archIndex", arch);
+            SetValue(route, "variant", variant);
+            var so = new UnityEditor.SerializedObject(route);
+            so.FindProperty("gizmoColor").colorValue = color;
+            so.ApplyModifiedPropertiesWithoutUndo();
+            for (int k = 0; k < pts.Count; k++) Empty($"WP_{k:00}", routeGo.transform, pts[k]);
         }
 
+        // ---------- Места под баррикады ----------
         private static IEnumerable<(Vector3, Quaternion)> BarricadeSpotPoses()
         {
             foreach (var a in ArchAngles)
@@ -203,20 +205,6 @@ namespace ColiseumGame.EditorTools
                 Vector3 p2 = Polar(15f, a - 218f, 0f);
                 yield return ((p1 + p2) * 0.5f, Quaternion.LookRotation(p2 - p1));
             }
-        }
-
-        private static GameObject BuildTowerSlot()
-        {
-            var root = new GameObject("TowerSlot");
-            var col = root.AddComponent<BoxCollider>();
-            col.isTrigger = true;
-            col.center = new Vector3(0f, 1.5f, 0f);
-            col.size = new Vector3(3f, 3f, 3f);
-            var slot = root.AddComponent<TowerSlot>();
-            var pad = Box("Pad", root.transform, new Vector3(0f, 0.06f, 0f), new Vector3(3f, 0.12f, 3f), Mats["Slot"]);
-            var mount = Empty("Mount", root.transform, Vector3.zero);
-            Assign(slot, ("mount", mount), ("padVisual", pad));
-            return root;
         }
 
         private const float BarricadeWidth = 7f;

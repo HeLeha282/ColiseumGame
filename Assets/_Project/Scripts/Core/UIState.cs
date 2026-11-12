@@ -11,7 +11,7 @@ namespace ColiseumGame
         public static bool FreeCursorHeld;
 
         public static bool CursorFree => MenuOpen || ResultOpen || FreeCursorHeld;
-        public static bool GameplayBlocked => MenuOpen || ResultOpen;
+        public static bool GameplayBlocked => MenuOpen || ResultOpen || Cutscene.Playing;
 
         public static void Reset()
         {

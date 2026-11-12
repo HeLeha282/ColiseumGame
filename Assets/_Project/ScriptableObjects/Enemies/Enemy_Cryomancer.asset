@@ -1,0 +1,58 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 970004bf78a9730479ff943ca1286a07, type: 3}
+  m_Name: Enemy_Cryomancer
+  m_EditorClassIdentifier: 
+  displayName: "\u041A\u0440\u0438\u043E\u043C\u0430\u043D\u0442"
+  description: "\u041B\u0435\u0434\u044F\u043D\u043E\u0439 \u043C\u0430\u0433. \u041E\u0431\u0441\u0442\u0440\u0435\u043B\u0438\u0432\u0430\u0435\u0442
+    \u0438\u0437\u0434\u0430\u043B\u0435\u043A\u0430 \u0438 \u0437\u0430\u043C\u0435\u0434\u043B\u044F\u0435\u0442
+    \u0433\u0435\u0440\u043E\u044F."
+  counterHint: "\u041E\u0413\u041E\u041D\u042C (\xD71.5): \u043E\u0433\u043D\u0435\u043D\u043D\u0430\u044F
+    \u043A\u0430\u0442\u0430\u043F\u0443\u043B\u044C\u0442\u0430, \u0436\u0430\u0440\u043E\u0432\u043D\u044F,
+    \u043E\u0433\u043D\u0435\u043D\u043D\u043E\u0435 \u0437\u0430\u0447\u0430\u0440\u043E\u0432\u0430\u043D\u0438\u0435.
+    \u041B\u0451\u0434 \u043D\u0435 \u0434\u0435\u0439\u0441\u0442\u0432\u0443\u0435\u0442."
+  prefab: {fileID: 7220513388849606279, guid: be20cbdf0b7af594fb7796a3a76bb950, type: 3}
+  maxHP: 70
+  armor: 0
+  armorTowerDamageMultiplier: 0.15
+  hasShield: 0
+  shieldHalfAngle: 70
+  element: 2
+  isFlying: 0
+  moveSpeed: 3
+  bodyRadius: 0.5
+  aimHeight: 1
+  jumpsBarricades: 0
+  attackDamage: 9
+  attackInterval: 2
+  attackRange: 12
+  projectileSpeed: 16
+  splashRadius: 2.5
+  slowPlayerOnHit: 0.4
+  knockbackPlayer: 0
+  healRadius: 0
+  healPercentPerSecond: 0
+  invisible: 0
+  deathExplosionRadius: 0
+  deathExplosionDamage: 0
+  splitInto: {fileID: 0}
+  splitCount: 0
+  essenceReward: 8
+  gloryReward: 6
+  playerAggroRange: 3
+  playerLeashRange: 8
+  cruiseHeight: 0
+  hoverHeight: 0.5
+  hoverRadius: 3
+  diveDistance: 18
+  bossKind: 0
+  bossHint: 

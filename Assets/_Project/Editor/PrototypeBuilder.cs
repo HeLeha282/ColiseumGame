@@ -42,6 +42,7 @@ namespace ColiseumGame.EditorTools
             var configs = CreateConfigs();
             var prefabs = CreatePrefabs(configs);
             BuildScene(prefabs);
+            ColiseumArtIntegration.ApplyLook();
             AssetDatabase.SaveAssets();
             Debug.Log("[ColiseumGame] Прототип собран.");
         }
@@ -132,10 +133,6 @@ namespace ColiseumGame.EditorTools
             var coliseum = Place(p.Coliseum, Vector3.zero, Quaternion.identity);
             Place(p.Portal, Vector3.zero, Quaternion.identity);
             Place(p.Routes, Vector3.zero, Quaternion.identity);
-
-            var slots = new GameObject("TowerSlots").transform;
-            foreach (var s in SlotPositions())
-                Place(p.TowerSlot, s, Quaternion.LookRotation(new Vector3(-s.x, 0f, -s.z)), slots);
 
             var spots = new GameObject("BarricadeSpots").transform;
             foreach (var (pos, rot) in BarricadeSpotPoses())

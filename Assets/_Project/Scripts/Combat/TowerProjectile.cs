@@ -3,37 +3,29 @@ using UnityEngine;
 namespace ColiseumGame
 {
     /// <summary>
-    /// Снаряд башни. Без взрыва — летит за целью (лучник). Со взрывом — летит в точку
-    /// с упреждением и бьёт по области всех наземных врагов (катапульта).
+    /// Снаряд башни. Одиночный — летит за целью (лучник, скорпион). Площадной — летит в точку с упреждением
+    /// (катапульта, по дуге). При попадании вся логика урона и перков — в Tower.ResolveImpact.
     /// </summary>
     public class TowerProjectile : MonoBehaviour
     {
-        [SerializeField] private GameObject explosionPrefab;
         [SerializeField] private float maxLifetime = 4f;
         [SerializeField] private bool useArc;
 
+        private Tower owner;
         private Enemy target;
-        private Vector3 targetPoint;
-        private float damage, speed, aoe;
-        private bool hitsAir;
-        private Vector3 origin;
-        private float life;
-        private Vector3 launchPoint;
-        private float flightTime, flightDuration, arcHeight;
+        private Vector3 targetPoint, launchPoint;
+        private float speed, life, flightTime, flightDuration, arcHeight;
+        private bool area;
 
-        public void Launch(Enemy enemy, float dmg, float projectileSpeed, float aoeRadius, bool canHitAir, Vector3 sourcePosition)
+        public void Launch(Tower tower, Enemy enemy, float projectileSpeed, bool isArea)
         {
+            owner = tower;
             target = enemy;
-            damage = dmg;
             speed = projectileSpeed;
-            aoe = aoeRadius;
-            hitsAir = canHitAir;
-            origin = sourcePosition;
-
+            area = isArea;
             targetPoint = enemy.AimPoint;
-            if (aoe > 0f)
+            if (area && !enemy.IsFlying)
             {
-                // Упреждение: куда враг дойдёт за время полёта.
                 float t = Vector3.Distance(transform.position, targetPoint) / speed;
                 targetPoint = enemy.transform.position + enemy.Velocity * t;
             }
@@ -48,13 +40,12 @@ namespace ColiseumGame
         private void Update()
         {
             life -= Time.deltaTime;
-            if (life <= 0f)
+            if (life <= 0f || owner == null)
             {
                 Destroy(gameObject);
                 return;
             }
-
-            if (aoe <= 0f && target != null && target.IsAlive) targetPoint = target.AimPoint;
+            if (!area && target != null && target.IsAlive) targetPoint = target.AimPoint;
 
             Vector3 next = Vector3.MoveTowards(transform.position, targetPoint, speed * Time.deltaTime);
             if (useArc)
@@ -67,31 +58,11 @@ namespace ColiseumGame
             if (dir.sqrMagnitude > 0.0001f) transform.rotation = Quaternion.LookRotation(dir);
             transform.position = next;
 
-            if (useArc ? flightTime >= flightDuration : Vector3.Distance(next, targetPoint) < 0.05f) Impact();
-        }
-
-        private void Impact()
-        {
-            if (aoe > 0f)
+            if (useArc ? flightTime >= flightDuration : Vector3.Distance(next, targetPoint) < 0.05f)
             {
-                foreach (var e in Enemy.All.ToArray())
-                {
-                    if (e == null || !e.IsAlive) continue;
-                    if (e.IsFlying && !hitsAir) continue;
-                    if (Vector3.Distance(e.transform.position, targetPoint) <= aoe + e.Radius)
-                        e.TakeDamage(new DamageInfo(damage, DamageSource.Tower, origin));
-                }
-                if (explosionPrefab != null)
-                {
-                    var fx = Instantiate(explosionPrefab, targetPoint, Quaternion.identity);
-                    fx.transform.localScale = Vector3.one * aoe * 2f;
-                }
+                owner.ResolveImpact(targetPoint, target != null && target.IsAlive ? target : null);
+                Destroy(gameObject);
             }
-            else if (target != null && target.IsAlive)
-            {
-                target.TakeDamage(new DamageInfo(damage, DamageSource.Tower, origin));
-            }
-            Destroy(gameObject);
         }
     }
 }

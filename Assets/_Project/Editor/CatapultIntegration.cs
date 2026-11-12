@@ -44,7 +44,7 @@ namespace ColiseumGame.EditorTools
                 var obstacle = root.GetComponent<NavMeshObstacle>();
                 obstacle.center = collider.center; obstacle.size = ColliderSize;
                 Assign(tower, ("config", cfg), ("head", head), ("muzzle", null),
-                    ("projectilePrefab", projectile.GetComponent<TowerProjectile>()), ("healthBar", bar), ("hitCollider", collider));
+                    ("projectilePrefab", projectile.GetComponent<TowerProjectile>()), ("hitCollider", collider));
                 AssignArray(tower, "levelMarkers", Array.Empty<Object>());
                 AddModels(tower, head);
                 PrefabUtility.SaveAsPrefabAsset(root, PrefabPath);
@@ -72,7 +72,6 @@ namespace ColiseumGame.EditorTools
             var projectile = root.AddComponent<TowerProjectile>();
             var stone = Material(Art, "CatapultStone", new Color(.29f, .25f, .20f), 0f, .12f);
             Prim(PrimitiveType.Sphere, "Stone", root.transform, Vector3.zero, Vector3.one * .32f, stone);
-            Assign(projectile, ("explosionPrefab", explosion));
             var so = new SerializedObject(projectile); so.FindProperty("useArc").boolValue = true; so.ApplyModifiedPropertiesWithoutUndo();
             return root;
         }

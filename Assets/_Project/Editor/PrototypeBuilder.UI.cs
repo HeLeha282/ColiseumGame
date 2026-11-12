@@ -98,6 +98,7 @@ namespace ColiseumGame.EditorTools
             restartRt.sizeDelta = new Vector2(300f, 80f);
             result.SetActive(false);
 
+            root.AddComponent<GameUI>();
             var hud = root.AddComponent<HUD>();
             Assign(hud,
                 ("playerHpFill", playerFill), ("playerHpText", playerText),
@@ -125,7 +126,7 @@ namespace ColiseumGame.EditorTools
             out Transform container, out Button template, out Button close)
         {
             var center = new Vector2(0.5f, 0.5f);
-            var panel = UIRect("BuildMenu", parent, center, center, new Vector2(0f, 40f), new Vector2(640f, 300f));
+            var panel = UIRect("BuildMenu", parent, center, center, new Vector2(0f, 40f), new Vector2(760f, 300f));
             panel.gameObject.AddComponent<Image>().color = new Color(0.08f, 0.08f, 0.1f, 0.92f);
             var layout = panel.gameObject.AddComponent<VerticalLayoutGroup>();
             layout.padding = new RectOffset(24, 24, 20, 20);
@@ -152,7 +153,7 @@ namespace ColiseumGame.EditorTools
             container = list;
 
             template = UIButton("OptionTemplate", list, "Пункт", new Color(0.25f, 0.4f, 0.65f), 26f);
-            template.gameObject.AddComponent<LayoutElement>().preferredHeight = 56f;
+            template.gameObject.AddComponent<LayoutElement>().preferredHeight = 72f;
 
             close = UIButton("CloseButton", panel, "Закрыть (F / Esc)", new Color(0.35f, 0.2f, 0.2f), 24f);
             close.gameObject.AddComponent<LayoutElement>().preferredHeight = 46f;

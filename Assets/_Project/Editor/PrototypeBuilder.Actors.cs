@@ -11,11 +11,12 @@ namespace ColiseumGame.EditorTools
     {
         public class PrefabSet
         {
-            public GameObject Coliseum, Portal, Routes, TowerSlot, BarricadeSpot, Barricade, Orb;
+            public GameObject Coliseum, Portal, Routes, BarricadeSpot, Barricade, Orb;
             public GameObject Player, CameraRig, Arrow;
-            public GameObject Walker, Shield, Flyer, Boss;
-            public GameObject Archer, Catapult, ProjArrow, ProjRock, Explosion;
+            public GameObject ProjArrow, ProjRock, ProjBolt, Explosion;
             public GameObject GameSystems, HUD;
+            public readonly System.Collections.Generic.Dictionary<string, GameObject> Enemies = new System.Collections.Generic.Dictionary<string, GameObject>();
+            public readonly System.Collections.Generic.Dictionary<string, GameObject> Towers = new System.Collections.Generic.Dictionary<string, GameObject>();
         }
 
         private static PrefabSet CreatePrefabs(ConfigSet c)
@@ -29,25 +30,31 @@ namespace ColiseumGame.EditorTools
             p.Coliseum = SavePrefab(BuildColiseum(), env + "Coliseum.prefab");
             p.Portal = SavePrefab(BuildPortal(c.Balance), env + "Portal.prefab");
             p.Routes = SavePrefab(BuildRoutes(), env + "Routes.prefab");
-            p.TowerSlot = SavePrefab(BuildTowerSlot(), env + "TowerSlot.prefab");
             p.BarricadeSpot = SavePrefab(BuildBarricadeSpot(), env + "BarricadeSpot.prefab");
             p.Barricade = SavePrefab(BuildBarricade(), env + "Barricade.prefab");
             p.Orb = SavePrefab(BuildOrb(), env + "EssenceOrb.prefab");
 
             p.Arrow = SavePrefab(BuildPlayerArrow(), pl + "Arrow.prefab");
-            p.Player = SavePrefab(BuildPlayer(c.Player, p.Arrow), pl + "Player.prefab");
+            p.Player = SavePrefab(BuildPlayer(c.Player, c.Hero, p.Arrow), pl + "Player.prefab");
             p.CameraRig = SavePrefab(BuildCameraRig(), pl + "CameraRig.prefab");
 
-            p.Walker = SavePrefab(BuildWalker(c.Walker), en + "Enemy_Walker.prefab");
-            p.Shield = SavePrefab(BuildShieldBearer(c.Shield), en + "Enemy_ShieldBearer.prefab");
-            p.Flyer = SavePrefab(BuildFlyer(c.Flyer), en + "Enemy_Flyer.prefab");
-            p.Boss = SavePrefab(BuildBoss(c.Boss), en + "Enemy_Boss.prefab");
+            // Сначала обычные враги (на них ссылаются деление и призыв), потом боссы
+            foreach (var look in Looks)
+                if (!c.Enemies[look.key].IsBoss) p.Enemies[look.key] = SavePrefab(BuildEnemy(look, c.Enemies[look.key], c), en + $"Enemy_{look.key}.prefab");
+            LinkPrefabs(c, p);
+            foreach (var look in Looks)
+                if (c.Enemies[look.key].IsBoss) p.Enemies[look.key] = SavePrefab(BuildEnemy(look, c.Enemies[look.key], c), en + $"Enemy_{look.key}.prefab");
 
             p.Explosion = SavePrefab(BuildExplosion(), tw + "FX_Explosion.prefab");
             p.ProjArrow = SavePrefab(BuildProjectile("Projectile_Arrow", new Vector3(0.08f, 0.08f, 0.7f), Mats["ArrowTower"], null), tw + "Projectile_Arrow.prefab");
+            p.ProjBolt = SavePrefab(BuildProjectile("Projectile_Bolt", new Vector3(0.18f, 0.18f, 1.3f), Mats["Steel"], null), tw + "Projectile_Bolt.prefab");
             p.ProjRock = SavePrefab(CatapultIntegration.CreateProjectile(p.Explosion), tw + "Projectile_Rock.prefab");
-            p.Archer = SavePrefab(BuildArcherTower(c.Archer, p.ProjArrow), tw + "Tower_Archer.prefab");
-            p.Catapult = SavePrefab(BuildCatapultTower(c.Catapult, p.ProjRock), tw + "Tower_Catapult.prefab");
+            p.Towers["Archer"] = SavePrefab(BuildArcherTower(c.Towers["Archer"], p.ProjArrow), tw + "Tower_Archer.prefab");
+            p.Towers["Catapult"] = SavePrefab(BuildCatapultTower(c.Towers["Catapult"], p.ProjRock), tw + "Tower_Catapult.prefab");
+            p.Towers["Obelisk"] = SavePrefab(BuildObelisk(c.Towers["Obelisk"]), tw + "Tower_Obelisk.prefab");
+            p.Towers["Brazier"] = SavePrefab(BuildBrazier(c.Towers["Brazier"]), tw + "Tower_Brazier.prefab");
+            p.Towers["Scorpion"] = SavePrefab(BuildScorpion(c.Towers["Scorpion"], p.ProjBolt), tw + "Tower_Scorpion.prefab");
+            p.Towers["Sanctuary"] = SavePrefab(BuildSanctuary(c.Towers["Sanctuary"]), tw + "Tower_Sanctuary.prefab");
 
             p.GameSystems = SavePrefab(BuildGameSystems(c.Balance, p.Orb, p.Barricade), PrefabDir + "/Systems/GameSystems.prefab");
             p.HUD = SavePrefab(BuildHUD(), PrefabDir + "/UI/HUD.prefab");
@@ -55,7 +62,6 @@ namespace ColiseumGame.EditorTools
             LinkPrefabs(c, p);
             return p;
         }
-
         // ---------- Полоска HP над головой ----------
 
         private static WorldHealthBar BuildWorldBar(Transform parent, float height, float widthMeters, bool armor, bool mark, Color fillColor)
@@ -105,7 +111,7 @@ namespace ColiseumGame.EditorTools
             return root;
         }
 
-        private static GameObject BuildPlayer(PlayerConfig config, GameObject arrowPrefab)
+        private static GameObject BuildPlayer(PlayerConfig config, HeroConfig hero, GameObject arrowPrefab)
         {
             var root = new GameObject("Player") { tag = "Player" };
             var cc = root.AddComponent<CharacterController>();
@@ -134,6 +140,14 @@ namespace ColiseumGame.EditorTools
             var bow = Empty("Bow", holder, new Vector3(-0.1f, 0.1f, 0.15f));
             SetupBowVisual(bow.gameObject);
 
+            // Молоток для режима стройки (клавиша 3)
+            var hammer = Empty("Hammer", holder, new Vector3(0f, 0.05f, 0.1f));
+            Prim(PrimitiveType.Cylinder, "Handle", hammer, new Vector3(0f, 0f, 0.3f), new Vector3(0.06f, 0.32f, 0.06f), Mats["Wood"], false, Quaternion.Euler(90f, 0f, 0f));
+            Box("Head", hammer, new Vector3(0f, 0f, 0.65f), new Vector3(0.34f, 0.18f, 0.18f), Mats["Steel"]);
+            Box("Band", hammer, new Vector3(0f, 0f, 0.65f), new Vector3(0.36f, 0.2f, 0.05f), Mats["LevelMark"]);
+            hammer.localRotation = Quaternion.Euler(-25f, -10f, 0f);
+            hammer.gameObject.SetActive(false);
+
             var arrowSpawn = Empty("ArrowSpawn", head, new Vector3(0.15f, -0.1f, 0.7f));
 
             var controller = root.AddComponent<PlayerController>();
@@ -143,9 +157,17 @@ namespace ColiseumGame.EditorTools
             Assign(cam, ("config", config), ("cameraTarget", cameraTarget), ("head", head));
             AssignArray(cam, "hideInFirstPerson", new Object[] { capsule.GetComponent<Renderer>(), visor.GetComponent<Renderer>() });
 
+            var progression = root.AddComponent<PlayerProgression>();
+            Assign(progression, ("hero", hero));
+            root.AddComponent<TowerPlacer>();
+
             var combat = root.AddComponent<PlayerCombat>();
-            Assign(combat, ("config", config), ("swordVisual", sword), ("bowVisual", bow), ("arrowSpawn", arrowSpawn),
+            Assign(combat, ("config", config), ("swordVisual", sword), ("bowVisual", bow), ("hammerVisual", hammer), ("arrowSpawn", arrowSpawn),
                 ("arrowPrefab", arrowPrefab.GetComponent<Arrow>()));
+
+            var abilities = root.AddComponent<PlayerAbilities>();
+            Assign(abilities, ("head", head));
+            root.AddComponent<AuraVisual>();
 
             var interactor = root.AddComponent<PlayerInteractor>();
             Assign(interactor, ("config", config));
@@ -236,90 +258,97 @@ namespace ColiseumGame.EditorTools
 
         // ---------- Враги ----------
 
-        /// <summary>Общая заготовка наземного врага: капсула, NavMeshAgent, HP-бар.</summary>
-        private static (GameObject root, Transform visual, Renderer body, Enemy enemy) GroundEnemyBase(string name, EnemyConfig cfg, Material mat)
+        /// <summary>Враг из примитивов по описанию внешности + компоненты по конфигу (ИИ, лекарь, босс).</summary>
+        private static GameObject BuildEnemy(EnemyLook look, EnemyConfig cfg, ConfigSet c)
         {
-            var root = new GameObject(name);
+            var root = new GameObject("Enemy_" + look.key);
             root.AddComponent<Health>();
-            var col = root.AddComponent<CapsuleCollider>();
-            col.center = new Vector3(0f, 1f, 0f);
-            col.radius = 0.5f;
-            col.height = 2f;
-            var agent = root.AddComponent<NavMeshAgent>();
-            agent.radius = 0.45f;
-            agent.height = 2f;
-            agent.speed = cfg.moveSpeed;
-            agent.angularSpeed = 540f;
-            agent.acceleration = 20f;
-            agent.stoppingDistance = 0.2f;
-            agent.autoBraking = false;
-            agent.obstacleAvoidanceType = ObstacleAvoidanceType.LowQualityObstacleAvoidance;
+            var mat = Material(MatDir, "Enemy_" + look.key, look.color);
+            var visual = Empty("Visual", root.transform, Vector3.zero);
+            GameObject body;
+            float barY;
+            if (cfg.isFlying)
+            {
+                var col = root.AddComponent<SphereCollider>();
+                col.radius = look.small ? 0.45f : 0.7f;
+                float s = look.small ? 0.6f : 1f;
+                body = Prim(PrimitiveType.Sphere, "Body", visual, Vector3.zero, new Vector3(0.9f, 0.6f, 1.3f) * s, mat);
+                Box("WingL", visual, new Vector3(-0.95f, 0.1f, 0f) * s, new Vector3(1.4f, 0.06f, 0.6f) * s, mat, false, Quaternion.Euler(0f, 0f, 15f));
+                Box("WingR", visual, new Vector3(0.95f, 0.1f, 0f) * s, new Vector3(1.4f, 0.06f, 0.6f) * s, mat, false, Quaternion.Euler(0f, 0f, -15f));
+                Box("Beak", visual, new Vector3(0f, 0f, 0.7f) * s, new Vector3(0.2f, 0.2f, 0.35f) * s, Mats["Visor"]);
+                barY = 1.1f * s;
+            }
+            else
+            {
+                var col = root.AddComponent<CapsuleCollider>();
+                col.center = new Vector3(0f, 1f, 0f);
+                col.radius = 0.5f;
+                col.height = 2f;
+                var agent = root.AddComponent<NavMeshAgent>();
+                agent.radius = 0.45f;
+                agent.height = 2f;
+                agent.speed = cfg.moveSpeed;
+                agent.angularSpeed = 540f;
+                agent.acceleration = 20f;
+                agent.stoppingDistance = 0.2f;
+                agent.autoBraking = false;
+                agent.obstacleAvoidanceType = ObstacleAvoidanceType.LowQualityObstacleAvoidance;
+                if (look.flat)
+                    body = Box("Body", visual, new Vector3(0f, 0.45f, 0f), new Vector3(0.8f, 0.6f, 1.6f), mat);
+                else if (look.boxy)
+                    body = Box("Body", visual, new Vector3(0f, 1f, 0f), new Vector3(1.1f, 1.6f, 0.9f), mat);
+                else
+                    body = Prim(PrimitiveType.Capsule, "Body", visual, new Vector3(0f, 1f, 0f), Vector3.one, mat);
+                Box("Face", visual, new Vector3(0f, look.flat ? 0.6f : 1.5f, look.flat ? 0.8f : 0.45f), new Vector3(0.5f, 0.15f, 0.15f), Mats["Visor"]);
+                barY = look.flat ? 1.5f : 2.5f;
+            }
+            root.transform.localScale = Vector3.one * look.scale;
+
+            // Детали-подсказки силуэта
+            if (look.shield) Box("Shield", visual, new Vector3(0f, 1f, 0.65f), new Vector3(1.3f, 1.7f, 0.15f), Mats["Shield"]);
+            if (look.bigShield) Box("Shield", visual, new Vector3(0f, 1f, 0.65f), new Vector3(1.6f, 2.0f, 0.18f), Mats["Shield"]);
+            if (look.horns)
+            {
+                Box("HornL", visual, new Vector3(-0.3f, 2.0f, 0.1f), new Vector3(0.08f, 0.35f, 0.08f), Mats["Steel"], false, Quaternion.Euler(0f, 0f, 30f));
+                Box("HornR", visual, new Vector3(0.3f, 2.0f, 0.1f), new Vector3(0.08f, 0.35f, 0.08f), Mats["Steel"], false, Quaternion.Euler(0f, 0f, -30f));
+            }
+            if (look.hat) Prim(PrimitiveType.Cylinder, "Hat", visual, new Vector3(0f, 2.15f, 0f), new Vector3(0.75f, 0.35f, 0.75f), Material(MatDir, "EnemyHat", new Color(0.2f, 0.15f, 0.25f)));
+            if (look.robe) Prim(PrimitiveType.Cylinder, "Robe", visual, new Vector3(0f, 0.45f, 0f), new Vector3(1.05f, 0.45f, 1.05f), mat);
+            if (look.eye) Prim(PrimitiveType.Sphere, "Eye", visual, new Vector3(0f, 1.55f, 0.42f), Vector3.one * 0.35f, Material(MatDir, "EnemyEye", new Color(1f, 0.95f, 0.8f), 1f));
+            if (look.staff) Prim(PrimitiveType.Cylinder, "Staff", visual, new Vector3(0.55f, 1.1f, 0.25f), new Vector3(0.08f, 1.0f, 0.08f), Mats["Wood"]);
+            if (look.bow) Box("Bow", visual, new Vector3(-0.6f, 1.2f, 0.2f), new Vector3(0.08f, 1.2f, 0.08f), Mats["Wood"]);
+            GameObject armorGo = null;
+            if (look.armor)
+            {
+                var armor = Empty("Armor", visual, Vector3.zero);
+                Box("Chest", armor, new Vector3(0f, 1.15f, 0.42f), new Vector3(0.95f, 0.8f, 0.2f), Mats["Armor"]);
+                Box("ShoulderL", armor, new Vector3(-0.55f, 1.5f, 0f), new Vector3(0.35f, 0.25f, 0.6f), Mats["Armor"]);
+                Box("ShoulderR", armor, new Vector3(0.55f, 1.5f, 0f), new Vector3(0.35f, 0.25f, 0.6f), Mats["Armor"]);
+                Box("Helmet", armor, new Vector3(0f, 1.85f, 0f), new Vector3(0.7f, 0.3f, 0.7f), Mats["Armor"]);
+                armorGo = armor.gameObject;
+            }
+            if (cfg.element != Element.None)   // светящийся «камень стихии» на груди
+                Prim(PrimitiveType.Sphere, "ElementCore", visual, new Vector3(0f, cfg.isFlying ? 0.2f : 1.1f, 0.5f), Vector3.one * 0.3f, Material(MatDir, "EnemyElement_" + cfg.element, Elements.Color(cfg.element), 2f));
+
+            var indicator = Prim(PrimitiveType.Sphere, "ElementAura", root.transform, new Vector3(0.55f, barY + 0.25f, 0f), Vector3.one * 0.22f, Mats["LevelMark"]);
+            indicator.GetComponent<Renderer>().enabled = false;
+            var bar = BuildWorldBar(root.transform, barY, 1.2f, cfg.armor > 0f, true, new Color(0.9f, 0.2f, 0.2f));
 
             var enemy = root.AddComponent<Enemy>();
-            var ai = root.AddComponent<GroundEnemyAI>();
-            var visual = Empty("Visual", root.transform, Vector3.zero);
-            var body = Prim(PrimitiveType.Capsule, "Body", visual, new Vector3(0f, 1f, 0f), Vector3.one, mat);
-            Box("Face", visual, new Vector3(0f, 1.5f, 0.42f), new Vector3(0.5f, 0.15f, 0.15f), Mats["Visor"]);
+            EnemyAIBase ai = cfg.isFlying ? root.AddComponent<FlyingEnemyAI>() : (EnemyAIBase)root.AddComponent<GroundEnemyAI>();
             Assign(ai, ("visualRoot", visual));
-            return (root, visual, body.GetComponent<Renderer>(), enemy);
-        }
-
-        private static void FinishEnemy(Enemy enemy, EnemyConfig cfg, WorldHealthBar bar, Renderer body, GameObject armor = null)
-        {
-            Assign(enemy, ("config", cfg), ("healthBar", bar), ("bodyRenderer", body), ("armorVisual", armor));
-        }
-
-        private static GameObject BuildWalker(EnemyConfig cfg)
-        {
-            var (root, visual, body, enemy) = GroundEnemyBase("Enemy_Walker", cfg, Mats["Walker"]);
-            Box("Sword", visual, new Vector3(0.55f, 1f, 0.3f), new Vector3(0.08f, 0.08f, 0.9f), Mats["Steel"]);
-            var bar = BuildWorldBar(root.transform, 2.5f, 1.2f, false, true, new Color(0.9f, 0.2f, 0.2f));
-            FinishEnemy(enemy, cfg, bar, body);
-            return root;
-        }
-
-        private static GameObject BuildShieldBearer(EnemyConfig cfg)
-        {
-            var (root, visual, body, enemy) = GroundEnemyBase("Enemy_ShieldBearer", cfg, Mats["ShieldBearer"]);
-            Box("Shield", visual, new Vector3(0f, 1f, 0.65f), new Vector3(1.3f, 1.7f, 0.15f), Mats["Shield"]);
-            var bar = BuildWorldBar(root.transform, 2.6f, 1.2f, false, true, new Color(0.9f, 0.2f, 0.2f));
-            FinishEnemy(enemy, cfg, bar, body);
-            return root;
-        }
-
-        private static GameObject BuildBoss(EnemyConfig cfg)
-        {
-            var (root, visual, body, enemy) = GroundEnemyBase("Enemy_Boss", cfg, Mats["Boss"]);
-            root.transform.localScale = Vector3.one * 1.8f;
-            var armor = Empty("Armor", visual, Vector3.zero);
-            Box("Chest", armor, new Vector3(0f, 1.15f, 0.42f), new Vector3(0.95f, 0.8f, 0.2f), Mats["Armor"]);
-            Box("ShoulderL", armor, new Vector3(-0.55f, 1.5f, 0f), new Vector3(0.35f, 0.25f, 0.6f), Mats["Armor"]);
-            Box("ShoulderR", armor, new Vector3(0.55f, 1.5f, 0f), new Vector3(0.35f, 0.25f, 0.6f), Mats["Armor"]);
-            Box("Helmet", armor, new Vector3(0f, 1.85f, 0f), new Vector3(0.7f, 0.3f, 0.7f), Mats["Armor"]);
-            Box("HornL", visual, new Vector3(-0.35f, 2.05f, 0.1f), new Vector3(0.1f, 0.4f, 0.1f), Mats["Steel"], false, Quaternion.Euler(0f, 0f, 30f));
-            Box("HornR", visual, new Vector3(0.35f, 2.05f, 0.1f), new Vector3(0.1f, 0.4f, 0.1f), Mats["Steel"], false, Quaternion.Euler(0f, 0f, -30f));
-            Box("Axe", visual, new Vector3(0.65f, 1.1f, 0.35f), new Vector3(0.1f, 0.1f, 1.2f), Mats["Steel"]);
-            var bar = BuildWorldBar(root.transform, 2.6f, 1.4f, true, true, new Color(0.9f, 0.2f, 0.2f));
-            FinishEnemy(enemy, cfg, bar, body, armor.gameObject);
-            return root;
-        }
-
-        private static GameObject BuildFlyer(EnemyConfig cfg)
-        {
-            var root = new GameObject("Enemy_Flyer");
-            root.AddComponent<Health>();
-            var col = root.AddComponent<SphereCollider>();
-            col.radius = 0.7f;
-            var enemy = root.AddComponent<Enemy>();
-            var ai = root.AddComponent<FlyingEnemyAI>();
-            var visual = Empty("Visual", root.transform, Vector3.zero);
-            var body = Prim(PrimitiveType.Sphere, "Body", visual, Vector3.zero, new Vector3(0.9f, 0.6f, 1.3f), Mats["Flyer"]);
-            Box("WingL", visual, new Vector3(-0.95f, 0.1f, 0f), new Vector3(1.4f, 0.06f, 0.6f), Mats["Flyer"], false, Quaternion.Euler(0f, 0f, 15f));
-            Box("WingR", visual, new Vector3(0.95f, 0.1f, 0f), new Vector3(1.4f, 0.06f, 0.6f), Mats["Flyer"], false, Quaternion.Euler(0f, 0f, -15f));
-            Box("Beak", visual, new Vector3(0f, 0f, 0.7f), new Vector3(0.2f, 0.2f, 0.35f), Mats["Visor"]);
-            Assign(ai, ("visualRoot", visual));
-            var bar = BuildWorldBar(root.transform, 1.1f, 1.2f, false, true, new Color(0.9f, 0.2f, 0.2f));
-            FinishEnemy(enemy, cfg, bar, body.GetComponent<Renderer>());
+            if (cfg.healRadius > 0f) root.AddComponent<EnemyHealer>();
+            switch (cfg.bossKind)
+            {
+                case BossKind.Minotaur: root.AddComponent<BossMinotaur>(); break;
+                case BossKind.Cerberus: root.AddComponent<BossCerberus>(); break;
+                case BossKind.Hydra: root.AddComponent<BossHydra>(); break;
+                case BossKind.Medusa: root.AddComponent<BossMedusa>(); break;
+                case BossKind.HarpyQueen: Assign(root.AddComponent<BossHarpyQueen>(), ("minion", c.E("Harpy"))); break;
+                case BossKind.Titan: root.AddComponent<BossTitan>(); break;
+            }
+            Assign(enemy, ("config", cfg), ("healthBar", bar), ("bodyRenderer", body.GetComponent<Renderer>()), ("armorVisual", armorGo),
+                ("elementIndicator", indicator.GetComponent<Renderer>()));
             return root;
         }
 
@@ -336,16 +365,15 @@ namespace ColiseumGame.EditorTools
         private static GameObject BuildProjectile(string name, Vector3 size, Material mat, GameObject explosion)
         {
             var root = new GameObject(name);
-            var proj = root.AddComponent<TowerProjectile>();
+            root.AddComponent<TowerProjectile>();
             Box("Visual", root.transform, Vector3.zero, size, mat);
-            if (explosion != null) Assign(proj, ("explosionPrefab", explosion));
             return root;
         }
 
-        private static (GameObject root, Tower tower) TowerBase(string name, Vector3 colliderSize)
+        /// <summary>Общая основа башни: коллайдер, вырез в NavMesh, 6 отметок уровня, кристалл ветки.</summary>
+        private static (GameObject root, Tower tower) TowerBase(string name, Vector3 colliderSize, float markerZ, float gemY)
         {
             var root = new GameObject(name);
-            root.AddComponent<Health>();
             var col = root.AddComponent<BoxCollider>();
             col.center = new Vector3(0f, colliderSize.y * 0.5f, 0f);
             col.size = colliderSize;
@@ -355,16 +383,14 @@ namespace ColiseumGame.EditorTools
             obstacle.size = colliderSize;
             obstacle.carving = true;
             var tower = root.AddComponent<Tower>();
-            Assign(tower, ("hitCollider", col));
+            var marks = new GameObject[6];
+            for (int i = 0; i < 6; i++)
+                marks[i] = Box($"Level_{i + 1}", root.transform, new Vector3(-0.5f + (i % 3) * 0.5f, 0.35f + (i / 3) * 0.3f, markerZ),
+                    new Vector3(0.22f, 0.2f, 0.06f), Mats["LevelMark"]);
+            var gem = Prim(PrimitiveType.Sphere, "BranchGem", root.transform, new Vector3(0f, gemY, 0f), Vector3.one * 0.4f, Mats["LevelMark"]);
+            Assign(tower, ("hitCollider", col), ("branchGem", gem.GetComponent<Renderer>()));
+            AssignArray(tower, "levelMarkers", marks);
             return (root, tower);
-        }
-
-        private static GameObject[] LevelMarkers(Transform parent, float z)
-        {
-            var marks = new GameObject[3];
-            for (int i = 0; i < 3; i++)
-                marks[i] = Box($"Level_{i + 1}", parent, new Vector3(-0.4f + i * 0.4f, 1f, z), new Vector3(0.25f, 0.25f, 0.08f), Mats["LevelMark"]);
-            return marks;
         }
 
         private const string ArcherArtDir = Root + "/Art/ArcherTowers";
@@ -372,13 +398,11 @@ namespace ColiseumGame.EditorTools
 
         private static GameObject BuildArcherTower(TowerConfig cfg, GameObject projectile)
         {
-            var (root, tower) = TowerBase("Tower_Archer", ArcherColliderSize);
+            var (root, tower) = TowerBase("Tower_Archer", ArcherColliderSize, 0.85f, 4.6f);
             var t = root.transform;
             var head = Empty("Head", t, new Vector3(0f, 3.8f, 0f));
             var muzzle = Empty("Muzzle", head, new Vector3(0f, 0f, 0.5f));
-            var bar = BuildWorldBar(t, 4.15f, 1.6f, false, false, new Color(0.3f, 0.9f, 0.3f));
-            Assign(tower, ("config", cfg), ("head", head), ("muzzle", muzzle), ("projectilePrefab", projectile.GetComponent<TowerProjectile>()),
-                ("healthBar", bar));
+            Assign(tower, ("config", cfg), ("head", head), ("muzzle", muzzle), ("projectilePrefab", projectile.GetComponent<TowerProjectile>()));
             AddArcherLevelModels(tower);
             return root;
         }
@@ -392,7 +416,6 @@ namespace ColiseumGame.EditorTools
                 var model = AssetDatabase.LoadAssetAtPath<GameObject>(path);
                 if (model == null)
                     throw new System.InvalidOperationException($"Не найдена модель башни лучников: {path}");
-
                 models[i] = (GameObject)PrefabUtility.InstantiatePrefab(model, tower.transform);
                 models[i].SetActive(i == 0);
             }
@@ -401,11 +424,65 @@ namespace ColiseumGame.EditorTools
 
         private static GameObject BuildCatapultTower(TowerConfig cfg, GameObject projectile)
         {
-            var (root, tower) = TowerBase("Tower_Catapult", CatapultIntegration.ColliderSize);
+            var (root, tower) = TowerBase("Tower_Catapult", CatapultIntegration.ColliderSize, 1.35f, 3.3f);
             var head = Empty("Head", root.transform, Vector3.zero);
-            var bar = BuildWorldBar(root.transform, 3f, 1.8f, false, false, new Color(0.3f, 0.9f, 0.3f));
-            Assign(tower, ("config", cfg), ("head", head), ("projectilePrefab", projectile.GetComponent<TowerProjectile>()), ("healthBar", bar));
+            Assign(tower, ("config", cfg), ("head", head), ("projectilePrefab", projectile.GetComponent<TowerProjectile>()));
             CatapultIntegration.AddModels(tower, head);
+            return root;
+        }
+
+        private static GameObject BuildObelisk(TowerConfig cfg)
+        {
+            var (root, tower) = TowerBase("Tower_Obelisk", new Vector3(1.4f, 4.4f, 1.4f), 0.75f, 5f);
+            var t = root.transform;
+            var stone = Material(MatDir, "TowerObelisk", new Color(0.3f, 0.26f, 0.42f));
+            Box("Base", t, new Vector3(0f, 0.3f, 0f), new Vector3(1.4f, 0.6f, 1.4f), Mats["Stone"]);
+            Box("Pillar", t, new Vector3(0f, 2.1f, 0f), new Vector3(0.7f, 3.2f, 0.7f), stone, false, Quaternion.Euler(0f, 45f, 0f));
+            var head = Empty("Head", t, new Vector3(0f, 4.1f, 0f));
+            Prim(PrimitiveType.Sphere, "Crystal", head, Vector3.zero, Vector3.one * 0.7f, Material(MatDir, "TowerObeliskCrystal", Elements.Color(Element.Lightning), 2.5f));
+            var muzzle = Empty("Muzzle", head, Vector3.zero);
+            Assign(tower, ("config", cfg), ("head", head), ("muzzle", muzzle));
+            return root;
+        }
+
+        private static GameObject BuildBrazier(TowerConfig cfg)
+        {
+            var (root, tower) = TowerBase("Tower_Brazier", new Vector3(1.4f, 1.6f, 1.4f), 0.72f, 2.4f);
+            var t = root.transform;
+            Prim(PrimitiveType.Cylinder, "Pedestal", t, new Vector3(0f, 0.35f, 0f), new Vector3(1.2f, 0.35f, 1.2f), Mats["Stone"]);
+            Prim(PrimitiveType.Cylinder, "Bowl", t, new Vector3(0f, 1.0f, 0f), new Vector3(1.4f, 0.25f, 1.4f), Mats["Steel"]);
+            Prim(PrimitiveType.Sphere, "Fire", t, new Vector3(0f, 1.4f, 0f), new Vector3(1.0f, 0.8f, 1.0f), Mats["Explosion"]);
+            Assign(tower, ("config", cfg));
+            return root;
+        }
+
+        private static GameObject BuildScorpion(TowerConfig cfg, GameObject projectile)
+        {
+            var (root, tower) = TowerBase("Tower_Scorpion", new Vector3(1.8f, 2.4f, 1.8f), 0.92f, 3.2f);
+            var t = root.transform;
+            Box("Base", t, new Vector3(0f, 0.6f, 0f), new Vector3(1.8f, 1.2f, 1.8f), Mats["Wood"]);
+            var head = Empty("Head", t, new Vector3(0f, 1.6f, 0f));
+            Box("Rail", head, Vector3.zero, new Vector3(0.3f, 0.3f, 2.2f), Mats["Wood"]);
+            Box("Arms", head, new Vector3(0f, 0f, 0.6f), new Vector3(2.2f, 0.15f, 0.25f), Mats["Steel"]);
+            Box("Bolt", head, new Vector3(0f, 0.22f, 0.4f), new Vector3(0.1f, 0.1f, 1.3f), Mats["Steel"]);
+            var muzzle = Empty("Muzzle", head, new Vector3(0f, 0.22f, 1.2f));
+            Assign(tower, ("config", cfg), ("head", head), ("muzzle", muzzle), ("projectilePrefab", projectile.GetComponent<TowerProjectile>()));
+            return root;
+        }
+
+        private static GameObject BuildSanctuary(TowerConfig cfg)
+        {
+            var (root, tower) = TowerBase("Tower_Sanctuary", new Vector3(2.2f, 2.6f, 2.2f), 1.12f, 3.3f);
+            var t = root.transform;
+            Prim(PrimitiveType.Cylinder, "Platform", t, new Vector3(0f, 0.15f, 0f), new Vector3(2.4f, 0.15f, 2.4f), Mats["Stone"]);
+            for (int i = 0; i < 4; i++)
+            {
+                float a = i * Mathf.PI * 0.5f + Mathf.PI * 0.25f;
+                Prim(PrimitiveType.Cylinder, "Column", t, new Vector3(Mathf.Cos(a) * 0.85f, 1.2f, Mathf.Sin(a) * 0.85f), new Vector3(0.25f, 1.05f, 0.25f), Mats["Stone"]);
+            }
+            Box("Roof", t, new Vector3(0f, 2.35f, 0f), new Vector3(2.2f, 0.25f, 2.2f), Mats["StoneDark"]);
+            Prim(PrimitiveType.Sphere, "Orb", t, new Vector3(0f, 1.2f, 0f), Vector3.one * 0.6f, Material(MatDir, "TowerSanctuaryOrb", new Color(1f, 0.85f, 0.4f), 2.5f));
+            Assign(tower, ("config", cfg));
             return root;
         }
 
