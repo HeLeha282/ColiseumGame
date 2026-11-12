@@ -67,3 +67,6 @@ desktop.ini
 
 # Аддон MCP for Blender (скачивается каждым себе, см. DEVLOG)
 /Tools/BlenderMCP/
+
+# Автобэкапы Blender
+*.blend1

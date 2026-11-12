@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Unity.AI.Navigation;
 using UnityEditor;
 using UnityEditor.SceneManagement;
@@ -106,8 +106,8 @@ namespace ColiseumGame.EditorTools
             M("TowerCatapult", new Color(0.55f, 0.38f, 0.22f));
             M("TowerTop", new Color(0.4f, 0.4f, 0.42f));
             M("LevelMark", new Color(1f, 0.85f, 0.2f), 1.5f);
-            M("Slot", new Color(1f, 0.85f, 0.2f), 0.6f);
-            M("BarricadeSpot", new Color(1f, 0.5f, 0.1f), 0.6f);
+            M("Slot", new Color(0.78f, 0.62f, 0.32f), 0.12f, 0.5f);  // приглушённое золото под стиль Колизея
+            M("BarricadeSpot", new Color(0.72f, 0.38f, 0.16f), 0.15f);
             M("Orb", new Color(0.3f, 1f, 0.9f), 3f);
             M("ArrowPlayer", new Color(1f, 1f, 0.9f), 1f);
             M("ArrowTower", new Color(1f, 0.9f, 0.4f), 2f);

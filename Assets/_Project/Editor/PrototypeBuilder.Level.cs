@@ -67,6 +67,9 @@ namespace ColiseumGame.EditorTools
             var surface = root.AddComponent<NavMeshSurface>();
             surface.collectObjects = CollectObjects.Children;
             surface.useGeometry = NavMeshCollectGeometry.PhysicsColliders;
+
+            // Красивая модель поверх серых коллайдеров (если FBX уже есть в проекте)
+            ColiseumArtIntegration.AddArt(root);
             return root;
         }
 

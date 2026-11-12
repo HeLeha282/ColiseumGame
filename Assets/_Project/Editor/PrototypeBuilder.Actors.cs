@@ -187,7 +187,7 @@ namespace ColiseumGame.EditorTools
             fl.m_YAxis.Value = 0.5f;
             fl.Priority = 20;
             var collider = flGo.AddComponent<CinemachineCollider>();
-            collider.m_CollideAgainst = 1; // слой Default
+            collider.m_CollideAgainst = 1 | (1 << ColiseumArtIntegration.EnsureCameraBlockerLayer()); // Default + декор Колизея
             collider.m_IgnoreTag = "Player";
             collider.m_MinimumDistanceFromTarget = 0.5f;
             collider.m_Strategy = CinemachineCollider.ResolutionStrategy.PullCameraForward;
