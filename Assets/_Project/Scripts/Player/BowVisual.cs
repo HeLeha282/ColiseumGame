@@ -30,8 +30,8 @@ namespace ColiseumGame
         [Header("Движение")]
         [SerializeField] private Vector3 restLocalPosition = new Vector3(0.02f, -0.02f, 0.3f);
         [SerializeField] private Vector3 restLocalEuler = new Vector3(8f, -12f, -38f);
-        [SerializeField] private Vector3 aimLocalPosition = new Vector3(-0.36f, 0.23f, 0.2f);
-        [SerializeField] private Vector3 aimLocalEuler = new Vector3(0f, 0f, -12f);
+        [SerializeField] private Vector3 aimLocalPosition = new Vector3(-0.08f, 0.1f, 0.32f);
+        [SerializeField] private Vector3 aimLocalEuler = new Vector3(0f, -4f, -22f);
         [SerializeField] private float raiseSpeed = 12f;
 
         private Transform[] upper, lower;

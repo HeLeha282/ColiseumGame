@@ -143,8 +143,8 @@ MonoBehaviour:
   arrowLength: 0.62
   restLocalPosition: {x: 0.02, y: -0.02, z: 0.3}
   restLocalEuler: {x: 8, y: -12, z: -38}
-  aimLocalPosition: {x: -0.36, y: 0.23, z: 0.2}
-  aimLocalEuler: {x: 0, y: 0, z: -12}
+  aimLocalPosition: {x: -0.08, y: 0.1, z: 0.32}
+  aimLocalEuler: {x: 0, y: -4, z: -22}
   raiseSpeed: 12
 --- !u!1 &1023234862732047630
 GameObject:
