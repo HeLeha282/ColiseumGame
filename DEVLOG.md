@@ -16,6 +16,21 @@
 
 ---
 
+## 2026-11-13 — Катапульта вместо баллисты и модели башен (Леша; запись добавил Davidik31 + Claude по коммиту 76ef3b1)
+
+**Что видно по коммиту:** баллиста заменена катапультой (`Tower_Catapult` — префаб, конфиг и снаряд `Projectile_Rock`
+с полётом по дуге; GUID ассетов сохранены, ссылки в `GameBalance` не сломались). Модели башен лучника и катапульты
+уровней 1–3 (FBX + текстуры BaseColor/Normal + материалы) — в `Assets/_Project/Art/ArcherTowers` и `Art/Catapults`,
+исходники Blender и скрипты сборки — в `ArtSource/`. Интеграция — `Editor/CatapultIntegration.cs`, анимация — `CatapultVisual.cs`.
+Генератор прототипа (`PrototypeBuilder`) обновлён под катапульту.
+
+**Исправлено после слияния:** в `.mcp.json` попали маркеры конфликта `<<<<<<<` (JSON был битый, MCP-серверы
+Unity и Blender не запустились бы). Вернул оба сервера.
+
+**Леше:** допиши, пожалуйста, что выбирал и почему, и что осталось. Если `CatapultInstallOnce.cs` одноразовый, его можно удалить.
+
+---
+
 ## 2026-11-13 — MCP для Blender (Davidik31 + Claude)
 
 **Сделано:** в `.mcp.json` добавлен сервер `blender` — **MCP for Blender** (ahujasid/mcp-for-blender,
