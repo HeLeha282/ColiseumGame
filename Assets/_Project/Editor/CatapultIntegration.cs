@@ -95,6 +95,9 @@ namespace ColiseumGame.EditorTools
                 var asset = AssetDatabase.LoadAssetAtPath<GameObject>(path);
                 if (asset == null) throw new InvalidOperationException("Missing model: " + path);
                 var model = (GameObject)PrefabUtility.InstantiatePrefab(asset, head);
+                // Модель из Blender «бросает» в сторону −Z, а башня наводит Head.forward (+Z) на цель —
+                // разворачиваем модель, иначе катапульта стреляет спиной. Анимация крутит только дочерние узлы.
+                model.transform.localRotation = Quaternion.Euler(0f, 180f, 0f);
                 models[i] = model;
                 // Clip paths are relative to this imported root, so keep its hierarchy intact.
                 var animation = model.GetComponent<Animation>();
