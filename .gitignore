@@ -64,3 +64,6 @@ desktop.ini
 /[Aa]ssets/Plugins/Editor/JetBrains*
 /ProjectSettings/RiderScriptEditorPersistedState.asset
 *.log
+
+# Аддон MCP for Blender (скачивается каждым себе, см. DEVLOG)
+/Tools/BlenderMCP/

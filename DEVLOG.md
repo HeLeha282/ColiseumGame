@@ -16,6 +16,26 @@
 
 ---
 
+## 2026-11-13 — MCP для Blender (Davidik31 + Claude)
+
+**Сделано:** в `.mcp.json` добавлен сервер `blender` — **MCP for Blender** (ahujasid/mcp-for-blender,
+пакет `mcp-for-blender==2.2.6` через `uvx`, телеметрия выключена `DISABLE_TELEMETRY=true`).
+Он связывает Claude Code с открытым Blender (аддон внутри Blender слушает `localhost:9876`).
+
+**Почему эта версия:** 2.2.6 (28.10.2026) — последняя, которой больше двух недель; 2.2.7 и 2.2.8 совсем свежие.
+Обновляем только вместе и записываем сюда. Бывшее имя пакета — `blender-mcp`.
+
+**Что сделать каждому у себя (один раз):**
+1. Blender 3.0+ (у Davidik31 — Blender 5.3).
+2. Установить аддон той же версии. Файл берётся из пакета: `mcp_for_blender-2.2.6-py3-none-any.whl` на PyPI →
+   внутри `blender_mcp/bundled/addon.py` (у Davidik31 уже лежит в `Tools/BlenderMCP/`, папка в .gitignore).
+   Blender → Edit → Preferences → Add-ons → ⌄ → **Install from Disk…** → выбрать файл → включить **Interface: MCP for Blender**.
+3. В Blender: N в 3D-вьюпорте → вкладка **MCP for Blender** → **Start MCP Server** (если не запустился сам).
+4. Перезапустить Claude Code и разрешить сервер `blender`. Если Blender не открыт — сервер просто не подключится, это не ошибка.
+
+**Заметки:** у Unity MCP есть свой мост к этому же аддону (`blender_bridge`, импорт модели из Blender прямо в сцену).
+Сокет аддона без пароля — не открывать порт 9876 наружу.
+
 ## 2026-11-12 — Серый прототип, этап 8: плейтест, баланс, итог (Davidik31 + Claude)
 
 **Как играли.** Через MCP человеком не поиграть, поэтому сделан `PlaytestBot` (Scripts/Core, только в редакторе).
