@@ -70,16 +70,13 @@ namespace ColiseumGame
 
             if (input.Weapon1Pressed) SetWeapon(WeaponType.Sword);
             if (input.Weapon2Pressed) SetWeapon(WeaponType.Bow);
-            if (input.Weapon3Pressed)
-            {
-                if (GameManager.Instance != null && GameManager.Instance.Phase != GamePhase.Preparation)
-                    GameManager.Instance.ShowMessage("Строить можно только в фазе подготовки");
-                else SetWeapon(Weapon == WeaponType.Hammer ? WeaponType.Sword : WeaponType.Hammer);
-            }
+            // Молоток (стройка) доступен и в подготовке, и прямо в бою
+            bool canBuild = GameManager.Instance == null || GameManager.Instance.CanManage;
+            if (input.Weapon3Pressed && canBuild)
+                SetWeapon(Weapon == WeaponType.Hammer ? WeaponType.Sword : WeaponType.Hammer);
             if (Weapon == WeaponType.Hammer)
             {
-                if (input.AltFirePressed || input.CancelPressed ||
-                    (GameManager.Instance != null && GameManager.Instance.Phase != GamePhase.Preparation))
+                if (input.AltFirePressed || input.CancelPressed || !canBuild)
                     SetWeapon(WeaponType.Sword);
                 return;
             }

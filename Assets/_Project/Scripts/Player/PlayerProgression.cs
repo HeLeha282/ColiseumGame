@@ -159,7 +159,7 @@ namespace ColiseumGame
         {
             var gm = GameManager.Instance;
             int cost = UpgradeCost(w);
-            if (cost <= 0 || gm.Phase != GamePhase.Preparation || !gm.TrySpend(cost)) return false;
+            if (cost <= 0 || !gm.CanManage || !gm.TrySpend(cost)) return false;
             if (w == WeaponType.Sword) SwordLevel++; else BowLevel++;
             Changed?.Invoke();
             return true;
@@ -170,7 +170,7 @@ namespace ColiseumGame
         public bool SetEnchant(Element e)
         {
             var gm = GameManager.Instance;
-            if (e == Enchant || gm.Phase != GamePhase.Preparation || !gm.TrySpend(EnchantCost)) return false;
+            if (e == Enchant || !gm.CanManage || !gm.TrySpend(EnchantCost)) return false;
             Enchant = e;
             enchantBought = true;
             Changed?.Invoke();

@@ -117,7 +117,7 @@ namespace ColiseumGame
             {
                 GamePhase.Setup => "Выбор сложности",
                 GamePhase.Preparation => "Подготовка — 3: молоток, Tab: герой, G: начать волну",
-                GamePhase.Wave => $"Бой — врагов: {gm.Spawner.Alive + gm.Spawner.RemainingToSpawn}" + (gm.CanCallEarly ? "  ·  <color=#FFD36B>G — следующая волна досрочно (+бонус)</color>" : ""),
+                GamePhase.Wave => $"Бой — врагов: {gm.Spawner.Alive + gm.Spawner.RemainingToSpawn}" + (gm.CanCallEarly ? "  ·  <color=#FFD36B>G — следующая волна досрочно (+бонус)</color>" : "  ·  3: молоток, Tab: герой"),
                 GamePhase.Victory => "Победа",
                 _ => "Поражение"
             };

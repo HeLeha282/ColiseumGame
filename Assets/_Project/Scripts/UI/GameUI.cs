@@ -29,6 +29,7 @@ namespace ColiseumGame
         private readonly Queue<EnemyConfig> introQueue = new Queue<EnemyConfig>();
         private float introTimer;
         private bool heroDirty = true;
+        private float nextHeroRebuild;
 
         private void Start()
         {
@@ -196,7 +197,7 @@ namespace ColiseumGame
             heroDirty = false;
             foreach (Transform c in heroContent) Destroy(c.gameObject);
             if (prog == null) return;
-            bool prep = gm.Phase == GamePhase.Preparation;
+            bool prep = gm.CanManage;   // прокачка героя доступна и в бою
             var hero = prog.Hero;
 
             Height(Text("Header", heroContent, $"ГЕРОЙ — уровень {prog.Level}   <size=70%>Слава {prog.Glory}/{prog.GloryToNext} · Башен максимум: {prog.TowerLimit} · Эссенция: {gm.Essence}</size>",
@@ -229,7 +230,7 @@ namespace ColiseumGame
             }
             else Height(Text("NoChoice", heroContent, "Новых выборов нет — набирай Славу (убийства и пройденные волны).", 20f, TextAlignmentOptions.Center, new Color(0.8f, 0.8f, 0.8f)), 30f);
 
-            Height(Text("WeaponsTitle", heroContent, "ОРУЖИЕ" + (prep ? "" : " <size=70%>(улучшать можно в подготовке)</size>"), 24f, TextAlignmentOptions.Center, Gold), 34f);
+            Height(Text("WeaponsTitle", heroContent, "ОРУЖИЕ", 24f, TextAlignmentOptions.Center, Gold), 34f);
             WeaponRow(WeaponType.Sword, "Меч", prog.SwordLevel, prep);
             WeaponRow(WeaponType.Bow, "Лук", prog.BowLevel, prep);
 
@@ -274,7 +275,7 @@ namespace ColiseumGame
             continueButton.SetActive(gm.Phase == GamePhase.Victory);
             previewPanel.SetActive(gm.Phase == GamePhase.Preparation);
             if (gm.Phase == GamePhase.Preparation) RebuildPreview();
-            if (gm.Phase != GamePhase.Preparation && heroPanel.activeSelf) heroDirty = true;
+            if (heroPanel.activeSelf) heroDirty = true;
         }
 
         private void RebuildPreview()
@@ -313,7 +314,14 @@ namespace ColiseumGame
                 if (input.MenuPressed) ToggleHero(!heroPanel.activeSelf);
                 else if (heroPanel.activeSelf && input.CancelPressed) ToggleHero(false);
             }
-            if (heroPanel.activeSelf && heroDirty) RebuildHero();
+            // В бою эссенция меняется постоянно — перестраиваем меню не чаще раза в 0.3 с
+            // и не пока зажата кнопка мыши (иначе кнопка исчезнет посреди клика)
+            bool mouseHeld = UnityEngine.InputSystem.Mouse.current != null && UnityEngine.InputSystem.Mouse.current.leftButton.isPressed;
+            if (heroPanel.activeSelf && heroDirty && !mouseHeld && Time.unscaledTime >= nextHeroRebuild)
+            {
+                RebuildHero();
+                nextHeroRebuild = Time.unscaledTime + 0.3f;
+            }
 
             if (prog != null)
             {

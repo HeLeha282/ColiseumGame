@@ -16,12 +16,13 @@ namespace ColiseumGame
             (6f, 38.6f, 44.4f),
         };
 
-        public static bool Check(TowerConfig cfg, Vector3 point, Vector3 normal, Vector3 playerPos, out string reason)
+        /// <param name="checkReach">false — не проверять «далеко от игрока» (для бота).</param>
+        public static bool Check(TowerConfig cfg, Vector3 point, Vector3 normal, Vector3 playerPos, out string reason, bool checkReach = true)
         {
             var gm = GameManager.Instance;
             var b = gm.Balance;
             reason = "";
-            if (gm.Phase != GamePhase.Preparation) { reason = "Строить можно только в фазе подготовки"; return false; }
+            if (!gm.CanManage) { reason = "Сейчас строить нельзя"; return false; }
             int limit = PlayerProgression.Instance != null ? PlayerProgression.Instance.TowerLimit : b.hero.baseTowerLimit;
             if (Tower.All.Count >= limit) { reason = $"Достигнут лимит башен ({limit}). Увеличивается при повышении уровня героя"; return false; }
             if (!gm.CanAfford(cfg.levels[0].cost)) { reason = "Не хватает эссенции"; return false; }
@@ -36,7 +37,16 @@ namespace ColiseumGame
             if (point.y < 1f && r < b.portalClearance) { reason = "Слишком близко к порталу"; return false; }
 
             Vector3 pp = playerPos; pp.y = point.y;
-            if (Vector3.Distance(pp, point) > b.maxBuildDistance) { reason = "Слишком далеко — подойди ближе"; return false; }
+            float dist = Vector3.Distance(pp, point);
+            if (checkReach && dist > b.maxBuildDistance) { reason = "Слишком далеко — подойди ближе"; return false; }
+
+            // Во время боя место должно быть свободно: не ставим башню на себя и на врагов
+            float free = cfg.footprint * 0.5f + 0.8f;
+            if (dist < free) { reason = "Отойди — башня встанет прямо на тебя"; return false; }
+            foreach (var e in Enemy.All)
+                if (e != null && e.IsAlive && !e.IsFlying && Mathf.Abs(e.transform.position.y - point.y) < 2f &&
+                    Vector3.Distance(new Vector3(e.transform.position.x, point.y, e.transform.position.z), point) < free + e.Radius)
+                { reason = "Здесь враг"; return false; }
 
             foreach (var t in Tower.All)
             {

@@ -6,7 +6,7 @@ namespace ColiseumGame
     /// <summary>
     /// Башня: ставится игроком куда угодно (с лимитом), неуязвима. Прокачка: уровни 1–3 — цифры,
     /// 4 — выбор ветки, 5 — продолжение ветки, 6 — гибрид (перк соседней ветки с силой 50%) или особый финал.
-    /// Меню прокачки — F, только в фазе подготовки.
+    /// Меню прокачки — F, в любой момент игры (и в подготовке, и в бою).
     /// </summary>
     public class Tower : MonoBehaviour, IInteractable
     {
@@ -50,7 +50,8 @@ namespace ColiseumGame
         private LineRenderer gridLine;
 
         private static GameManager GM => GameManager.Instance;
-        private static bool IsPrep => GM != null && GM.Phase == GamePhase.Preparation;
+        /// <summary>Строить, прокачивать и продавать можно и в подготовке, и прямо в бою.</summary>
+        private static bool CanManage => GM != null && GM.CanManage;
 
         private void OnEnable() => All.Add(this);
         private void OnDisable() => All.Remove(this);
@@ -132,7 +133,6 @@ namespace ColiseumGame
         {
             get
             {
-                string phase = IsPrep ? "" : "\nПрокачивать можно только в фазе подготовки.";
                 string kind = config.kind switch
                 {
                     TowerKind.Support => $"аура {range:0} м, +{auraBonus * 100f * SupportMultiplier():0}% урона башням",
@@ -142,14 +142,14 @@ namespace ColiseumGame
                 };
                 string perks = "";
                 foreach (var p in new[] { perk4, perk5, hybrid }) if (p != null) perks += (perks == "" ? "\n" : " · ") + p.name;
-                return kind + (element != Element.None ? $" · {Elements.Name(element)}" : "") + perks + phase;
+                return kind + (element != Element.None ? $" · {Elements.Name(element)}" : "") + perks;
             }
         }
 
         public void FillMenu(List<MenuOption> options)
         {
             if (GM == null) return;
-            bool prep = IsPrep;
+            bool prep = CanManage;
             if (level < config.levels.Length - 1)
             {
                 int cost = config.levels[level + 1].cost;
@@ -192,7 +192,7 @@ namespace ColiseumGame
 
         private void Buy(int cost, System.Action change)
         {
-            if (!IsPrep || !GM.TrySpend(cost)) return;
+            if (!CanManage || !GM.TrySpend(cost)) return;
             change();
             TotalInvested += cost;
             Recompute();
@@ -201,7 +201,7 @@ namespace ColiseumGame
 
         private void Sell()
         {
-            if (!IsPrep) return;
+            if (!CanManage) return;
             GM.AddEssence(Mathf.RoundToInt(TotalInvested * GM.Balance.sellRefund));
             Destroy(gameObject);
         }

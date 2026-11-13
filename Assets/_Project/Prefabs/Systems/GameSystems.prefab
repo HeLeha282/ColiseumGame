@@ -72,5 +72,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   balance: {fileID: 11400000, guid: 7f256d73cd5589d4e82b4847921f0b12, type: 2}
-  orbPrefab: {fileID: 7946504308621448544, guid: cd719400f76e7414490c439b9d5e9dca, type: 3}
   barricadePrefab: {fileID: 7499113056236283171, guid: edc377c574b5ff34fa22af33af870d57, type: 3}

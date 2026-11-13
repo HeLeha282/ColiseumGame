@@ -11,7 +11,7 @@ namespace ColiseumGame.EditorTools
     {
         public class PrefabSet
         {
-            public GameObject Coliseum, Portal, Routes, BarricadeSpot, Barricade, Orb;
+            public GameObject Coliseum, Portal, Routes, BarricadeSpot, Barricade;
             public GameObject Player, CameraRig, Arrow;
             public GameObject ProjArrow, ProjRock, ProjBolt, Explosion;
             public GameObject GameSystems, HUD;
@@ -32,7 +32,6 @@ namespace ColiseumGame.EditorTools
             p.Routes = SavePrefab(BuildRoutes(), env + "Routes.prefab");
             p.BarricadeSpot = SavePrefab(BuildBarricadeSpot(), env + "BarricadeSpot.prefab");
             p.Barricade = SavePrefab(BuildBarricade(), env + "Barricade.prefab");
-            p.Orb = SavePrefab(BuildOrb(), env + "EssenceOrb.prefab");
 
             p.Arrow = SavePrefab(BuildPlayerArrow(), pl + "Arrow.prefab");
             p.Player = SavePrefab(BuildPlayer(c.Player, c.Hero, p.Arrow), pl + "Player.prefab");
@@ -56,7 +55,7 @@ namespace ColiseumGame.EditorTools
             p.Towers["Scorpion"] = SavePrefab(BuildScorpion(c.Towers["Scorpion"], p.ProjBolt), tw + "Tower_Scorpion.prefab");
             p.Towers["Sanctuary"] = SavePrefab(BuildSanctuary(c.Towers["Sanctuary"]), tw + "Tower_Sanctuary.prefab");
 
-            p.GameSystems = SavePrefab(BuildGameSystems(c.Balance, p.Orb, p.Barricade), PrefabDir + "/Systems/GameSystems.prefab");
+            p.GameSystems = SavePrefab(BuildGameSystems(c.Balance, p.Barricade), PrefabDir + "/Systems/GameSystems.prefab");
             p.HUD = SavePrefab(BuildHUD(), PrefabDir + "/UI/HUD.prefab");
 
             LinkPrefabs(c, p);
@@ -460,14 +459,14 @@ namespace ColiseumGame.EditorTools
 
         // ---------- Системы ----------
 
-        private static GameObject BuildGameSystems(GameBalance balance, GameObject orb, GameObject barricade)
+        private static GameObject BuildGameSystems(GameBalance balance, GameObject barricade)
         {
             var root = new GameObject("GameSystems");
             var input = root.AddComponent<InputReader>();
             Assign(input, ("actions", InputAsset));
             root.AddComponent<WaveSpawner>();
             var gm = root.AddComponent<GameManager>();
-            Assign(gm, ("balance", balance), ("orbPrefab", orb.GetComponent<EssenceOrb>()), ("barricadePrefab", barricade.GetComponent<Barricade>()));
+            Assign(gm, ("balance", balance), ("barricadePrefab", barricade.GetComponent<Barricade>()));
             return root;
         }
     }

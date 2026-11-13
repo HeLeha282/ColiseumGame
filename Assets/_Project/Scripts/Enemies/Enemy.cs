@@ -396,10 +396,8 @@ namespace ColiseumGame
             if (gm != null)
             {
                 gm.RegisterKill(this);
-                Vector3 dropPos = transform.position + Vector3.up * 0.8f;
-                if (config.isFlying && Physics.Raycast(transform.position, Vector3.down, out var hit, 100f, ~LayerMask.GetMask("CameraBlocker"), QueryTriggerInteraction.Ignore))
-                    dropPos = hit.point + Vector3.up * 0.8f;
-                gm.SpawnOrb(dropPos, Mathf.RoundToInt(config.essenceReward * (IsBoss ? 1f : Mathf.Sqrt(HpMultiplier))));
+                // Эссенция начисляется сразу — подбирать ничего не нужно
+                gm.GrantKillReward(AimPoint, Mathf.RoundToInt(config.essenceReward * (IsBoss ? 1f : Mathf.Sqrt(HpMultiplier))));
             }
             PlayerProgression.Instance?.AddGlory(config.gloryReward * (Elite != EliteModifier.None ? 2 : 1));
 

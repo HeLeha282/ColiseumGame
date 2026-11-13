@@ -25,7 +25,6 @@ namespace ColiseumGame
         public static GameManager Instance { get; private set; }
 
         [SerializeField] private GameBalance balance;
-        [SerializeField] private EssenceOrb orbPrefab;
         [SerializeField] private Barricade barricadePrefab;
 
         public GameBalance Balance => balance;
@@ -45,6 +44,8 @@ namespace ColiseumGame
         public WaveSpawner Spawner { get; private set; }
         /// <summary>Номер волны для интерфейса: в подготовке — следующая, в бою — текущая.</summary>
         public int DisplayWave => Phase == GamePhase.Preparation || Phase == GamePhase.Setup ? WaveIndex + 1 : Mathf.Max(1, WaveIndex);
+        /// <summary>Можно строить/прокачивать башни и героя: и в подготовке, и прямо во время волны.</summary>
+        public bool CanManage => Phase == GamePhase.Preparation || Phase == GamePhase.Wave;
         public bool CanCallEarly => Phase == GamePhase.Wave && Spawner.AllSpawned && HasWave(WaveIndex) && pending.Count < 2;
 
         public event Action PhaseChanged;
@@ -111,12 +112,13 @@ namespace ColiseumGame
             EssenceChanged?.Invoke();
         }
 
-        public void SpawnOrb(Vector3 position, int value)
+        /// <summary>Награда за убийство: эссенция сразу на счёт (без шариков), над врагом всплывает «+N».</summary>
+        public void GrantKillReward(Vector3 position, int value)
         {
             int v = Mathf.RoundToInt(value * IncomeMultiplier) + Tower.EssenceBonusAt(position);
-            if (orbPrefab == null || v <= 0) return;
-            var orb = Instantiate(orbPrefab, position, Quaternion.identity);
-            orb.Init(v, balance);
+            if (v <= 0) return;
+            AddEssence(v);
+            Vfx.Text(position + Vector3.up * 0.6f, "+" + v, new Color(0.4f, 1f, 0.95f), 0.7f);
         }
 
         public void RegisterKill(Enemy e) => Kills++;

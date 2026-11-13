@@ -22,10 +22,6 @@ namespace ColiseumGame
     {
         [Header("Эссенция")]
         public int startEssence = 150;
-        public float orbLifetime = 10f;
-        public float orbPickupRadius = 1.5f;
-        public float orbMagnetRadius = 4f;
-        public float orbMagnetSpeed = 14f;
 
         [Header("Метка игрока")]
         public float markDuration = 4f;

@@ -40,6 +40,7 @@ namespace ColiseumGame
         private bool mouseDown;
         private float prepTimer;
         private float abilityTimer;
+        private float waveBuildTimer;
         private int typeCursor;
         private int lastWaveLogged = -1;
         private float waveStartTime;
@@ -83,7 +84,16 @@ namespace ColiseumGame
             if (prog != null && prog.PendingChoices > 0 && prog.Offer.Count > 0) ChoosePerk(prog);
 
             if (gm.Phase == GamePhase.Preparation) Prepare(gm);
-            else if (gm.Phase == GamePhase.Wave) TrackWave(gm);
+            else if (gm.Phase == GamePhase.Wave)
+            {
+                TrackWave(gm);
+                // Стройка и прокачка теперь доступны и в бою — бот тратит эссенцию раз в пару секунд
+                if (autoBuild && (waveBuildTimer -= Time.deltaTime) <= 0f)
+                {
+                    waveBuildTimer = 2f;
+                    Build(gm);
+                }
+            }
             else LogWave(gm);
 
             if (!passive && player.IsAlive && gm.Phase == GamePhase.Wave && !UIState.GameplayBlocked)
@@ -112,13 +122,13 @@ namespace ColiseumGame
             var types = gm.Balance.towerTypes;
             var prog = PlayerProgression.Instance;
             int limit = prog != null ? prog.TowerLimit : 4;
-            spots ??= FindSpots(types[0]);
-
             // Новая башня, если есть место в лимите.
             if (Tower.All.Count < limit)
             {
                 var cfg = types[typeCursor % types.Length];
                 if (!gm.CanAfford(cfg.levels[0].cost)) return;   // копим на башню
+                // Места ищем, только когда на башню хватает (иначе правила отбросят все точки), и пересчитываем пустой список
+                if (spots == null || spots.Count == 0) spots = FindSpots(cfg);
                 bool placed = false;
                 foreach (var p in spots)
                     if (TowerPlacer.Instance.TryPlaceAt(cfg, p)) { typeCursor++; placed = true; break; }
@@ -165,7 +175,7 @@ namespace ColiseumGame
                 {
                     float y = r < 30f ? 0f : r < 38f ? 3f : 6f;
                     var p = new Vector3(r * Mathf.Cos(a * Mathf.Deg2Rad), y + 0.01f, r * Mathf.Sin(a * Mathf.Deg2Rad));
-                    if (!PlacementRules.Check(cfg, p, Vector3.up, p, out _)) continue;
+                    if (!PlacementRules.Check(cfg, p, Vector3.up, p + new Vector3(1000f, 0f, 0f), out _, false)) continue;
                     int score = 0;
                     foreach (var route in routes)
                         for (int i = 0; i < route.Count; i++)
@@ -233,8 +243,7 @@ namespace ColiseumGame
             Enemy target = PickTarget(portal);
             if (target == null)
             {
-                var orb = NearestOrb();
-                Vector3 goal = orb != null ? orb.transform.position : portal + new Vector3(0f, 0f, -6f);
+                Vector3 goal = portal + new Vector3(0f, 0f, -6f);
                 if (Flat(goal - transform.position).magnitude > 1.5f) MoveTo(goal, keys);
                 return;
             }
@@ -301,21 +310,6 @@ namespace ColiseumGame
             return best;
         }
 
-        private EssenceOrb NearestOrb()
-        {
-            EssenceOrb best = null;
-            float bestDist = 25f;
-            foreach (var orb in FindObjectsOfType<EssenceOrb>())
-            {
-                float d = Vector3.Distance(orb.transform.position, transform.position);
-                if (d < bestDist && Mathf.Abs(orb.transform.position.y - transform.position.y) < 2f)
-                {
-                    bestDist = d;
-                    best = orb;
-                }
-            }
-            return best;
-        }
 
         private void MoveTo(Vector3 goal, List<Key> k)
         {

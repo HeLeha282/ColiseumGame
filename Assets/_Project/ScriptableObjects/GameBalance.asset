@@ -13,10 +13,6 @@ MonoBehaviour:
   m_Name: GameBalance
   m_EditorClassIdentifier: 
   startEssence: 150
-  orbLifetime: 10
-  orbPickupRadius: 1.5
-  orbMagnetRadius: 4
-  orbMagnetSpeed: 14
   markDuration: 4
   markTowerDamageMultiplier: 1.5
   elementAuraDuration: 5

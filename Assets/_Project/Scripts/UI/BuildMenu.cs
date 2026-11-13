@@ -38,9 +38,30 @@ namespace ColiseumGame
         {
             if (GameManager.Instance != null)
             {
-                GameManager.Instance.EssenceChanged += Refresh;
-                GameManager.Instance.PhaseChanged += Close;
+                // В бою эссенция меняется постоянно — помечаем «нужно обновить», а обновляем в Update
+                GameManager.Instance.EssenceChanged += () => dirty = true;
+                GameManager.Instance.PhaseChanged += OnPhaseChanged;
             }
+        }
+
+        private bool dirty;
+        private float nextRefresh;
+
+        // Башни можно качать и в подготовке, и в бою — меню закрываем только в конце игры
+        private void OnPhaseChanged()
+        {
+            var gm = GameManager.Instance;
+            if (gm != null && !gm.CanManage) Close();
+            else dirty = true;
+        }
+
+        private void Update()
+        {
+            if (!dirty || !IsOpen) return;
+            // Не перестраиваем кнопки посреди клика и не чаще раза в 0.3 с
+            var mouse = UnityEngine.InputSystem.Mouse.current;
+            if ((mouse != null && mouse.leftButton.isPressed) || Time.unscaledTime < nextRefresh) return;
+            Refresh();
         }
 
         public void Open(IInteractable interactable)
@@ -60,7 +81,11 @@ namespace ColiseumGame
 
         private void Refresh()
         {
+            dirty = false;
+            nextRefresh = Time.unscaledTime + 0.3f;
             if (!IsOpen || target == null) return;
+            // Башню продали (объект уничтожен) — закрываем меню
+            if (target is Object unityObject && unityObject == null) { Close(); return; }
             titleText.text = target.Title;
             descriptionText.text = target.Description;
 

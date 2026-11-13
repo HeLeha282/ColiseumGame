@@ -272,14 +272,5 @@ namespace ColiseumGame.EditorTools
             Assign(portal, ("balance", balance), ("hitCollider", col), ("glowRenderer", glow.GetComponent<Renderer>()));
             return root;
         }
-
-        private static GameObject BuildOrb()
-        {
-            var root = new GameObject("EssenceOrb");
-            var orb = root.AddComponent<EssenceOrb>();
-            var vis = Prim(PrimitiveType.Sphere, "Visual", root.transform, Vector3.zero, Vector3.one * 0.45f, Mats["Orb"]);
-            Assign(orb, ("visual", vis.GetComponent<Renderer>()));
-            return root;
-        }
     }
 }

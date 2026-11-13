@@ -105,7 +105,7 @@ namespace ColiseumGame
         /// <summary>Поставить башню (используется и ботом для автотестов). Проверки — PlacementRules.</summary>
         public bool TryPlaceAt(TowerConfig cfg, Vector3 at)
         {
-            if (!PlacementRules.Check(cfg, at, Vector3.up, at, out string reason))
+            if (!PlacementRules.Check(cfg, at, Vector3.up, transform.position, out string reason, false))
             {
                 Reason = reason;
                 return false;
