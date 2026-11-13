@@ -149,12 +149,19 @@ namespace ColiseumGame
 
         private GameObject MakeGhost(TowerConfig cfg)
         {
-            var ghost = Instantiate(cfg.prefab.gameObject);
+            // Создаём под выключенным родителем, чтобы скрипты башни не успели проснуться (Awake/OnEnable),
+            // и вычищаем всё, кроме мешей.
+            var holder = new GameObject("GhostHolder");
+            holder.SetActive(false);
+            var ghost = Instantiate(cfg.prefab.gameObject, holder.transform);
             ghost.name = "Ghost_" + cfg.displayName;
-            foreach (var mb in ghost.GetComponentsInChildren<MonoBehaviour>(true)) Destroy(mb);
-            foreach (var c in ghost.GetComponentsInChildren<Collider>(true)) Destroy(c);
-            foreach (var o in ghost.GetComponentsInChildren<UnityEngine.AI.NavMeshObstacle>(true)) Destroy(o);
-            foreach (var a in ghost.GetComponentsInChildren<Animation>(true)) Destroy(a);
+            foreach (var mb in ghost.GetComponentsInChildren<MonoBehaviour>(true)) DestroyImmediate(mb);
+            foreach (var c in ghost.GetComponentsInChildren<Collider>(true)) DestroyImmediate(c);
+            foreach (var o in ghost.GetComponentsInChildren<UnityEngine.AI.NavMeshObstacle>(true)) DestroyImmediate(o);
+            foreach (var a in ghost.GetComponentsInChildren<Animation>(true)) DestroyImmediate(a);
+            foreach (var lr in ghost.GetComponentsInChildren<LineRenderer>(true)) DestroyImmediate(lr);
+            ghost.transform.SetParent(null, false);
+            Destroy(holder);
             foreach (var r in ghost.GetComponentsInChildren<Renderer>(true))
                 r.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
             return ghost;

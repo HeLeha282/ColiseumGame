@@ -147,8 +147,8 @@ namespace ColiseumGame.EditorTools
             {
                 e.displayName = "Гарпия";
                 e.description = "Летает над маршрутом и пикирует прямо на портал.";
-                e.counterHint = "лучник, Скорпион, лук героя; мечом — только в прыжке или если сбить на землю.";
-                e.isFlying = true; e.maxHP = 40f; e.moveSpeed = 7f; e.attackDamage = 5f; e.attackInterval = 1.2f;
+                e.counterHint = "лучник рядом с порталом, Скорпион, лук героя; мечом — только если сбить на землю.";
+                e.isFlying = true; e.maxHP = 40f; e.moveSpeed = 7f; e.attackDamage = 3f; e.attackInterval = 1.5f;
                 e.bodyRadius = 0.7f; e.aimHeight = 0f; e.hoverHeight = 0.5f; e.hoverRadius = 3f; e.diveDistance = 18f;
                 e.playerAggroRange = 0f; e.essenceReward = 6; e.gloryReward = 4;
             });
@@ -157,7 +157,7 @@ namespace ColiseumGame.EditorTools
                 e.displayName = "Стимфалийская птица";
                 e.description = "Стая мелких медных птиц, быстро пикирует.";
                 e.counterHint = "Скорпион (Залп, Шрапнель), Шквал лучника, Цепная молния.";
-                e.isFlying = true; e.maxHP = 18f; e.moveSpeed = 9f; e.attackDamage = 3f; e.attackInterval = 1f;
+                e.isFlying = true; e.maxHP = 18f; e.moveSpeed = 9f; e.attackDamage = 2f; e.attackInterval = 1.4f;
                 e.bodyRadius = 0.45f; e.aimHeight = 0f; e.hoverHeight = 0.8f; e.hoverRadius = 4f; e.diveDistance = 14f;
                 e.playerAggroRange = 0f; e.essenceReward = 2; e.gloryReward = 1;
             });
@@ -185,7 +185,7 @@ namespace ColiseumGame.EditorTools
                 e.description = "Бык-исполин в тяжёлой броне.";
                 e.counterHint = "броню снимает только герой — бей его сам, потом башни добьют.";
                 e.bossHint = "Броню Минотавра снимает только герой.";
-                e.maxHP = 1200f; e.armor = 450f; e.moveSpeed = 2.2f; e.attackDamage = 30f; e.attackInterval = 2f; e.attackRange = 1.4f;
+                e.maxHP = 1200f; e.armor = 450f; e.moveSpeed = 2.2f; e.attackDamage = 20f; e.attackInterval = 2f; e.attackRange = 1.4f;
                 e.playerAggroRange = 4f; e.playerLeashRange = 10f; e.knockbackPlayer = 8f; e.essenceReward = 100; e.gloryReward = 60;
             });
             DefineEnemy(c, "Cerberus", new EnemyLook { color = new Color(0.18f, 0.12f, 0.12f), scale = 1.9f, boxy = true }, e =>
@@ -193,7 +193,7 @@ namespace ColiseumGame.EditorTools
                 e.displayName = "Цербер"; e.bossKind = BossKind.Cerberus;
                 e.description = "Трёхглавый пёс. У каждой головы своя стихия.";
                 e.counterHint = "огненную голову — льдом, ледяную — огнём, грозовую — мечом/стрелами без зачарования.";
-                e.maxHP = 2600f; e.moveSpeed = 2.6f; e.attackDamage = 35f; e.attackInterval = 1.8f; e.attackRange = 1.6f;
+                e.maxHP = 2000f; e.moveSpeed = 2.6f; e.attackDamage = 22f; e.attackInterval = 1.8f; e.attackRange = 1.6f;
                 e.playerAggroRange = 4f; e.playerLeashRange = 10f; e.essenceReward = 150; e.gloryReward = 80;
             });
             DefineEnemy(c, "Hydra", new EnemyLook { color = new Color(0.2f, 0.45f, 0.25f), scale = 2.1f }, e =>
@@ -201,7 +201,7 @@ namespace ColiseumGame.EditorTools
                 e.displayName = "Гидра"; e.bossKind = BossKind.Hydra;
                 e.description = "Многоглавый змей. Срубленные головы отрастают двумя.";
                 e.counterHint = "руби головы, затем прижигай обрубки огнём или подбеги и нажми E.";
-                e.maxHP = 3000f; e.moveSpeed = 2f; e.attackDamage = 40f; e.attackInterval = 2f; e.attackRange = 1.8f;
+                e.maxHP = 3000f; e.moveSpeed = 2f; e.attackDamage = 24f; e.attackInterval = 2f; e.attackRange = 1.8f;
                 e.playerAggroRange = 4f; e.playerLeashRange = 10f; e.essenceReward = 180; e.gloryReward = 90;
             });
             DefineEnemy(c, "Medusa", new EnemyLook { color = new Color(0.3f, 0.6f, 0.5f), scale = 1.7f, robe = true }, e =>
@@ -209,7 +209,7 @@ namespace ColiseumGame.EditorTools
                 e.displayName = "Медуза"; e.bossKind = BossKind.Medusa;
                 e.description = "Её взгляд превращает башни в камень.";
                 e.counterHint = "расколдовывай башни (E рядом), сбей до 25% и отруби ей голову (E).";
-                e.maxHP = 3400f; e.moveSpeed = 2.4f; e.attackDamage = 30f; e.attackInterval = 1.6f; e.attackRange = 1.4f;
+                e.maxHP = 3400f; e.moveSpeed = 2.4f; e.attackDamage = 20f; e.attackInterval = 1.6f; e.attackRange = 1.4f;
                 e.playerAggroRange = 4f; e.playerLeashRange = 10f; e.essenceReward = 200; e.gloryReward = 100;
             });
             DefineEnemy(c, "HarpyQueen", new EnemyLook { color = new Color(0.45f, 0.15f, 0.6f), scale = 2.2f, wings = true }, e =>
@@ -217,7 +217,7 @@ namespace ColiseumGame.EditorTools
                 e.displayName = "Королева гарпий"; e.bossKind = BossKind.HarpyQueen;
                 e.description = "Летающий босс: кружит высоко и призывает гарпий.";
                 e.counterHint = "сбей на землю (гарпун Скорпиона, сеть Снайпера, Громоотвод, Цепная молния) и нажми E рядом — оторви крылья.";
-                e.isFlying = true; e.maxHP = 3000f; e.moveSpeed = 5f; e.attackDamage = 30f; e.attackInterval = 1.5f;
+                e.isFlying = true; e.maxHP = 3000f; e.moveSpeed = 5f; e.attackDamage = 18f; e.attackInterval = 1.5f;
                 e.bodyRadius = 1.2f; e.aimHeight = 0f; e.cruiseHeight = 4f; e.hoverHeight = 4f; e.hoverRadius = 7f; e.diveDistance = 20f;
                 e.playerAggroRange = 0f; e.essenceReward = 220; e.gloryReward = 110;
             });
@@ -226,7 +226,7 @@ namespace ColiseumGame.EditorTools
                 e.displayName = "Титан"; e.bossKind = BossKind.Titan;
                 e.description = "Финальный босс. Три фазы: броня, смена стихий, добивание.";
                 e.counterHint = "1) снимай броню сам; 2) бей противоположной стихией; 3) E — добить.";
-                e.maxHP = 7000f; e.armor = 1500f; e.moveSpeed = 1.8f; e.attackDamage = 60f; e.attackInterval = 2.5f; e.attackRange = 2f;
+                e.maxHP = 7000f; e.armor = 1500f; e.moveSpeed = 1.8f; e.attackDamage = 40f; e.attackInterval = 2.5f; e.attackRange = 2f;
                 e.playerAggroRange = 5f; e.playerLeashRange = 12f; e.knockbackPlayer = 12f; e.essenceReward = 400; e.gloryReward = 200;
             });
         }

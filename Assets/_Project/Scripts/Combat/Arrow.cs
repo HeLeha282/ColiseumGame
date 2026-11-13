@@ -49,7 +49,8 @@ namespace ColiseumGame
             {
                 var h = Hits[i];
                 if (ignoreRoot != null && h.transform.IsChildOf(ignoreRoot)) continue;
-                if (h.collider.GetComponentInParent<Tower>() != null) continue;
+                // Башни и магический портал стрелы пролетают насквозь — иначе гарпий над порталом не сбить.
+                if (h.collider.GetComponentInParent<Tower>() != null || h.collider.GetComponentInParent<Portal>() != null) continue;
                 var enemy = h.collider.GetComponentInParent<Enemy>();
                 if (enemy != null)
                 {

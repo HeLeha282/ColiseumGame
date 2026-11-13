@@ -8,16 +8,16 @@ namespace ColiseumGame
     /// </summary>
     public static class Vfx
     {
-        private static readonly Dictionary<Color, Material> Cache = new Dictionary<Color, Material>();
+        private static readonly Dictionary<(Color, float), Material> Cache = new Dictionary<(Color, float), Material>();
         private static Shader unlit;
 
         public static Material Mat(Color c, float glow = 2f)
         {
-            if (Cache.TryGetValue(c, out var m) && m != null) return m;
+            if (Cache.TryGetValue((c, glow), out var m) && m != null) return m;
             if (unlit == null) unlit = Shader.Find("Universal Render Pipeline/Unlit");
             m = new Material(unlit);
             m.SetColor("_BaseColor", c * glow);
-            Cache[c] = m;
+            Cache[(c, glow)] = m;
             return m;
         }
 

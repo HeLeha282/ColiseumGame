@@ -19,7 +19,8 @@ namespace ColiseumGame
         }
 
         [SerializeField] private float headHpShare = 0.25f;
-        [SerializeField] private float bodyDamageWhileHeads = 0.08f;
+        [Tooltip("Доля урона, которая проходит в тело, пока живы головы (чтобы бой не был безвыходным)")]
+        [SerializeField] private float bodyDamageWhileHeads = 0.2f;
 
         private readonly List<Head> heads = new List<Head>();
 
@@ -53,7 +54,8 @@ namespace ColiseumGame
                             Element.Ice => $"ледяную — ОГНЁМ ({h.hp / h.max * 100f:0}%)",
                             _ => $"грозовую — МЕЧОМ/СТРЕЛАМИ без стихии ({h.hp / h.max * 100f:0}%)"
                         });
-                return "Пока живы головы, тело неуязвимо. Бей " + string.Join(", ", parts) + ".";
+                return "Пока живы головы, тело почти неуязвимо. Бей " + string.Join(", ", parts) +
+                       ". Лёд/огонь: зачарование оружия (Tab), Ледяная нова, снаряды катапульты, Жаровня.";
             }
         }
 

@@ -405,6 +405,7 @@ namespace ColiseumGame
             if (stun) e.Stun(1f);
             if (Has(TowerSpecial.Shackles))
             {
+                if (hitCounts.Count > 200) hitCounts.Clear();   // не копить мёртвых врагов
                 hitCounts.TryGetValue(e, out int n);
                 n++;
                 if (n >= 3) { e.Freeze(1.5f * Power(TowerSpecial.Shackles)); n = 0; }

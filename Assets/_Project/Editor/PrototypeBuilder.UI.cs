@@ -9,9 +9,9 @@ namespace ColiseumGame.EditorTools
 {
     public static partial class PrototypeBuilder
     {
-        private const string HintsLine =
-            "WASD — движение · Shift — бег · Пробел — прыжок · Мышь — камера · V — 1-е/3-е лицо · 1/2 — меч/лук · " +
-            "ЛКМ — атака (лук: держать) · F — меню слота · E — ремонт (держать) · G — Готов · Alt — курсор";
+        public const string HintsLine =
+            "WASD · Shift — бег · Пробел — прыжок · V — 1-е/3-е лицо · 1/2/3 — меч/лук/молоток (стройка) · ЛКМ — атака · " +
+            "Q/R — навыки · X — ультимейт · F — меню башни · E — действие · Tab — герой · G — Готов · Alt — курсор";
 
         private static GameObject BuildHUD()
         {

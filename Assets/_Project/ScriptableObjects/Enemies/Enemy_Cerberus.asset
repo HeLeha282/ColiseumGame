@@ -22,7 +22,7 @@ MonoBehaviour:
     \u2014 \u043C\u0435\u0447\u043E\u043C/\u0441\u0442\u0440\u0435\u043B\u0430\u043C\u0438
     \u0431\u0435\u0437 \u0437\u0430\u0447\u0430\u0440\u043E\u0432\u0430\u043D\u0438\u044F."
   prefab: {fileID: 6224404016124990423, guid: b0e06fb86a7f8c2419e0a9644edb8ed0, type: 3}
-  maxHP: 2600
+  maxHP: 2000
   armor: 0
   armorTowerDamageMultiplier: 0.15
   hasShield: 0
@@ -33,7 +33,7 @@ MonoBehaviour:
   bodyRadius: 0.5
   aimHeight: 1
   jumpsBarricades: 0
-  attackDamage: 35
+  attackDamage: 22
   attackInterval: 1.8
   attackRange: 1.6
   projectileSpeed: 18

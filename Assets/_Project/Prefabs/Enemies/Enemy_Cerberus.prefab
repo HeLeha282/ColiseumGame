@@ -733,4 +733,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   headHpShare: 0.25
-  bodyDamageWhileHeads: 0.08
+  bodyDamageWhileHeads: 0.2

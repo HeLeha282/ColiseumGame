@@ -27,6 +27,8 @@ namespace ColiseumGame
                 var hit = Hits[i];
                 if (hit.distance < minDistance) continue;
                 if (ignoreRoot != null && hit.transform.IsChildOf(ignoreRoot)) continue;
+                // Прицел «видит» сквозь портал и башни (стрелы через них тоже пролетают).
+                if (hit.collider.GetComponentInParent<Portal>() != null || hit.collider.GetComponentInParent<Tower>() != null) continue;
                 if (hit.distance < best)
                 {
                     best = hit.distance;

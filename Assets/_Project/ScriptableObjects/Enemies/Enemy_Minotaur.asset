@@ -31,7 +31,7 @@ MonoBehaviour:
   bodyRadius: 0.5
   aimHeight: 1
   jumpsBarricades: 0
-  attackDamage: 30
+  attackDamage: 20
   attackInterval: 2
   attackRange: 1.4
   projectileSpeed: 18

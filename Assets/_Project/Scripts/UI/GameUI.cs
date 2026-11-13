@@ -318,7 +318,7 @@ namespace ColiseumGame
             if (prog != null)
             {
                 towersText.text = $"Башни: {Tower.All.Count}/{prog.TowerLimit}";
-                levelText.text = $"Герой ур.{prog.Level} · Слава {prog.Glory}/{prog.GloryToNext}" + (prog.PendingChoices > 0 ? "  <color=#FFD36B>★ выбор усиления — Tab</color>" : "");
+                levelText.text = $"Герой ур.{prog.Level} · Слава {prog.Glory}/{prog.GloryToNext}" + (prog.PendingChoices > 0 ? "  <color=#FFD36B>» выбор усиления — Tab</color>" : "");
                 xpFill.localScale = new Vector3(Mathf.Clamp01(prog.Glory / (float)prog.GloryToNext), 1f, 1f);
                 focusFill.localScale = new Vector3(prog.FocusFraction, 1f, 1f);
                 focusFill.GetComponent<Image>().color = prog.UltimateReady ? Color.Lerp(Elements.Color(Element.Void), Color.white, Mathf.PingPong(Time.time * 2f, 0.5f)) : Elements.Color(Element.Void);
@@ -382,7 +382,7 @@ namespace ColiseumGame
         {
             BossBase boss = null;
             foreach (var b in BossBase.All) if (b != null && b.Enemy.IsAlive) { boss = b; break; }
-            bool on = boss != null && !UIState.ResultOpen;
+            bool on = boss != null && !UIState.ResultOpen && !Cutscene.Playing;
             if (bossPanel.activeSelf != on) bossPanel.SetActive(on);
             if (!on) return;
             bossName.text = boss.Name + (boss.Enemy.Armor > 0f ? $"  <size=70%>броня {boss.Enemy.Armor:0}</size>" : "");
