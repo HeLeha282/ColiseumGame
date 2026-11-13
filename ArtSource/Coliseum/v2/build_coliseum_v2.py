@@ -1199,6 +1199,7 @@ def finalize(b, coll_name, prefix="Col_"):
 
 
 def build_all(export_path=None):
+    """Весь Колизей. export_path — папка Assets/_Project/Art/Coliseum (туда лягут обе версии FBX)."""
     make_all_textures()
     b = Builder(7)
     arena(b)
@@ -1220,8 +1221,9 @@ def build_all(export_path=None):
     aqueduct(b)
     scatter(b)
     made = finalize(b, COLL)
+    split_sectors(COLL)
     if export_path:
-        export_fbx(export_path)
+        export_variants(export_path)
     return made
 
 
@@ -1256,3 +1258,60 @@ def export_fbx(path):
                              apply_unit_scale=True, apply_scale_options='FBX_SCALE_UNITS',
                              bake_space_transform=True, use_mesh_modifiers=True,
                              mesh_smooth_type='FACE', bake_anim=False, path_mode='STRIP')
+
+
+# ================================================================ оптимизация: сектора и облегчённая версия
+
+def split_sectors(coll_name=COLL, n=8):
+    """Режет каждый объект-материал на n угловых секторов (Col_Stone → Col_Stone_S0..S7), чтобы в Unity
+    работало отсечение по камере: рисуется только та часть Колизея, что в кадре."""
+    coll = bpy.data.collections[coll_name]
+    made = 0
+    for o in list(coll.objects):
+        if o.name.rsplit("_", 1)[-1].startswith("S") and o.name.rsplit("_", 1)[-1][1:].isdigit():
+            continue
+        me = o.data
+        bm = bmesh.new()
+        bm.from_mesh(me)
+        groups = [set() for _ in range(n)]
+        for fc in bm.faces:
+            c = fc.calc_center_median()
+            a = math.degrees(math.atan2(c.y, c.x)) % 360.0
+            groups[int(a / (360.0 / n)) % n].add(fc.index)
+        for k in range(n):
+            if not groups[k]:
+                continue
+            bk = bm.copy()
+            bk.faces.ensure_lookup_table()
+            bmesh.ops.delete(bk, geom=[fc for fc in bk.faces if fc.index not in groups[k]], context='FACES')
+            mk = bpy.data.meshes.new(f"{o.name}_S{k}")
+            bk.to_mesh(mk)
+            bk.free()
+            for m in me.materials:
+                mk.materials.append(m)
+            ok = bpy.data.objects.new(mk.name, mk)
+            coll.objects.link(ok)
+            for mod in o.modifiers:
+                nm = ok.modifiers.new(mod.name, mod.type)
+                if mod.type == 'BEVEL':
+                    nm.width, nm.segments, nm.limit_method = mod.width, mod.segments, mod.limit_method
+                    nm.angle_limit, nm.harden_normals = mod.angle_limit, mod.harden_normals
+            made += 1
+        bm.free()
+        bpy.data.objects.remove(o, do_unlink=True)
+        if me.users == 0:
+            bpy.data.meshes.remove(me)
+    return made
+
+
+def export_variants(folder):
+    """Две версии для Unity: полная (с фасками) и облегчённая (без фасок) — для настроек графики «Средняя/Низкая»."""
+    export_fbx(os.path.join(folder, "Coliseum_Art.fbx"))
+    bevels = [m for o in bpy.data.collections[COLL].objects for m in o.modifiers if m.type == 'BEVEL']
+    for m in bevels:
+        m.show_viewport = m.show_render = False
+    try:
+        export_fbx(os.path.join(folder, "Coliseum_Art_Low.fbx"))
+    finally:
+        for m in bevels:
+            m.show_viewport = m.show_render = True

@@ -53,10 +53,16 @@ namespace ColiseumGame
             gm.EssenceChanged += () => heroDirty = true;
             if (prog != null) prog.Changed += () => heroDirty = true;
             Enemy.FirstSeen += OnFirstSeen;
+            GraphicsQuality.Changed += OnGraphicsChanged;
+            GraphicsQuality.ApplySaved();
             OnPhaseChanged();
         }
 
-        private void OnDestroy() => Enemy.FirstSeen -= OnFirstSeen;
+        private void OnDestroy()
+        {
+            Enemy.FirstSeen -= OnFirstSeen;
+            GraphicsQuality.Changed -= OnGraphicsChanged;
+        }
 
         private void OnFirstSeen(EnemyConfig cfg) => introQueue.Enqueue(cfg);
 
@@ -149,7 +155,7 @@ namespace ColiseumGame
             var full = Panel("Setup", transform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), Vector2.zero, Vector2.zero, new Color(0f, 0f, 0f, 0.85f));
             Stretch(full.rectTransform);
             setupPanel = full.gameObject;
-            var box = Rect("Box", full.transform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), Vector2.zero, new Vector2(760f, 560f));
+            var box = Rect("Box", full.transform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), Vector2.zero, new Vector2(760f, 680f));
             VLayout(box.gameObject, 10, 14f);
             Height(Text("Title", box, "КОЛИЗЕЙ\n<size=60%>Выбери сложность</size>", 54f, TextAlignmentOptions.Center, Gold), 140f);
             var diffs = gm.Balance.difficulties;
@@ -160,6 +166,41 @@ namespace ColiseumGame
                     i == gm.Balance.defaultDifficulty ? new Color(0.35f, 0.25f, 0.12f) : new Color(0.2f, 0.18f, 0.22f), 30f, () => gm.SelectDifficulty(idx));
                 Height(b, 110f);
             }
+            // Настройки графики (их же переключает F10 в любой момент)
+            var row = Rect("Graphics", box, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), Vector2.zero, new Vector2(740f, 60f));
+            Height(row, 60f);
+            var h = row.gameObject.AddComponent<HorizontalLayoutGroup>();
+            h.spacing = 10f;
+            h.childControlWidth = h.childControlHeight = true;
+            h.childForceExpandWidth = h.childForceExpandHeight = true;
+            Text("Label", Rect("LabelRoot", row, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), Vector2.zero, new Vector2(150f, 60f)),
+                "Графика:", 24f, TextAlignmentOptions.Center, Color.white);
+            for (int i = 0; i < 3; i++)
+            {
+                int lvl = i;
+                var gb = Button("Gfx" + i, row, GraphicsQuality.Names[i], new Color(0.2f, 0.18f, 0.22f), 24f,
+                    () => GraphicsQuality.Apply((GraphicsQuality.Level)lvl));
+                graphicsButtons[i] = gb;
+            }
+            Height(Text("GfxHint", box, "<size=80%>F10 — сменить графику в игре. На слабом ноутбуке выбирай «Низкая».</size>", 18f,
+                TextAlignmentOptions.Center, new Color(0.75f, 0.75f, 0.75f)), 26f);
+            RefreshGraphicsButtons();
+        }
+
+        private readonly Button[] graphicsButtons = new Button[3];
+
+        private void RefreshGraphicsButtons()
+        {
+            for (int i = 0; i < 3; i++)
+                if (graphicsButtons[i] != null)
+                    graphicsButtons[i].GetComponent<Image>().color = i == (int)GraphicsQuality.Current
+                        ? new Color(0.35f, 0.25f, 0.12f) : new Color(0.2f, 0.18f, 0.22f);
+        }
+
+        private void OnGraphicsChanged()
+        {
+            RefreshGraphicsButtons();
+            if (gm != null && gm.Phase != GamePhase.Setup) gm.ShowMessage("Графика: " + GraphicsQuality.Names[(int)GraphicsQuality.Current]);
         }
 
         private void BuildContinue()
@@ -308,6 +349,8 @@ namespace ColiseumGame
         private void Update()
         {
             if (gm == null) return;
+            var kb = UnityEngine.InputSystem.Keyboard.current;
+            if (kb != null && kb.f10Key.wasPressedThisFrame) GraphicsQuality.Cycle();
             var input = InputReader.Instance;
             if (input != null && prog != null && gm.Phase != GamePhase.Setup && !UIState.ResultOpen)
             {

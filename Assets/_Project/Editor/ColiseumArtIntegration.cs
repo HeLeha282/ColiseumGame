@@ -254,41 +254,59 @@ namespace ColiseumGame.EditorTools
             }
         }
 
-        /// <summary>Добавить модель в корень Колизея. Возвращает false, если FBX ещё нет.</summary>
-        public static bool AddArt(GameObject root)
+        /// <summary>Облегчённая версия (без фасок) — для настроек графики «Средняя» и «Низкая».</summary>
+        public const string FbxLow = Art + "/Coliseum_Art_Low.fbx";
+
+        /// <summary>Ключ материала из имени объекта FBX: «Col_Stone_S3» → «Stone».</summary>
+        public static string KeyOf(string name)
         {
-            if (AssetDatabase.LoadAssetAtPath<GameObject>(Fbx) == null) return false;
-            PrepareImporter();
-            var model = AssetDatabase.LoadAssetAtPath<GameObject>(Fbx);
+            string key = name.StartsWith("Col_") ? name.Substring(4) : name;
+            int us = key.LastIndexOf("_S", System.StringComparison.Ordinal);
+            if (us > 0 && us + 2 < key.Length && int.TryParse(key.Substring(us + 2), out _)) key = key.Substring(0, us);
+            return key;
+        }
 
-            var old = root.transform.Find("Art");
+        private static GameObject Instantiate(string path, GameObject root, string name)
+        {
+            var old = root.transform.Find(name);
             if (old != null) Object.DestroyImmediate(old.gameObject);
-
-            // Серые меши прототипа — только коллайдеры. Земля за стенами остаётся видимой.
-            foreach (var r in root.GetComponentsInChildren<MeshRenderer>(true))
-                if (r.gameObject.name != "Ground") r.enabled = false;
-
-            var art = (GameObject)PrefabUtility.InstantiatePrefab(model, root.transform);
-            art.name = "Art";
-            art.transform.localPosition = Vector3.zero;
-            art.transform.localRotation = Quaternion.identity;
-            foreach (var r in art.GetComponentsInChildren<MeshRenderer>(true))
+            if (AssetDatabase.LoadAssetAtPath<GameObject>(path) == null) return null;
+            PrepareImporter(path);
+            var go = (GameObject)PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>(path), root.transform);
+            go.name = name;
+            go.transform.localPosition = Vector3.zero;
+            go.transform.localRotation = Quaternion.identity;
+            foreach (var r in go.GetComponentsInChildren<MeshRenderer>(true))
             {
-                string key = r.gameObject.name.StartsWith("Col_") ? r.gameObject.name.Substring(4) : r.gameObject.name;
+                string key = KeyOf(r.gameObject.name);
                 var mat = GetMaterial(key);
                 if (mat != null) r.sharedMaterial = mat;
                 bool light = key == "Fire" || key == "Void" || key == "Ember" || key == "PortalGlow";
                 r.shadowCastingMode = light ? UnityEngine.Rendering.ShadowCastingMode.Off : UnityEngine.Rendering.ShadowCastingMode.On;
                 GameObjectUtility.SetStaticEditorFlags(r.gameObject, StaticEditorFlags.BatchingStatic | StaticEditorFlags.OccluderStatic | StaticEditorFlags.OccludeeStatic);
             }
+            return go;
+        }
 
-            // Коллайдеры модели — только для камеры и прицела (слой CameraBlocker ни с чем физически не сталкивается
-            // и не попадает в NavMesh), иначе камера 3-го лица залезает в колонны и парапеты.
+        /// <summary>Добавить модель в корень Колизея. Возвращает false, если FBX ещё нет.</summary>
+        public static bool AddArt(GameObject root)
+        {
+            if (AssetDatabase.LoadAssetAtPath<GameObject>(Fbx) == null) return false;
+
+            // Серые меши прототипа — только коллайдеры. Земля за стенами остаётся видимой.
+            foreach (var r in root.GetComponentsInChildren<MeshRenderer>(true))
+                if (r.gameObject.name != "Ground") r.enabled = false;
+
+            var art = Instantiate(Fbx, root, "Art");
+            var artLow = Instantiate(FbxLow, root, "ArtLow");
+            if (artLow != null) artLow.SetActive(false);
+
+            // Коллайдеры модели — только у полной версии и только для камеры и прицела (слой CameraBlocker ни с чем
+            // физически не сталкивается и не попадает в NavMesh), иначе камера 3-го лица залезает в колонны и парапеты.
             int layer = EnsureCameraBlockerLayer();
             foreach (var r in art.GetComponentsInChildren<MeshRenderer>(true))
             {
-                string key = r.gameObject.name.StartsWith("Col_") ? r.gameObject.name.Substring(4) : r.gameObject.name;
-                if (!IsSolid(key)) continue;
+                if (!IsSolid(KeyOf(r.gameObject.name))) continue;
                 r.gameObject.layer = layer;
                 if (!r.TryGetComponent(out MeshCollider mc)) mc = r.gameObject.AddComponent<MeshCollider>();
                 mc.sharedMesh = r.GetComponent<MeshFilter>().sharedMesh;
@@ -296,11 +314,17 @@ namespace ColiseumGame.EditorTools
             var surface = root.GetComponent<Unity.AI.Navigation.NavMeshSurface>();
             if (surface != null) surface.layerMask &= ~(1 << layer);
 
+            // Переключатель версий для настроек графики
+            if (!root.TryGetComponent(out ColiseumArtLod lod)) lod = root.AddComponent<ColiseumArtLod>();
+            var so = new SerializedObject(lod);
+            so.FindProperty("high").objectReferenceValue = art;
+            so.FindProperty("low").objectReferenceValue = artLow;
+            so.ApplyModifiedPropertiesWithoutUndo();
+
             var ground = root.transform.Find("Ground");
             if (ground != null) ground.GetComponent<Renderer>().sharedMaterial = GetMaterial("Sand");
             return true;
         }
-
         public const string CameraBlockerLayer = "CameraBlocker";
 
         /// <summary>Слой для коллайдеров декора: не сталкивается ни с чем, его видят только камера и лучи прицела.</summary>
@@ -327,9 +351,9 @@ namespace ColiseumGame.EditorTools
             return layer;
         }
 
-        private static void PrepareImporter()
+        private static void PrepareImporter(string path)
         {
-            var importer = (ModelImporter)AssetImporter.GetAtPath(Fbx);
+            var importer = (ModelImporter)AssetImporter.GetAtPath(path);
             bool dirty = importer.materialImportMode != ModelImporterMaterialImportMode.None
                          || importer.importAnimation || importer.animationType != ModelImporterAnimationType.None
                          || importer.importNormals != ModelImporterNormals.Import;
