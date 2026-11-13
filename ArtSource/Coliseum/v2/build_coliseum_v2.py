@@ -44,8 +44,8 @@ def near_any(deg, centers, half):
 def in_ranges(deg, ranges):
     return any(abs(dangle(deg, (lo + hi) * .5)) <= (hi - lo) * .5 for lo, hi in ranges)
 
-RAMP_T1_ARENA = [(a - 199, a - 173) for a in ARCHES]
-RAMP_T2_T1 = [(a - 101, a - 77) for a in ARCHES]
+RAMP_T1_ARENA = [(a - 209 - 5.8, a - 209 + 5.8) for a in ARCHES]
+RAMP_T2_T1 = [(a - 89 - 4.6, a - 89 + 4.6) for a in ARCHES]
 
 
 class F:
@@ -690,48 +690,63 @@ def gate(b, deg):
         moss_tuft(b, f.p(s * (hw + 1.8), -.1, T2_Y + .05), .35)
 
 
-def stairs(b, r, deg_top, y_top, deg_bot, y_bot, floor, width=2.2):
-    """Лист 14: каменная лестница с боковыми стенками (кирпич + наклонный парапет + столбы с шапками).
-    Лестница лежит ровно по хорде геймплейного пандуса."""
-    top, bot = U(r, deg_top, y_top), U(r, deg_bot, y_bot)
+# Лестницы между уровнями: прямые, перпендикулярно стене (как на референсе), выходят из верхнего уровня вниз.
+# Стоят вразбежку: со 2-го яруса — через 89° от ворот, с 1-го яруса на арену — ещё через 120°,
+# поэтому врагам приходится пройти часть каждого уровня. Те же числа — в PrototypeBuilder.Level.cs.
+STAIR_W = 3.6
+STAIR_T2 = (-89.0, T1_R, T2_Y, T1_R - 4.5, T1_Y)       # (смещение угла от ворот, r верх, y верх, r низ, y низ)
+STAIR_T1 = (-209.0, ARENA_R, T1_Y, ARENA_R - 4.5, 0.0)
+
+
+def stairs(b, deg, r_top, y_top, r_bot, y_bot, floor, width=STAIR_W):
+    """Лист 14: широкая каменная лестница — сплошные ступени, боковые стенки с кирпичной вставкой и наклонным
+    парапетом, квадратные столбы с шапками внизу и наверху."""
+    top, bot = U(r_top, deg, y_top), U(r_bot, deg, y_bot)
     flat = Vector((top.x - bot.x, top.y - bot.y, 0))
     L = flat.length
     d = flat.normalized()
     side = UP.cross(d).normalized()
     f = F(Vector((bot.x, bot.y, 0)), side, d)          # x — поперёк, y — вдоль подъёма
-    n = max(4, int(L / .42))
+    n = max(4, int(round((y_top - y_bot) / .3)))
     run = L / n
     rise = (y_top - y_bot) / n
     for i in range(n):
         zt = y_bot + rise * (i + 1)
-        for k in (-1, 1):
-            b.lbox("Paving", f, k * width / 4, run * (i + .5), zt - .17, width / 2 - .03, run + .02, .34)
+        parts = 3
+        for k in range(parts):
+            w = width / parts
+            b.lbox("Stone", f, -width / 2 + w * (k + .5), run * (i + .5), (floor + zt) * .5, w - .03, run + .02, zt - floor)
     for k in (-1, 1):
-        x = k * (width / 2 + .17)
-        wf = F(f.o + f.x * x, f.y, f.x)            # плоскость стенки: «x» кадра — вдоль подъёма
-        b.prism("Brick", [(0, floor), (0, y_bot + .5), (L, y_top + .5), (L, floor)], F(wf.o, f.y, f.x, UP), -.15, .3)
-        segs = max(2, int(L / 1.4))
+        x = k * (width / 2 + .3)
+        wf = F(f.o + f.x * x, f.y, f.x, UP)        # плоскость стенки: «x» кадра — вдоль подъёма
+        b.prism("Brick", [(.5, floor), (.5, y_bot + .6), (L - .5, y_top + .45), (L - .5, floor)], wf, -.22, .44)
+        # каменная рамка вокруг кирпича
+        b.lbox("Stone", f, x, L * .5, floor + .2, .62, L, .4)
+        segs = max(2, int(L / 1.3))
         for i in range(segs):
             t0, t1 = i / segs, (i + 1) / segs
-            p0 = f.p(x, L * t0, y_bot + (y_top - y_bot) * t0 + .62)
-            p1 = f.p(x, L * t1, y_bot + (y_top - y_bot) * t1 + .62)
+            p0 = f.p(x, L * t0, y_bot + (y_top - y_bot) * t0 + .72)
+            p1 = f.p(x, L * t1, y_bot + (y_top - y_bot) * t1 + .72)
             ax = (p1 - p0).normalized()
             az = f.x.cross(ax).normalized()
             if az.z < 0:
                 az = -az
-            b.box("Stone", (p0 + p1) * .5, ax, f.x, az, (p1 - p0).length - .03, .42, .26)
+            b.box("Stone", (p0 + p1) * .5, ax, f.x, az, (p1 - p0).length - .03, .68, .32)
         for t, zt in ((0.0, y_bot), (1.0, y_top)):
-            yy = L * t + (.25 if t == 0 else -.25)
-            h = zt + .95 - floor
-            b.lbox("Stone", f, x, yy, floor + h / 2, .6, .6, h)
-            b.lbox("Stone", f, x, yy, floor + h + .12, .72, .72, .24)
+            yy = L * t + (.3 if t == 0 else -.3)
+            h = zt + 1.05 - floor
+            b.lbox("Stone", f, x, yy, floor + h / 2, .72, .72, h)
+            b.lbox("Gold", f, x, yy, floor + h - .12, .76, .76, .12)
+            b.lbox("Stone", f, x, yy, floor + h + .14, .86, .86, .28)
+    moss_tuft(b, f.p(-width / 2 + .3, .4, y_bot + .3), .25)
 
 
 def ramps(b):
     for a in ARCHES:
-        stairs(b, 37.0, a - 80, T2_Y, a - 98, T1_Y, T1_Y - .25)
-        stairs(b, 29.0, a - 175, T1_Y, a - 197, 0.0, -.1)
-
+        o, rt, yt, rb, yb = STAIR_T2
+        stairs(b, a + o, rt, yt, rb, yb, T1_Y - .2)
+        o, rt, yt, rb, yb = STAIR_T1
+        stairs(b, a + o, rt, yt, rb, yb, -.1)
 
 def ruined(deg):
     return in_ranges(deg, [RUIN])

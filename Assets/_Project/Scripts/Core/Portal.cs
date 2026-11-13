@@ -42,8 +42,19 @@ namespace ColiseumGame
 
         public void TakeDamage(DamageInfo info) => Health.Damage(info.Amount);
 
+        private Transform ringA, ringB;
+
+        private void Start()
+        {
+            ringA = transform.Find("RingA");
+            ringB = transform.Find("RingB");
+        }
+
         private void Update()
         {
+            // Медленно вращающиеся кольца энергии
+            if (ringA != null) ringA.Rotate(Vector3.up, 35f * Time.deltaTime, Space.World);
+            if (ringB != null) ringB.Rotate(Vector3.up, -50f * Time.deltaTime, Space.World);
             if (glowRenderer == null) return;
             // Цвет уходит в красный по мере потери HP, плюс лёгкая пульсация.
             Color c = Color.Lerp(dyingColor, healthyColor, Health.Fraction);

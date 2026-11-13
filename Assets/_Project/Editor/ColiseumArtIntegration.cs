@@ -4,7 +4,7 @@ using UnityEngine;
 namespace ColiseumGame.EditorTools
 {
     /// <summary>
-    /// Подключает красивую модель Колизея (ArtSource/Coliseum → Art/Coliseum/Coliseum_Art.fbx) к префабу Coliseum.
+    /// Подключает красивую модель Колизея (ArtSource/Coliseum/v2 → Art/Coliseum/Coliseum_Art.fbx) к префабу Coliseum.
     /// Серые меши прототипа выключаются (рендер), но их коллайдеры остаются — геймплей и NavMesh не меняются.
     /// Меню: ColiseumGame → Install Coliseum Art. Генератор прототипа вызывает AddArt сам.
     /// </summary>
@@ -15,26 +15,35 @@ namespace ColiseumGame.EditorTools
         public const string MatDir = Art + "/Materials";
         public const string PrefabPath = "Assets/_Project/Prefabs/Environment/Coliseum.prefab";
 
-        // Ключ = имя объекта в FBX без "Col_". Цвета — те же, что в build_coliseum.py.
-        private static readonly (string key, Color color, float metallic, float smoothness, float emission, bool textured)[] Materials =
+        // Ключ = имя объекта в FBX без "Col_" (= материал в ArtSource/Coliseum/v2/build_coliseum_v2.py, словарь MATS).
+        // texture — файл Textures/<texture>.png (null — однотонный), color умножается на текстуру,
+        // solid — объект закрывает камеру (MeshCollider на слое CameraBlocker).
+        private static readonly (string key, string texture, Color color, float metallic, float smoothness, float emission, bool solid)[] Materials =
         {
-            ("Stone", new Color(0.90f, 0.81f, 0.65f), 0f, 0.15f, 0f, true),
-            ("StoneB", new Color(0.84f, 0.72f, 0.55f), 0f, 0.15f, 0f, true),
-            ("StoneDark", new Color(0.68f, 0.56f, 0.42f), 0f, 0.12f, 0f, true),
-            ("Shadow", new Color(0.40f, 0.32f, 0.25f), 0f, 0.05f, 0f, true),
-            ("Paving", new Color(0.82f, 0.72f, 0.57f), 0f, 0.1f, 0f, true),
-            ("Seats", new Color(0.86f, 0.77f, 0.61f), 0f, 0.1f, 0f, true),
-            ("SeatsB", new Color(0.74f, 0.64f, 0.49f), 0f, 0.1f, 0f, true),
-            ("Sand", new Color(0.87f, 0.75f, 0.53f), 0f, 0f, 0f, true),
-            ("Wood", new Color(0.52f, 0.32f, 0.17f), 0f, 0.2f, 0f, false),
-            ("Iron", new Color(0.16f, 0.15f, 0.15f), 0.6f, 0.55f, 0f, false),
-            ("Gold", new Color(0.95f, 0.70f, 0.28f), 1f, 0.7f, 0f, false),
-            ("Cloth", new Color(0.64f, 0.11f, 0.11f), 0f, 0.15f, 0f, false),
-            ("Fire", new Color(1f, 0.55f, 0.12f), 0f, 0f, 4f, false),
-            ("Void", new Color(0.03f, 0.025f, 0.02f), 0f, 0f, 0f, false),
-            ("Mortar", new Color(0.30f, 0.24f, 0.19f), 0f, 0f, 0f, false),
+            ("Stone", "T2_Stone", new Color(.95f, .84f, .70f), 0f, .15f, 0f, true),
+            ("StoneFar", "T2_Stone", new Color(.93f, .82f, .68f), 0f, .15f, 0f, true),
+            ("Paving", "T2_Paving", new Color(.92f, .83f, .72f), 0f, .1f, 0f, true),
+            ("Seat", "T2_Paving", new Color(.90f, .80f, .68f), 0f, .1f, 0f, true),
+            ("Brick", "T2_Brick", Color.white, 0f, .1f, 0f, true),
+            ("Plaster", "T2_Plaster", Color.white, 0f, .1f, 0f, true),
+            ("Sand", "T2_Sand", Color.white, 0f, 0f, 0f, true),
+            ("Grass", "T2_Grass", Color.white, 0f, 0f, 0f, true),
+            ("Roof", "T2_Roof", Color.white, 0f, .2f, 0f, true),
+            ("Banner", "T2_Banner", Color.white, 0f, .15f, 0f, false),
+            ("Gold", null, new Color(.98f, .70f, .24f), 1f, .68f, 0f, false),
+            ("Iron", null, new Color(.46f, .30f, .19f), .35f, .45f, 0f, false),
+            ("Cloth", null, new Color(.66f, .10f, .09f), 0f, .15f, 0f, false),
+            ("RedPanel", null, new Color(.55f, .10f, .08f), 0f, .2f, 0f, true),
+            ("Shadow", null, new Color(.22f, .14f, .10f), 0f, 0f, 0f, true),
+            ("Void", null, new Color(.03f, .02f, .02f), 0f, 0f, 0f, false),
+            ("Moss", null, new Color(.48f, .56f, .16f), 0f, 0f, 0f, false),
+            ("Leaf", null, new Color(.36f, .45f, .14f), 0f, .1f, 0f, false),
+            ("LeafLight", null, new Color(.62f, .64f, .18f), 0f, .1f, 0f, false),
+            ("Bark", null, new Color(.45f, .28f, .16f), 0f, .1f, 0f, false),
+            ("Fire", null, new Color(1f, .45f, .10f), 0f, 0f, 4f, false),
+            ("Ember", null, new Color(.85f, .22f, .06f), 0f, 0f, 2f, false),
+            ("PortalGlow", null, new Color(.25f, .95f, 1f), 0f, .5f, 3f, false),
         };
-
         [MenuItem("ColiseumGame/Install Coliseum Art")]
         public static void Install()
         {
@@ -268,7 +277,7 @@ namespace ColiseumGame.EditorTools
                 string key = r.gameObject.name.StartsWith("Col_") ? r.gameObject.name.Substring(4) : r.gameObject.name;
                 var mat = GetMaterial(key);
                 if (mat != null) r.sharedMaterial = mat;
-                bool light = key == "Fire" || key == "Void";
+                bool light = key == "Fire" || key == "Void" || key == "Ember" || key == "PortalGlow";
                 r.shadowCastingMode = light ? UnityEngine.Rendering.ShadowCastingMode.Off : UnityEngine.Rendering.ShadowCastingMode.On;
                 GameObjectUtility.SetStaticEditorFlags(r.gameObject, StaticEditorFlags.BatchingStatic | StaticEditorFlags.OccluderStatic | StaticEditorFlags.OccludeeStatic);
             }
@@ -279,7 +288,7 @@ namespace ColiseumGame.EditorTools
             foreach (var r in art.GetComponentsInChildren<MeshRenderer>(true))
             {
                 string key = r.gameObject.name.StartsWith("Col_") ? r.gameObject.name.Substring(4) : r.gameObject.name;
-                if (key == "Fire" || key == "Cloth" || key == "Void" || key == "Gold" || key == "Wood") continue;
+                if (!IsSolid(key)) continue;
                 r.gameObject.layer = layer;
                 if (!r.TryGetComponent(out MeshCollider mc)) mc = r.gameObject.AddComponent<MeshCollider>();
                 mc.sharedMesh = r.GetComponent<MeshFilter>().sharedMesh;
@@ -335,6 +344,12 @@ namespace ColiseumGame.EditorTools
             importer.SaveAndReimport();
         }
 
+        private static bool IsSolid(string key)
+        {
+            foreach (var def in Materials) if (def.key == key) return def.solid;
+            return false;
+        }
+
         private static Material GetMaterial(string key)
         {
             foreach (var def in Materials)
@@ -348,18 +363,14 @@ namespace ColiseumGame.EditorTools
                     mat = new Material(Shader.Find("Universal Render Pipeline/Lit"));
                     AssetDatabase.CreateAsset(mat, path);
                 }
-                if (def.textured)
+                if (def.texture != null)
                 {
-                    string texPath = $"{Art}/Textures/T_Col_{key}.png";
+                    string texPath = $"{Art}/Textures/{def.texture}.png";
                     PrepareTexture(texPath);
                     mat.SetTexture("_BaseMap", AssetDatabase.LoadAssetAtPath<Texture2D>(texPath));
-                    mat.SetColor("_BaseColor", Color.white);
                 }
-                else
-                {
-                    mat.SetTexture("_BaseMap", null);
-                    mat.SetColor("_BaseColor", def.color);
-                }
+                else mat.SetTexture("_BaseMap", null);
+                mat.SetColor("_BaseColor", def.color);
                 mat.SetFloat("_Metallic", def.metallic);
                 mat.SetFloat("_Smoothness", def.smoothness);
                 if (def.emission > 0f)
@@ -368,22 +379,26 @@ namespace ColiseumGame.EditorTools
                     mat.SetColor("_EmissionColor", def.color * def.emission);
                     mat.globalIlluminationFlags = MaterialGlobalIlluminationFlags.RealtimeEmissive;
                 }
+                else
+                {
+                    mat.DisableKeyword("_EMISSION");
+                    mat.SetColor("_EmissionColor", Color.black);
+                }
                 EditorUtility.SetDirty(mat);
                 return mat;
             }
             return null;
         }
-
         private static void PrepareTexture(string path)
         {
             var ti = AssetImporter.GetAtPath(path) as TextureImporter;
             if (ti == null) return;
-            if (ti.wrapMode == TextureWrapMode.Repeat && ti.anisoLevel == 4 && ti.maxTextureSize == 512) return;
+            if (ti.wrapMode == TextureWrapMode.Repeat && ti.anisoLevel == 8 && ti.maxTextureSize == 1024) return;
             ti.textureType = TextureImporterType.Default;
             ti.sRGBTexture = true;
             ti.wrapMode = TextureWrapMode.Repeat;
-            ti.anisoLevel = 4;
-            ti.maxTextureSize = 512;
+            ti.anisoLevel = 8;
+            ti.maxTextureSize = 1024;
             ti.mipmapEnabled = true;
             ti.SaveAndReimport();
         }

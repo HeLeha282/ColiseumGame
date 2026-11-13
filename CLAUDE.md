@@ -95,7 +95,10 @@
 - Баланс: `ScriptableObjects/GameBalance.asset` (эссенция, метка, портал, баррикады, ремонт, списки башен и волн),
   `Enemies/*`, `Towers/*` (уровни 1–3), `Waves/Wave_01..10`, `Player/PlayerConfig`.
 - Маршруты врагов — объекты `Routes/Route_N`, точки маршрута = дочерние объекты по порядку. После правки геометрии —
-  ColiseumGame → Rebake NavMesh.
+  ColiseumGame → Rebake NavMesh. Между уровнями — прямые лестницы вразбежку (2-й ярус→1-й через 89° от ворот,
+  1-й→арена ещё через 120°); числа в `PrototypeBuilder.Level.cs` и `ArtSource/Coliseum/v2/build_coliseum_v2.py` должны совпадать.
+- Красивый Колизей v2: `ArtSource/Coliseum/v2` (Blender: `build_all()` → `export_fbx()`), в Unity — `Art/Coliseum/Coliseum_Art.fbx`,
+  ставится генератором (`ColiseumArtIntegration`). Серые меши остаются только коллайдерами.
 - Ввод: `Assets/_Project/Settings/ColiseumControls.inputactions`, читается через `InputReader`.
 - Автотесты через MCP: `PlaytestBot` (только в редакторе) — бот-игрок, жмёт клавиши через очередь Input System,
   сам строит/качает башни, берёт перки, жмёт E у боссов, запускает волны (поля `speed`, `difficulty`, `endlessWaves`).
