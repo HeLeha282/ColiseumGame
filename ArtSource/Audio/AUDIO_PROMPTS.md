@@ -207,30 +207,42 @@
 - **Боссы** — чемпионы арены прошлых эпох. Они знают, кто такой «пришелец Януса», и не любят его.
 
 ### Как генерировать
-1. **Voices → Voice Design**: вставь описание голоса (английский текст ниже), послушай варианты, сохрани лучший под
-   именем персонажа.
-2. **Text to Speech**, модель **Eleven v3** (или новее), язык **русский**, выбери голос.
+1. **Голос — готовый, из библиотеки** (свой создавать не нужно): **Voices → Voice Library**, фильтры
+   **Language: Russian**, пол и возраст — как в таблице ниже; в поиск — ключевые слова из таблицы. Слушай превью
+   на русской фразе, понравившийся — **Add to my voices** и переименуй в имя персонажа.
+   Русскоязычный голос важен: английские голоса (в т. ч. стандартные Default) говорят по-русски с акцентом.
+2. **Text to Speech**, модель **Eleven v3** (или новее), выбери голос.
 3. **Stability** — как указано у персонажа. Если голос «плывёт» — ближе к *Natural/Robust*.
 4. Одна реплика — один файл. Слова в `[квадратных скобках]` — подсказки интонации, не озвучиваются. Если тег
    не сработал — убери его.
 5. 2–3 дубля, сохрани лучший: `Audio/Voice/<Персонаж>/<файл>.mp3`. **Папка — того, кто говорит** (колонка «Кто»):
    реплики Рэна → `Voice/Hero`, Януса → `Voice/Janus`, глашатая → `Voice/Announcer`, боссов → их папки.
-6. **Янус** говорит «двумя лицами». Генерируй **один** голос (старый) — второй, молодой, я наложу в игре
-   (копия со сдвигом тона). Так его фразы будут звучать как два голоса в унисон.
+6. **Чудовищность добавлю в игре сам**, поэтому монстрам не нужен «идеальный монстр» в библиотеке — достаточно
+   подходящего по характеру низкого/хриплого голоса: Минотавр и Титан — понижение тона + реверб; Цербер — три копии
+   с разным тоном; Гидра — несколько копий с шипением; Королева гарпий — повышение тона + резкость; Янус — вторая
+   копия на тон выше («два лица»). Главное — чтобы голос нормально играл интонацию.
 
-### Голоса
+### Голоса — что выбрать
 
-| Персонаж | Папка | Voice Design (описание голоса) | Stability |
-|---|---|---|---|
-| Рэн (герой) | `Voice/Hero` | `19-year-old young man, light warm tenor, energetic, a bit sarcastic and nervous, expressive like an anime protagonist dub, youthful but brave.` | Natural |
-| Янус | `Voice/Janus` | `Ancient god of gates, deep calm resonant male voice, very old and wise, slow measured speech, faint ethereal echo, mysterious and slightly ironic.` | Natural |
-| Глашатай | `Voice/Announcer` | `Deep booming male voice of an ancient Roman arena herald, theatrical and grand, addressing a crowd of gods, proud and dramatic.` | Natural |
-| Минотавр | `Voice/Minotaur` | `Huge brutal half-bull monster, extremely deep gravelly growling male voice, snorting breaths between words, slow and menacing.` | Creative |
-| Цербер | `Voice/Cerberus` | `Three-headed hellhound speaking in overlapping monstrous voices, deep demonic growls, words barely human.` | Creative |
-| Гидра | `Voice/Hydra` | `Ancient serpent with many heads, several hissing reptilian voices speaking together, sibilant and wet, eerie and mocking.` | Creative |
-| Медуза | `Voice/Medusa` | `Seductive cold female voice of a gorgon, smooth and hypnotic with a hissing undertone, mature, elegant and dangerous.` | Creative |
-| Королева гарпий | `Voice/HarpyQueen` | `Shrill screeching female voice of a monstrous bird queen, wild and arrogant, piercing high pitch with raspy edges.` | Creative |
-| Титан | `Voice/Titan` | `Colossal ancient titan of stone, extremely deep slow resonant male voice, rumbling like an earthquake, tired, bitter and overwhelming.` | Natural |
+Сначала ищи в Voice Library с фильтром **Russian** (колонки «Фильтры» и «Ищи»). Если русского подходящего нет — запасной
+вариант из стандартных английских голосов (колонка «Запасной»; список стандартных у ElevenLabs меняется —
+если такого нет, бери похожий по описанию).
+
+| Персонаж | Папка | Фильтры | Ищи (ключевые слова) | Какой нужен | Запасной | Stability |
+|---|---|---|---|---|---|---|
+| Рэн (герой) | `Voice/Hero` | Male, Young | `young`, `energetic`, `anime`, `student`, `characters` | Молодой, светлый, живой; умеет и паниковать, и шутить, и кричать в бою. Не «диктор». | Liam / Harry | Natural |
+| Янус | `Voice/Janus` | Male, Old | `old`, `wise`, `narrator`, `deep`, `storyteller`, `mysterious` | Старый, спокойный, глубокий, медленный; лёгкая ирония. Не злодейский. | George / Bill | Natural |
+| Глашатай | `Voice/Announcer` | Male, Middle-aged | `announcer`, `epic`, `trailer`, `commentator`, `bold` | Громкий, театральный, «на публику». | Daniel / Brian | Natural |
+| Минотавр | `Voice/Minotaur` | Male, Middle-aged/Old | `deep`, `gruff`, `raspy`, `villain`, `orc`, `monster` | Очень низкий, грубый, хриплый. | Clyde / Callum | Creative |
+| Цербер | `Voice/Cerberus` | Male | `growl`, `demon`, `beast`, `villain`, `raspy` | Рычащий, злой, отрывистый (3 головы сделаю копиями). | Callum / Clyde | Creative |
+| Гидра | `Voice/Hydra` | Male или Female | `whisper`, `creepy`, `sinister`, `snake`, `villain` | Шипящий, вкрадчивый, насмешливый. | Callum (шёпотом) | Creative |
+| Медуза | `Voice/Medusa` | Female, Middle-aged | `seductive`, `cold`, `villain`, `sultry`, `elegant` | Холодный, гипнотический, взрослый, опасный. | Charlotte / Lily | Creative |
+| Королева гарпий | `Voice/HarpyQueen` | Female | `witch`, `shrill`, `crazy`, `villain`, `raspy` | Резкий, визгливый, надменный. | Glinda / Mimi (если есть) | Creative |
+| Титан | `Voice/Titan` | Male, Old | `deep`, `tired`, `sad`, `old`, `narrator`, `bass` | Очень низкий, медленный, усталый, горький (не орущий — он трагический). | Brian / Bill | Natural |
+
+**Советы:** Янус и Титан должны звучать **по-разному** (Янус — мягкий и ироничный, Титан — тяжёлый и усталый) —
+слушай их подряд перед выбором. Голос героя проверь на трёх репликах: паника (`intro_04`), шутка (`tut_build_hero`),
+боевой крик (`hero_ult_*`) — молодые голоса из библиотеки часто хороши только в одном из этого.
 
 > Если хотите дать герою другое имя — замените «Рэн» в репликах, больше ничего менять не нужно.
 
