@@ -195,119 +195,234 @@
 
 ---
 
-## Часть 2. ElevenLabs → голоса и реплики боссов
+## Часть 2. ElevenLabs → голоса, реплики и диалоги
 
-**Порядок для каждого персонажа:**
-1. **Voices → Voice Design** (создать голос по описанию). Вставь описание голоса (на английском, из блока ниже),
-   послушай 3 варианта, сохрани лучший под именем персонажа (`Minotaur`, `Medusa`…).
-2. **Text to Speech**: модель **Eleven v3** (или новее, если есть), выбери этот голос, язык — **русский**.
-3. **Stability**: режим как указано (*Creative* — максимум эмоций, *Natural* — баланс). Если голос «плывёт» или
-   бормочет — сдвинь ближе к *Natural/Robust*.
-4. Вставляй **по одной реплике** (вместе с тегами в квадратных скобках — это подсказки интонации для v3, они не
-   озвучиваются). Генерируй 2–3 раза, сохраняй лучший дубль.
-5. Если тег не сработал — просто убери его, а нужную эмоцию передай знаками: «…», «!», тире.
+### Лор в двух словах (чтобы попадать в интонацию)
+- **Рэн**, 19 лет, японский «ронин» — так в Японии зовут тех, кто провалил экзамены в университет и год готовится
+  к пересдаче. Капитан школьного клуба кендо, ходил и на кюдо. Вечером перед пересдачей засиделся в пустом додзё —
+  и портал из старой монеты деда затянул его на арену. Иронизирует, храбрится, скучает по дому, переживает за экзамен.
+- **Янус** — двуликий римский бог врат. Это он открыл портал и выбрал Рэна. Обещает вернуть домой, если тот
+  выстоит 30 волн. Помогает, но что-то недоговаривает: Рэн — не первый его чемпион. «Предыдущий» — это **Титан**.
+- **Глашатай** — голос арены. Обращается не к Рэну, а к **богам-зрителям** на трибунах: для них это зрелище.
+- **Боссы** — чемпионы арены прошлых эпох. Они знают, кто такой «пришелец Януса», и не любят его.
 
-Папка: `Audio/Voice/<Персонаж>/`, имя файла — из первой колонки.
+### Как генерировать
+1. **Voices → Voice Design**: вставь описание голоса (английский текст ниже), послушай варианты, сохрани лучший под
+   именем персонажа.
+2. **Text to Speech**, модель **Eleven v3** (или новее), язык **русский**, выбери голос.
+3. **Stability** — как указано у персонажа. Если голос «плывёт» — ближе к *Natural/Robust*.
+4. Одна реплика — один файл. Слова в `[квадратных скобках]` — подсказки интонации, не озвучиваются. Если тег
+   не сработал — убери его.
+5. 2–3 дубля, сохрани лучший: `Audio/Voice/<Персонаж>/<файл>.mp3`. **Папка — того, кто говорит** (колонка «Кто»):
+   реплики Рэна → `Voice/Hero`, Януса → `Voice/Janus`, глашатая → `Voice/Announcer`, боссов → их папки.
+6. **Янус** говорит «двумя лицами». Генерируй **один** голос (старый) — второй, молодой, я наложу в игре
+   (копия со сдвигом тона). Так его фразы будут звучать как два голоса в унисон.
 
-### Глашатай арены (Announcer) — объявляет волны
-**Voice Design:** `Deep, booming male voice of an ancient Roman arena herald, middle-aged, theatrical and commanding, slight echo of a stadium announcer, proud and dramatic.`
-**Stability:** Natural
+### Голоса
 
-| Файл | Реплика |
-|---|---|
-| ann_wave_01 | [loud, commanding] Волна начинается! К оружию! |
-| ann_wave_02 | [dramatic] Они идут! Защищайте портал! |
-| ann_wave_03 | [excited] Новая волна! Пусть арена услышит звон стали! |
-| ann_wave_clear_01 | [proud] Волна отбита! Арена ликует! |
-| ann_wave_clear_02 | [satisfied] Прекрасный бой, воин! Готовься к следующему. |
-| ann_boss | [ominous, slow] Затихните… На арену выходит чемпион тьмы. |
-| ann_portal_low | [urgent, shouting] Портал слабеет! Держите их! |
-| ann_victory | [triumphant, loud] Тридцать волн! Ты — легенда Колизея! |
-| ann_defeat | [somber, slow] Портал пал… Арена погрузилась во тьму. |
-| ann_endless | [excited, intense] Бесконечная битва! Посмотрим, сколько ты продержишься! |
-| ann_new_enemy | [curious] Это ещё что за тварь? Смотри внимательно! |
+| Персонаж | Папка | Voice Design (описание голоса) | Stability |
+|---|---|---|---|
+| Рэн (герой) | `Voice/Hero` | `19-year-old young man, light warm tenor, energetic, a bit sarcastic and nervous, expressive like an anime protagonist dub, youthful but brave.` | Natural |
+| Янус | `Voice/Janus` | `Ancient god of gates, deep calm resonant male voice, very old and wise, slow measured speech, faint ethereal echo, mysterious and slightly ironic.` | Natural |
+| Глашатай | `Voice/Announcer` | `Deep booming male voice of an ancient Roman arena herald, theatrical and grand, addressing a crowd of gods, proud and dramatic.` | Natural |
+| Минотавр | `Voice/Minotaur` | `Huge brutal half-bull monster, extremely deep gravelly growling male voice, snorting breaths between words, slow and menacing.` | Creative |
+| Цербер | `Voice/Cerberus` | `Three-headed hellhound speaking in overlapping monstrous voices, deep demonic growls, words barely human.` | Creative |
+| Гидра | `Voice/Hydra` | `Ancient serpent with many heads, several hissing reptilian voices speaking together, sibilant and wet, eerie and mocking.` | Creative |
+| Медуза | `Voice/Medusa` | `Seductive cold female voice of a gorgon, smooth and hypnotic with a hissing undertone, mature, elegant and dangerous.` | Creative |
+| Королева гарпий | `Voice/HarpyQueen` | `Shrill screeching female voice of a monstrous bird queen, wild and arrogant, piercing high pitch with raspy edges.` | Creative |
+| Титан | `Voice/Titan` | `Colossal ancient titan of stone, extremely deep slow resonant male voice, rumbling like an earthquake, tired, bitter and overwhelming.` | Natural |
 
-### Герой — короткие возгласы
-**Voice Design:** `Young male warrior, confident and determined, strong mid-range voice, slightly rough, heroic.`
-**Stability:** Natural
+> Если хотите дать герою другое имя — замените «Рэн» в репликах, больше ничего менять не нужно.
 
-| Файл | Реплика |
-|---|---|
-| hero_ult | [shouting, powerful] Разлом Пустоты! |
-| hero_ult_storm | [shouting] Алая буря! |
-| hero_ult_zero | [cold, intense] Абсолютный ноль. |
-| hero_levelup | [determined] Я стал сильнее. |
-| hero_low_hp | [breathing heavily] Нужно… отступить… |
-| hero_build | [focused] Здесь будет башня. |
-| hero_finisher | [roaring] Конец тебе! |
+---
 
-### Минотавр (босс 5-й волны)
-**Voice Design:** `Huge brutal half-bull monster, extremely deep and gravelly growling male voice, snorting breaths between words, slow and menacing.`
-**Stability:** Creative
+### 2.1 Вступление (для будущей катсцены в начале игры)
+Сцену пока не делаем, но реплики можно записать заранее — я подключу их, когда появится катсцена.
 
-| Файл | Реплика |
-|---|---|
-| minotaur_intro | [snorts, angry] Кто посмел войти в мой лабиринт? Я растопчу тебя! |
-| minotaur_taunt_01 | [growling] Твои стрелы — щекотка для моей брони! |
-| minotaur_taunt_02 | [laughs menacingly] Беги, букашка… беги! |
-| minotaur_armor | [roaring, furious] Моя броня! Ты за это заплатишь! |
-| minotaur_death | [pained, fading] Лабиринт… пал… |
+| Файл | Кто | Реплика |
+|---|---|---|
+| intro_01 | Янус | [calm, slow] Проснись, чужеземец. Ты не спишь… хотя и хотел бы. |
+| intro_02 | Рэн | [groggy, confused] Где я?.. Это что… Колизей?! |
+| intro_03 | Янус | Арена, что стоит между мирами. Боги любят зрелища, а здешние бойцы им наскучили. Я открыл врата — и выбрал тебя. |
+| intro_04 | Рэн | [panicking] Выбрал?! У меня завтра пересдача! Второй раз я её не завалю! |
+| intro_05 | Янус | [amused] Тогда тебе стоит поторопиться. Эти врата — твоя единственная дорога домой. |
+| intro_06 | Янус | [serious] Тридцать волн тварей придут, чтобы разбить их. Выстоишь — я открою путь назад. Падут врата — останешься здесь навсегда. |
+| intro_07 | Рэн | [sarcastic] А если я откажусь? |
+| intro_08 | Янус | Тогда арена решит за тебя. Возьми молот — строй башни. Возьми меч — сражайся. И помни: боги смотрят. |
+| intro_09 | Янус | [quietly, almost to himself] …Не разочаруй меня, как предыдущий. |
+| intro_10 | Рэн | [nervous laugh] «Как предыдущий»? Эй! Что значит — как предыдущий?! |
+| intro_11 | Глашатай | [booming] Боги Олимпа! Сегодня на арене — чужеземец из далёкого мира! Да начнутся игры! |
 
-### Цербер (босс 10-й волны) — без слов
-**Voice Design:** `Three-headed hellhound speaking in three overlapping monstrous voices, deep demonic growls, barely human words.`
-**Stability:** Creative
+Файлы: реплики Януса → `Voice/Janus/intro_0X`, Рэна → `Voice/Hero/intro_0X`, глашатая → `Voice/Announcer/intro_11`
+(номер оставь как в таблице — по нему я выстрою порядок).
 
-| Файл | Реплика |
-|---|---|
-| cerberus_intro | [growling, three voices] Мы… стережём… врата. Ты… не пройдёшь. |
-| cerberus_head | [howling in pain] Одна голова… ещё две… ГОЛОДНЫ! |
-| cerberus_death | [whimpering, fading] Врата… открыты… |
+### 2.2 Первые волны — обучение и знакомство
+Играют один раз, в нужный момент (при первом событии). Сначала реплика Януса, потом ответ Рэна.
 
-### Гидра (босс 15-й волны)
-**Voice Design:** `Ancient sea serpent with many heads, several hissing reptilian voices speaking together, sibilant and wet, eerie.`
-**Stability:** Creative
+| Файл | Кто | Когда | Реплика |
+|---|---|---|---|
+| tut_prepare_janus | Янус | первая подготовка | Пока тихо — строй. Возьми молот, клавиша три. Башни не устают, в отличие от тебя. |
+| tut_prepare_hero | Рэн | сразу после | [muttering] Строить башни посреди Колизея… Ладно. Как в стратегии. Я в такое играл. |
+| tut_build_janus | Янус | первая башня | [impressed] Молот слушается тебя. Ни один гладиатор здесь так не умел. |
+| tut_build_hero | Рэн | сразу после | [proud] Вот это я понимаю — «игровой опыт»! |
+| tut_wave1_janus | Янус | старт 1-й волны | Слышишь горн? Это скелеты легиона. Мертвецы, что не знают поражения… пока не встретят меч. |
+| tut_wave1_hero | Рэн | сразу после | [deep breath] Кендо, не подведи. |
+| tut_mark_janus | Янус | первый удар героя | Каждый твой удар оставляет метку. Башни бьют помеченных сильнее. Сражайтесь вместе. |
+| tut_wave1_clear_hero | Рэн | 1-я волна пройдена | [exhausted, surprised] Я… жив? Я правда это сделал? |
+| tut_wave1_clear_janus | Янус | сразу после | Одна из тридцати. Не празднуй слишком рано. |
+| tut_levelup_janus | Янус | первый уровень героя | Боги заметили тебя. Их дары ждут — открой их, клавиша Tab. |
+| tut_levelup_hero | Рэн | сразу после | [excited] Прокачка! Ну хоть что-то здесь работает как надо! |
+| tut_shield_janus | Янус | первый щитоносец | Башни не пробьют щит спереди. Зайди сбоку — или ударь сам. |
+| tut_flyer_janus | Янус | первая гарпия | Гарпии летят прямо к вратам. Лук — клавиша два. Целься выше. |
+| tut_flyer_hero | Рэн | сразу после | [focused] Кюдо, второй клуб. Пригодился. |
+| tut_satyr_janus | Янус | первый сатир | Сатиры перепрыгивают баррикады. Не надейся на дерево. |
+| tut_mage_janus | Янус | первый маг | Маги бьют издалека. Огонь против льда, лёд против огня. |
+| tut_elements_hero | Рэн | первая реакция стихий | [amazed] Огонь плюс лёд — и он разлетелся?! Ладно, это было круто. |
+| tut_portal_hit_janus | Янус | первый удар по порталу | [warning] Они у врат. Каждая трещина — шаг прочь от дома. |
+| tut_death_janus | Янус | первая смерть героя | Арена не отпускает так просто. Вставай, ронин. |
+| tut_death_hero | Рэн | возрождение | [coughing] Ронин… Даже здесь меня так называют. |
+| tut_early_janus | Янус | первая возможность досрочной волны | Смелые зовут следующую волну раньше. Боги щедры к смелым. |
 
-| Файл | Реплика |
-|---|---|
-| hydra_intro | [hissing, many voices] Ссруби одну голову… и вырасстут две! |
-| hydra_regrow | [laughing, hissing] Ещё голова! Ещё сссильнее! |
-| hydra_burned | [screaming] Огонь! Нет! Не огонь! |
-| hydra_death | [fading hiss] Ссслишком… много… огня… |
+### 2.3 Обычные реплики (случайные, по событиям)
 
-### Медуза (босс 20-й волны)
-**Voice Design:** `Seductive and cold female voice of a gorgon, smooth and hypnotic with a hissing undertone, mature, elegant and dangerous.`
-**Stability:** Creative
+| Файл | Кто | Когда | Реплика |
+|---|---|---|---|
+| hero_wave_start_01 | Рэн | начало волны | [determined] Ну, понеслось. |
+| hero_wave_start_02 | Рэн | начало волны | [sighs] Вместо подготовки к экзамену… вот это. |
+| hero_wave_start_03 | Рэн | начало волны | [confident] Я готов. Наверное. |
+| hero_wave_clear_01 | Рэн | волна пройдена | [relieved] Ещё одна. Ещё чуть-чуть до дома. |
+| hero_wave_clear_02 | Рэн | волна пройдена | [smug] Сенсей бы мной гордился. |
+| hero_wave_clear_03 | Рэн | волна пройдена | [tired] Мама думает, что я в библиотеке… |
+| hero_build_01 | Рэн | постройка башни | Здесь будет башня. |
+| hero_build_02 | Рэн | постройка башни | [satisfied] Отлично встала. |
+| hero_levelup_01 | Рэн | новый уровень | [determined] Я стал сильнее. |
+| hero_levelup_02 | Рэн | новый уровень | [grinning] Вот бы на экзамене так. |
+| hero_low_hp | Рэн | мало здоровья | [breathing heavily] Нужно… отступить… |
+| hero_ult | Рэн | ультимейт | [shouting, powerful] Разлом Пустоты! |
+| hero_ult_storm | Рэн | вариант ультимейта | [shouting] Алая буря! |
+| hero_ult_zero | Рэн | вариант ультимейта | [cold, intense] Абсолютный ноль. |
+| hero_finisher | Рэн | добивание босса (E) | [roaring] Это конец! |
+| hero_portal_low | Рэн | портал при смерти | [panicking] Нет-нет-нет! Только не врата! |
+| janus_wave_clear_01 | Янус | волна пройдена | Боги довольны. Продолжай. |
+| janus_wave_clear_02 | Янус | волна пройдена | [amused] Ты удивляешь даже меня, ронин. |
+| janus_portal_low | Янус | портал при смерти | [urgent] Врата трещат! Защищай их — или забудь о доме! |
+| ann_wave_01 | Глашатай | начало волны | [loud] Боги, смотрите! Новая волна выходит на арену! |
+| ann_wave_02 | Глашатай | начало волны | [dramatic] Твари идут! Устоит ли чужеземец? |
+| ann_wave_03 | Глашатай | начало волны | [excited] Пусть арена услышит звон стали! |
+| ann_wave_clear_01 | Глашатай | волна пройдена | [proud] Волна отбита! Боги рукоплещут! |
+| ann_wave_clear_02 | Глашатай | волна пройдена | [impressed] Чужеземец всё ещё стоит! Кто бы мог подумать! |
+| ann_clean_wave | Глашатай | волна без урона порталу | [delighted] Ни единой трещины на вратах! Великолепно! |
+| ann_boss | Глашатай | волна с боссом | [ominous] Затихните, боги… На арену выходит чемпион. |
+| ann_new_enemy | Глашатай | новый тип врага | [curious] А вот этого зверя арена ещё не видела! |
 
-| Файл | Реплика |
-|---|---|
-| medusa_intro | [whispers, seductive] Посмотри мне в глаза, герой… Только один раз. |
-| medusa_gaze | [hissing] Застынь… навеки. |
-| medusa_taunt | [laughs coldly] Твои башни теперь — мои статуи. |
-| medusa_stagger | [gasping, angry] Нет… не смей… |
-| medusa_death | [fading whisper] Я… ещё… увижу тебя… в камне… |
+### 2.4 Боссы — диалоги с героем
+В каждой сцене: глашатай объявляет → босс говорит → Рэн отвечает (в начале боя), реплики в бою, смерть босса, и
+короткий комментарий Януса после победы — он понемногу приоткрывает тайну.
 
-### Королева гарпий (босс 25-й волны, летающая)
-**Voice Design:** `Shrill, screeching female voice of a monstrous bird queen, wild and arrogant, piercing high pitch with raspy edges.`
-**Stability:** Creative
+#### Минотавр (5-я волна)
+| Файл | Кто | Когда | Реплика |
+|---|---|---|---|
+| ann_minotaur | Глашатай | объявление | [booming] Из лабиринта Крита — Минотавр! Сокрушитель героев! |
+| minotaur_intro | Минотавр | появление | [snorts, angry] Пришелец Януса… Мелкий. Тощий. Я растопчу тебя, как всех до тебя! |
+| hero_vs_minotaur | Рэн | ответ | [nervous joke] Бык в броне… Кендо такому точно не учит. |
+| minotaur_taunt_01 | Минотавр | в бою | [growling] Твои стрелы — щекотка для моей брони! |
+| minotaur_taunt_02 | Минотавр | в бою | [laughs menacingly] Беги, букашка… беги! |
+| minotaur_armor | Минотавр | броня сбита | [roaring, furious] Моя броня! Ты за это заплатишь! |
+| hero_minotaur_armor | Рэн | сразу после | [triumphant] Вот так-то лучше! |
+| minotaur_death | Минотавр | смерть | [pained, fading] Лабиринт… пал… |
+| janus_after_minotaur | Янус | после победы | Первый чемпион арены пал. Боги сделали ставки… и многие проиграли. |
 
-| Файл | Реплика |
-|---|---|
-| harpy_queen_intro | [screeching, arrogant] Небо принадлежит мне! Ползай в пыли, человек! |
-| harpy_queen_summon | [shrieking] Сёстры! Растерзайте его! |
-| harpy_queen_grounded | [panicked screech] Мои крылья! Нет! |
-| harpy_queen_death | [fading screech] Небо… без меня… |
+#### Цербер (10-я волна)
+| Файл | Кто | Когда | Реплика |
+|---|---|---|---|
+| ann_cerberus | Глашатай | объявление | [booming] Страж подземного мира! Трёхглавый Цербер! |
+| cerberus_intro | Цербер | появление | [growling, three voices] Мы… стережём… врата. Чужие… врата… не нужны. |
+| hero_vs_cerberus | Рэн | ответ | [disbelief] Три головы?! А кормить его кто будет?! |
+| cerberus_head | Цербер | голова повержена | [howling in pain] Одна голова… остальные… ГОЛОДНЫ! |
+| hero_cerberus_hint | Рэн | первая неудачная атака | [thinking] Огненную — льдом, ледяную — огнём… как задачка по химии. |
+| cerberus_death | Цербер | смерть | [whimpering, fading] Врата… открыты… |
+| janus_after_cerberus | Янус | после победы | [thoughtful] Даже Цербер не удержал тебя. Тот, кто был до тебя, тоже прошёл этот путь… |
+| hero_ask_janus_1 | Рэн | сразу после | [suspicious] Тот, кто был до меня? Янус, кто это был? |
+| janus_avoid_1 | Янус | сразу после | [cold] Готовься к следующей волне. |
 
-### Титан (финальный босс 30-й волны)
-**Voice Design:** `Colossal ancient titan made of stone, extremely deep slow resonant male voice, rumbling like an earthquake, calm, ancient and overwhelming.`
-**Stability:** Natural
+#### Гидра (15-я волна)
+| Файл | Кто | Когда | Реплика |
+|---|---|---|---|
+| ann_hydra | Глашатай | объявление | [booming] Из болот Лерны — бессмертная Гидра! |
+| hydra_intro | Гидра | появление | [hissing, many voices] Ссруби одну голову… и вырасстут две! Сссмешной маленький ронин! |
+| hero_vs_hydra | Рэн | ответ | [grim] Читал про тебя. Нужен огонь. Много огня. |
+| hydra_regrow | Гидра | голова отросла | [laughing, hissing] Ещё голова! Ещё сссильнее! |
+| hydra_burned | Гидра | обрубок прижжён | [screaming] Огонь! Нет! Не огонь! |
+| hero_hydra_burn | Рэн | сразу после | [satisfied] Говорил же — огонь. |
+| hydra_death | Гидра | смерть | [fading hiss] Ссслишком… много… огня… |
+| janus_after_hydra | Янус | после победы | Половина пути позади. Боги начинают ставить на тебя. |
+| hero_halfway | Рэн | сразу после | [hopeful] Половина… Держись, пересдача. Я иду. |
 
-| Файл | Реплика |
-|---|---|
-| titan_intro | [slow, deep, calm] Я старше этих стен. Старше богов. Ты — пыль. |
-| titan_phase2 | [rumbling, angry] Огонь и лёд… склонятся передо мной. |
-| titan_taunt | [slow] Тридцать волн… и всё напрасно. |
-| titan_kneel | [strained, surprised] Ты… поставил меня… на колени? |
-| titan_death | [fading, almost respectful] Наконец… достойный… противник. |
+#### Медуза (20-я волна)
+| Файл | Кто | Когда | Реплика |
+|---|---|---|---|
+| ann_medusa | Глашатай | объявление | [booming, cautious] Не смотрите ей в глаза, боги! Горгона Медуза! |
+| medusa_intro | Медуза | появление | [whispers, seductive] Новая игрушка Януса… Посмотри мне в глаза, мальчик. Только раз. |
+| hero_vs_medusa | Рэн | ответ | [nervous] Главное — не смотреть. Не смотреть… Блин, я посмотрел. |
+| medusa_gaze | Медуза | взгляд (окаменение башен) | [hissing] Застынь… навеки. |
+| medusa_taunt | Медуза | в бою | [laughs coldly] Твои башни теперь — мои статуи. |
+| hero_unpetrify | Рэн | расколдовал башню | Нет уж, башня мне ещё нужна! |
+| medusa_secret | Медуза | половина здоровья | [mocking] Знаешь, кем был тот, кто стоял здесь до тебя? Янус тебе не сказал? |
+| medusa_stagger | Медуза | на коленях (можно E) | [gasping, angry] Нет… не смей… |
+| medusa_death | Медуза | смерть | [fading whisper] Спроси Януса… о Титане… |
+| hero_ask_janus_2 | Рэн | после победы | [angry] Янус! Что ещё за Титан?! |
+| janus_avoid_2 | Янус | сразу после | [quietly] …Скоро узнаешь. Он ждёт тебя в конце. |
+
+#### Королева гарпий (25-я волна, летает)
+| Файл | Кто | Когда | Реплика |
+|---|---|---|---|
+| ann_harpy_queen | Глашатай | объявление | [booming] Владычица неба! Королева гарпий! |
+| harpy_queen_intro | Королева | появление | [screeching, arrogant] Небо принадлежит мне! Ползай в пыли, пришелец! |
+| hero_vs_harpy_queen | Рэн | ответ | [focused] Сбить на землю — и не дать взлететь. Как воздушный змей, только злой. |
+| harpy_queen_summon | Королева | призыв гарпий | [shrieking] Сёстры! Растерзайте его! |
+| harpy_queen_grounded | Королева | сбита на землю | [panicked screech] Земля! Нет! Только не земля! |
+| hero_wings | Рэн | оторвал крылья (E) | [roaring] Больше не взлетишь! |
+| harpy_queen_death | Королева | смерть | [fading screech] Небо… без меня… |
+| janus_after_harpy | Янус | после победы | [serious] Последний чемпион ждёт тебя. Он… был моим. Как ты сейчас. |
+| hero_realize | Рэн | сразу после | [quiet, shocked] Предыдущий… Это Титан. Он тоже хотел домой? |
+| janus_answer | Янус | сразу после | [heavy, sad] Он не выстоял. Врата пали. И арена сделала его своим. |
+
+#### Титан (30-я волна, финал)
+| Файл | Кто | Когда | Реплика |
+|---|---|---|---|
+| ann_titan | Глашатай | объявление | [trembling, grand] Боги… встаньте. Последний чемпион арены. Титан! |
+| titan_intro | Титан | появление | [slow, deep, bitter] Ещё один… Он и тебе обещал дорогу домой, мальчик? |
+| hero_vs_titan | Рэн | ответ | [firm] Обещал. И я дойду. В отличие от тебя. |
+| titan_reply | Титан | сразу после | [rumbling laugh] Я тоже так говорил. Тысячу лет назад. |
+| titan_phase2 | Титан | вторая фаза (стихии) | [rumbling, angry] Огонь и лёд… склонятся передо мной. |
+| hero_titan_phase2 | Рэн | сразу после | [gritting teeth] Тогда я ударю тем, что не склонится! |
+| titan_taunt | Титан | в бою | [slow] Посмотри на эти стены. Здесь все однажды остаются. |
+| titan_kneel | Титан | на коленях (можно E) | [strained, surprised] Ты… поставил меня… на колени? |
+| hero_titan_finish | Рэн | добивание | [softly, then shouting] Прости. Мне нужно домой! |
+| titan_death | Титан | смерть | [fading, almost grateful] Наконец… свобода… Иди, мальчик. Не оглядывайся. |
+
+### 2.5 Финал, поражение, бесконечный режим
+
+| Файл | Кто | Когда | Реплика |
+|---|---|---|---|
+| ann_victory | Глашатай | победа | [triumphant] Тридцать волн! Боги Олимпа приветствуют нового чемпиона арены! |
+| janus_victory | Янус | победа | [warm] Ты сделал то, что не смог никто. Врата открыты, ронин. Ты свободен. |
+| hero_victory | Рэн | победа | [relieved laugh] Свободен… А экзамен? Я ведь проспал пересдачу, да? |
+| janus_offer_endless | Янус | кнопка «Продолжить?» | [amused] Или… останься ещё ненадолго. Боги хотят большего. |
+| hero_endless | Рэн | бесконечный режим | [cocky] Ладно, ещё пара волн. Экзамен всё равно уже проспал. |
+| ann_endless | Глашатай | бесконечный режим | [excited] Бесконечная битва! Сколько продержится чемпион?! |
+| janus_defeat | Янус | поражение | [sad] Врата пали… Теперь ты принадлежишь арене. Как и он. |
+| hero_defeat | Рэн | поражение | [desperate] Нет… Только не так… |
+| ann_defeat | Глашатай | поражение | [somber] Портал пал… Арена погрузилась во тьму. |
+
+### 2.6 Подготовка между актами (короткие сцены в начале фазы подготовки)
+
+| Файл | Кто | Когда | Реплика |
+|---|---|---|---|
+| act2_janus | Янус | перед 11-й волной | Теперь враги умнее. Некоторые пойдут другой дорогой — развилками. |
+| act2_hero | Рэн | сразу после | [sighs] Как будто сложность в игре подняли. Ну конечно. |
+| act3_janus | Янус | перед 21-й волной | [serious] Арена злится. Сильнейшие пойдут в броне и с дарами богов. Будь готов. |
+| act3_hero | Рэн | сразу после | [determined] Девять волн до дома. Я не остановлюсь. |
 
 ---
 
