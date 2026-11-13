@@ -204,8 +204,8 @@ def make_plaster(name="T2_Plaster", n=512):
     col = warm_shade(base, shade)
     # Облупившиеся участки — светлый камень с тёмным краем
     peel = fbm(n, ((4, .5), (10, .3), (40, .2)), 15)
-    pm = smooth(peel, .70, .73)
-    outline = smooth(peel, .67, .70) * (1 - pm)
+    pm = smooth(peel, .80, .83)
+    outline = smooth(peel, .77, .80) * (1 - pm)
     stone = np.array((.90, .78, .61)) * (shade[..., None] * 1.02)
     col = col * (1 - pm[..., None]) + stone * pm[..., None]
     col *= (1 - .35 * outline)[..., None]

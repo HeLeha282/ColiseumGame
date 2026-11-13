@@ -82,18 +82,18 @@ def OF(r, deg, y=0.0):
 
 #  key: (текстура, режим UV, размер плитки м, цвет sRGB, metal, rough, emission, bevel, сегменты bevel, гладкость)
 MATS = {
-    "Stone":     ("T2_Stone", "block", 0, (1, 1, 1), 0.0, .85, 0, .06, 2, True),
-    "StoneFar":  ("T2_Stone", "block", 0, (1, 1, 1), 0.0, .85, 0, .05, 1, True),
-    "Paving":    ("T2_Paving", "block", 0, (1, 1, 1), 0.0, .9, 0, .045, 1, True),
-    "Seat":      ("T2_Paving", "block", 0, (.97, .95, .92), 0.0, .9, 0, .04, 1, True),
+    "Stone":     ("T2_Stone", "block", 0, (.95, .84, .70), 0.0, .85, 0, .06, 2, True),
+    "StoneFar":  ("T2_Stone", "block", 0, (.93, .82, .68), 0.0, .85, 0, .05, 1, True),
+    "Paving":    ("T2_Paving", "block", 0, (.92, .83, .72), 0.0, .9, 0, .045, 1, True),
+    "Seat":      ("T2_Paving", "block", 0, (.90, .80, .68), 0.0, .9, 0, .04, 1, True),
     "Brick":     ("T2_Brick", "world", 1.5, (1, 1, 1), 0.0, .9, 0, 0, 0, False),
-    "Plaster":   ("T2_Plaster", "world", 3.0, (1, 1, 1), 0.0, .9, 0, 0, 0, False),
+    "Plaster":   ("T2_Plaster", "world", 4.5, (1, 1, 1), 0.0, .9, 0, 0, 0, False),
     "Sand":      ("T2_Sand", "world", 7.0, (1, 1, 1), 0.0, 1.0, 0, 0, 0, False),
-    "Grass":     ("T2_Grass", "world", 9.0, (1, 1, 1), 0.0, 1.0, 0, 0, 0, True),
+    "Grass":     ("T2_Grass", "world", 32.0, (1, 1, 1), 0.0, 1.0, 0, 0, 0, True),
     "Roof":      ("T2_Roof", "world", 2.0, (1, 1, 1), 0.0, .8, 0, 0, 0, False),
     "Banner":    ("T2_Banner", "banner", 0, (1, 1, 1), 0.0, .85, 0, 0, 0, False),
     "Gold":      (None, "none", 0, (.98, .70, .24), 1.0, .32, 0, .015, 1, True),
-    "Iron":      (None, "none", 0, (.30, .19, .12), .35, .55, 0, .012, 1, True),
+    "Iron":      (None, "none", 0, (.46, .30, .19), .35, .55, 0, .012, 1, True),
     "Cloth":     (None, "none", 0, (.66, .10, .09), 0.0, .85, 0, 0, 0, True),
     "RedPanel":  (None, "none", 0, (.55, .10, .08), 0.0, .8, 0, 0, 0, False),
     "Shadow":    (None, "none", 0, (.22, .14, .10), 0.0, 1.0, 0, 0, 0, False),
@@ -102,7 +102,7 @@ MATS = {
     "Leaf":      (None, "none", 0, (.36, .45, .14), 0.0, .9, 0, 0, 0, True),
     "LeafLight": (None, "none", 0, (.62, .64, .18), 0.0, .9, 0, 0, 0, True),
     "Bark":      (None, "none", 0, (.45, .28, .16), 0.0, .9, 0, 0, 0, True),
-    "Fire":      (None, "none", 0, (1.0, .55, .12), 0.0, 1.0, 6.0, 0, 0, True),
+    "Fire":      (None, "none", 0, (1.0, .45, .10), 0.0, 1.0, 6.0, 0, 0, True),
     "Ember":     (None, "none", 0, (.85, .22, .06), 0.0, 1.0, 2.0, 0, 0, True),
     "PortalGlow": (None, "none", 0, (.25, .95, 1.0), 0.0, .5, 5.0, 0, 0, True),
 }
@@ -506,7 +506,7 @@ def cypress(b, f, h=9.0):
             off = rr * .38
             c = f.p(math.cos(a) * off, math.sin(a) * off, z)
             mat = "LeafLight" if (math.sin(a) < -.2 and rnd.random() < .7) or t > .85 else "Leaf"
-            b.blob(mat, c, rr * .75, rr * .75, h / levels * .95, subdiv=1, jitter=.2)
+            b.blob(mat, c, rr * .75, rr * .75, h / levels * .95, subdiv=2, jitter=.12)
     b.blob("Leaf", f.p(0, 0, h - .2), maxr * .25, maxr * .25, .6, subdiv=1)
 
 
@@ -524,7 +524,7 @@ def bush(b, f, s=1.0):
         z = (.55 + rnd.uniform(0, .6) - rr * .4) * s
         r = rnd.uniform(.38, .55) * s
         mat = "LeafLight" if z > .9 * s or rnd.random() < .3 else "Leaf"
-        b.blob(mat, f.p(math.cos(a) * rr, math.sin(a) * rr, z), r, r, r * .85, subdiv=1, jitter=.22)
+        b.blob(mat, f.p(math.cos(a) * rr, math.sin(a) * rr, z), r, r, r * .85, subdiv=2, jitter=.14)
 
 
 def portal_pedestal(b, f):
@@ -799,18 +799,18 @@ def cavea(b):
         moss_tuft(b, U(47.0 + k * depth + .4, deg, 11.4 + (k + 1) * rise), .3)
 
 
-def engaged_column(b, f, x, z0, z1, mat="StoneFar"):
-    """Полуколонна на лице опоры внешней аркады (лист 9): база, ствол, золотая капитель."""
+def engaged_column(b, f, x, z0, z1, mat="StoneFar", top=None):
+    """Полуколонна на лице опоры внешней аркады (лист 9): база, ствол, золотая капитель.
+    top — высота слома (руины): ниже z1 колонна обрывается без капители."""
     r = .34
     c = f.at(x, -.28, 0)
+    if top is not None and top < z0 + .5:
+        return
     b.lbox(mat, c, 0, .1, z0 + .2, .9, .7, .4)
-    if b.clip is not None:
-        fr, cut, _ = b.clip
-        top = cut((c.o - fr.o).dot(fr.x))
-        if top < z1:
-            if top > z0 + 1.0:
-                b.cyl(mat, c.p(0, 0, z0 + .4), f.z, r, top - z0 - .4 - .2, seg=12)
-            return
+    if top is not None and top < z1:
+        if top > z0 + 1.0:
+            b.cyl(mat, c.p(0, 0, z0 + .4), f.z, r, top - z0 - .6, seg=12)
+        return
     b.cyl(mat, c.p(0, 0, z0 + .4), f.z, r, z1 - z0 - 1.0, seg=12)
     b.cyl("Gold", c.p(0, 0, z1 - .6), f.z, r * 1.02, .38, seg=12, r2=r * 1.5)
     b.lbox(mat, c, 0, .05, z1 - .11, 1.0, .8, .22)
@@ -821,25 +821,26 @@ CROWN_TOP = 33.0
 
 
 def crown_cut_heights(bays):
-    """Высота сохранившейся стены на каждой опоре (по краям руин — целиком, в центре — до 1-го яруса)."""
+    """Высота сохранившейся опоры (по краям руин — целиком, в центре — около 1-го яруса)."""
     rnd = random.Random(31)
     hs = []
     step = 360.0 / bays
     for i in range(bays + 1):
-        deg = i * step
-        rd = ruin_depth(deg)
+        rd = ruin_depth(i * step)
         if rd <= 0:
             hs.append(99.0)
         else:
             full = CROWN_TOP + 1.4
-            low = 21.5 + rnd.uniform(0, 2.5)
-            hs.append(full - (full - low) * rd + rnd.uniform(-1.6, 1.6) * rd)
+            low = 21.0 + rnd.uniform(0, 3.0)
+            k = rnd.choice((.45, .7, .85, 1.0, 1.0))      # некоторые опоры стоят выше соседей
+            hs.append(full - (full - low) * rd * k + rnd.uniform(-1.5, 1.5) * rd)
     return hs
 
 
 def crown(b):
-    """Лист 9 / 10: внешняя трёхъярусная аркада поверх трибун (r 60.6, y 20.6..34). В секторе руин —
-    рваный верх, обвалившиеся арки, обнажённый кирпич, плющ и груды."""
+    """Лист 9 / 10: внешняя трёхъярусная аркада поверх трибун (r 60.6, y 20.6..34). В секторе руин опоры
+    обрываются на своей высоте (верхний камень — обнажённый кирпич), арки держатся только там, где обе
+    опоры целы (иначе остаются лишь «пятки» арок), плющ свисает с обломанных опор, внизу груды."""
     bays = 72
     step = 360.0 / bays
     rf = 60.6
@@ -853,43 +854,55 @@ def crown(b):
         dp = i * step
         dc = dp + step / 2
         f = RF(rf, dc)
-        rd = ruin_depth(dc)
-        if rd > 0:
-            hl, hr = hs[i], hs[i + 1]
-            jag = [rnd.uniform(-1.0, 1.0) for _ in range(6)]
-
-            def cut(x, hl=hl, hr=hr, jag=jag):
-                t = min(max((x + chord / 2) / chord, 0), 1)
-                j = jag[min(5, int(t * 5.999))]
-                return hl + (hr - hl) * t + j * .9
-            b.clip = (f, cut, rnd)
+        pf = RF(rf, dp)
+        hp = hs[i]                         # высота этой (левой) опоры
+        hmin = min(hs[i], hs[i + 1])       # до этой высоты целы обе опоры пролёта
+        intact = hmin >= 90
         for li, (z0, z1) in enumerate(CROWN_LEVELS):
             zs = z1 - .5 - hw
-            # опора на левой границе пролёта
-            pf = RF(rf, dp)
-            b.lbox("StoneFar", pf, 0, depth / 2, (z0 + z1 - .5) * .5, pw, depth, z1 - .5 - z0 - .02)
-            engaged_column(b, pf, 0, z0, z1 - .5)
-            voussoirs(b, "StoneFar", f, 0, 0, hw, zs, .38, depth, n=9)
-            b.prism("Plaster", arch_outline(hw + .15, zs, z1 - .5), f, .04, depth - .08)
-            b.lbox("StoneFar", f, 0, depth / 2, z0 + .15, 2 * hw, depth, .3)
-            course(b, "StoneFar", f, -chord / 2, chord / 2, -.2, depth + .1, z1 - .5, z1, block=2.0)
-            b.lbox("Gold", f, 0, -.22, z1 - .48, chord, .04, .06)
-            if li == 1 and i % 3 == 0 and rd == 0:
+            # Опора: три блока, в руинах — только те, что ниже слома; верхний уцелевший — кирпичное ядро
+            hb = (z1 - .5 - z0) / 3
+            for k in range(3):
+                bz0 = z0 + hb * k
+                if bz0 + hb * .5 > hp:
+                    break
+                last = bz0 + hb * 1.5 > hp
+                b.lbox("Brick" if (last and not intact) else "StoneFar", pf, 0, depth / 2, bz0 + hb / 2,
+                       pw * (.85 if last and not intact else 1), depth * (.8 if last and not intact else 1), hb - .02)
+            engaged_column(b, pf, 0, z0, z1 - .5, top=None if hp >= z1 else hp)
+            if z1 <= hmin:
+                voussoirs(b, "StoneFar", f, 0, 0, hw, zs, .38, depth, n=9)
+                b.prism("Plaster", arch_outline(hw + .15, zs, z1 - .5), f, .04, depth - .08)
+                course(b, "StoneFar", f, -chord / 2, chord / 2, -.2, depth + .1, z1 - .5, z1, block=2.0)
+                b.lbox("Gold", f, 0, -.22, z1 - .48, chord, .04, .06)
+            elif zs < hmin:
+                # Арка обвалилась: остаются «пятки» — нижние клинчатые камни с обеих сторон
+                n = 9
+                for j in range(n):
+                    t = math.pi * (j + .5) / n
+                    if zs + (hw + .19) * math.sin(t) > hmin - .3 or 2 < j < n - 3:
+                        continue
+                    rr = hw + .19
+                    c = f.p(rr * math.cos(t), depth * .5, zs + rr * math.sin(t))
+                    bx = f.x * math.sin(t) - f.z * math.cos(t)
+                    bz = f.x * math.cos(t) + f.z * math.sin(t)
+                    b.box("StoneFar", c, bx, f.y, bz, math.pi * rr / n * .94, depth, .38)
+            if z0 + .3 < hmin:
+                b.lbox("StoneFar", f, 0, depth / 2, z0 + .15, 2 * hw, depth, .3)
+            if li == 1 and i % 3 == 0 and intact:
                 banner(b, pf.at(0, -.66, z1 - .9), 1.0, 2.6)
-        course(b, "StoneFar", f, -chord / 2, chord / 2, -.4, depth + .2, CROWN_TOP, CROWN_TOP + .4, block=2.4)
-        b.lbox("StoneFar", RF(rf, dp), 0, depth / 2, CROWN_TOP + .75, 1.5, depth + .3, .7)
-        if b.clip is not None:
-            fr, cut, _ = b.clip
-            for x in (-chord * .3, 0, chord * .3):
-                top = cut(x)
-                if top < CROWN_TOP and rnd.random() < .6:
-                    ivy(b, f, x, -.05, top - .2, rnd.uniform(1.0, 3.0))
-                    moss_tuft(b, f.p(x, depth * .5, top), .4)
-            # Обломки у подножия — на верхних рядах трибун
+        if intact or hp >= 90:
+            if intact:
+                course(b, "StoneFar", f, -chord / 2, chord / 2, -.4, depth + .2, CROWN_TOP, CROWN_TOP + .4, block=2.4)
+            if hp >= 90:
+                b.lbox("StoneFar", pf, 0, depth / 2, CROWN_TOP + .75, 1.5, depth + .3, .7)
+        if not intact:
+            if hp < CROWN_TOP:
+                if rnd.random() < .75:
+                    ivy(b, pf, 0, -.05, hp - .2, rnd.uniform(1.2, min(4.0, hp - 21.0)))
+                moss_tuft(b, pf.p(0, depth * .5, hp), .45)
             if rnd.random() < .7:
                 rubble(b, RF(rf - 1.6, dc + rnd.uniform(-1.5, 1.5), 20.4), rnd.uniform(.9, 1.6))
-            b.clip = None
-
 
 def outer_facade(b):
     """Нижний внешний фасад (снаружи, r 62.2, y 0..20.6): опоры, глухие арки с кирпичом, карнизы. Виден с холмов."""
