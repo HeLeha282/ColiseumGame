@@ -263,20 +263,11 @@ namespace ColiseumGame.EditorTools
         {
             var root = new GameObject("Enemy_" + look.key);
             root.AddComponent<Health>();
-            var mat = Material(MatDir, "Enemy_" + look.key, look.color);
             var visual = Empty("Visual", root.transform, Vector3.zero);
-            GameObject body;
-            float barY;
             if (cfg.isFlying)
             {
                 var col = root.AddComponent<SphereCollider>();
                 col.radius = look.small ? 0.45f : 0.7f;
-                float s = look.small ? 0.6f : 1f;
-                body = Prim(PrimitiveType.Sphere, "Body", visual, Vector3.zero, new Vector3(0.9f, 0.6f, 1.3f) * s, mat);
-                Box("WingL", visual, new Vector3(-0.95f, 0.1f, 0f) * s, new Vector3(1.4f, 0.06f, 0.6f) * s, mat, false, Quaternion.Euler(0f, 0f, 15f));
-                Box("WingR", visual, new Vector3(0.95f, 0.1f, 0f) * s, new Vector3(1.4f, 0.06f, 0.6f) * s, mat, false, Quaternion.Euler(0f, 0f, -15f));
-                Box("Beak", visual, new Vector3(0f, 0f, 0.7f) * s, new Vector3(0.2f, 0.2f, 0.35f) * s, Mats["Visor"]);
-                barY = 1.1f * s;
             }
             else
             {
@@ -293,42 +284,23 @@ namespace ColiseumGame.EditorTools
                 agent.stoppingDistance = 0.2f;
                 agent.autoBraking = false;
                 agent.obstacleAvoidanceType = ObstacleAvoidanceType.LowQualityObstacleAvoidance;
-                if (look.flat)
-                    body = Box("Body", visual, new Vector3(0f, 0.45f, 0f), new Vector3(0.8f, 0.6f, 1.6f), mat);
-                else if (look.boxy)
-                    body = Box("Body", visual, new Vector3(0f, 1f, 0f), new Vector3(1.1f, 1.6f, 0.9f), mat);
-                else
-                    body = Prim(PrimitiveType.Capsule, "Body", visual, new Vector3(0f, 1f, 0f), Vector3.one, mat);
-                Box("Face", visual, new Vector3(0f, look.flat ? 0.6f : 1.5f, look.flat ? 0.8f : 0.45f), new Vector3(0.5f, 0.15f, 0.15f), Mats["Visor"]);
-                barY = look.flat ? 1.5f : 2.5f;
             }
-            root.transform.localScale = Vector3.one * look.scale;
 
-            // Детали-подсказки силуэта
-            if (look.shield) Box("Shield", visual, new Vector3(0f, 1f, 0.65f), new Vector3(1.3f, 1.7f, 0.15f), Mats["Shield"]);
-            if (look.bigShield) Box("Shield", visual, new Vector3(0f, 1f, 0.65f), new Vector3(1.6f, 2.0f, 0.18f), Mats["Shield"]);
-            if (look.horns)
-            {
-                Box("HornL", visual, new Vector3(-0.3f, 2.0f, 0.1f), new Vector3(0.08f, 0.35f, 0.08f), Mats["Steel"], false, Quaternion.Euler(0f, 0f, 30f));
-                Box("HornR", visual, new Vector3(0.3f, 2.0f, 0.1f), new Vector3(0.08f, 0.35f, 0.08f), Mats["Steel"], false, Quaternion.Euler(0f, 0f, -30f));
-            }
-            if (look.hat) Prim(PrimitiveType.Cylinder, "Hat", visual, new Vector3(0f, 2.15f, 0f), new Vector3(0.75f, 0.35f, 0.75f), Material(MatDir, "EnemyHat", new Color(0.2f, 0.15f, 0.25f)));
-            if (look.robe) Prim(PrimitiveType.Cylinder, "Robe", visual, new Vector3(0f, 0.45f, 0f), new Vector3(1.05f, 0.45f, 1.05f), mat);
-            if (look.eye) Prim(PrimitiveType.Sphere, "Eye", visual, new Vector3(0f, 1.55f, 0.42f), Vector3.one * 0.35f, Material(MatDir, "EnemyEye", new Color(1f, 0.95f, 0.8f), 1f));
-            if (look.staff) Prim(PrimitiveType.Cylinder, "Staff", visual, new Vector3(0.55f, 1.1f, 0.25f), new Vector3(0.08f, 1.0f, 0.08f), Mats["Wood"]);
-            if (look.bow) Box("Bow", visual, new Vector3(-0.6f, 1.2f, 0.2f), new Vector3(0.08f, 1.2f, 0.08f), Mats["Wood"]);
-            GameObject armorGo = null;
-            if (look.armor)
-            {
-                var armor = Empty("Armor", visual, Vector3.zero);
-                Box("Chest", armor, new Vector3(0f, 1.15f, 0.42f), new Vector3(0.95f, 0.8f, 0.2f), Mats["Armor"]);
-                Box("ShoulderL", armor, new Vector3(-0.55f, 1.5f, 0f), new Vector3(0.35f, 0.25f, 0.6f), Mats["Armor"]);
-                Box("ShoulderR", armor, new Vector3(0.55f, 1.5f, 0f), new Vector3(0.35f, 0.25f, 0.6f), Mats["Armor"]);
-                Box("Helmet", armor, new Vector3(0f, 1.85f, 0f), new Vector3(0.7f, 0.3f, 0.7f), Mats["Armor"]);
-                armorGo = armor.gameObject;
-            }
+            // Узнаваемая фигура из примитивов (скелет, сатир, кентавр...) — см. PrototypeBuilder.EnemyModels
+            var model = BuildEnemyModel(look, visual);
+            if (cfg.isFlying && look.small) visual.localScale = Vector3.one * 0.75f;
+            float barY = model.barY * visual.localScale.y;
+            var body = model.body.gameObject;
+            GameObject armorGo = model.armor;
+            root.transform.localScale = Vector3.one * look.scale;
+            var rig = visual.gameObject.AddComponent<EnemyRig>();
+            AssignArray(rig, "legs", model.legs.ToArray());
+            AssignArray(rig, "arms", model.arms.ToArray());
+            AssignArray(rig, "wings", model.wings.ToArray());
+            AssignArray(rig, "tails", model.tails.ToArray());
+
             if (cfg.element != Element.None)   // светящийся «камень стихии» на груди
-                Prim(PrimitiveType.Sphere, "ElementCore", visual, new Vector3(0f, cfg.isFlying ? 0.2f : 1.1f, 0.5f), Vector3.one * 0.3f, Material(MatDir, "EnemyElement_" + cfg.element, Elements.Color(cfg.element), 2f));
+                Prim(PrimitiveType.Sphere, "ElementCore", visual, model.core, Vector3.one * 0.22f, Material(MatDir, "EnemyElement_" + cfg.element, Elements.Color(cfg.element), 2f));
 
             var indicator = Prim(PrimitiveType.Sphere, "ElementAura", root.transform, new Vector3(0.55f, barY + 0.25f, 0f), Vector3.one * 0.22f, Mats["LevelMark"]);
             indicator.GetComponent<Renderer>().enabled = false;
