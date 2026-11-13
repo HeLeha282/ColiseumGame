@@ -110,6 +110,11 @@
 - Красивый Колизей v2: `ArtSource/Coliseum/v2` (Blender: `build_all()` → `export_fbx()`), в Unity — `Art/Coliseum/Coliseum_Art.fbx`,
   ставится генератором (`ColiseumArtIntegration`). Серые меши остаются только коллайдерами.
 - Ввод: `Assets/_Project/Settings/ColiseumControls.inputactions`, читается через `InputReader`.
+- Катана героя: `ArtSource/Hero/Katana/build_katana.py` → `Art/Hero/Katana.fbx` (+ `Tools/SoundLab/katana.glb`).
+  Удары — `SwordSwing.cs` (3 удара, урон в `HitTime`); те же числа продублированы в `Tools/SoundLab/index.html` (ATTACKS).
+- Звуки подбираются в **SoundLab** (`Tools/SoundLab/index.html`): анимация на каждый SFX, черновики —
+  `ArtSource/Audio/Drafts/` (не в git), выбранные — `Assets/_Project/Audio/SFX/<Папка>/`. После правки промтов —
+  `python Tools/SoundLab/gen_data.py`.
 - Автотесты через MCP: `PlaytestBot` (только в редакторе) — бот-игрок, жмёт клавиши через очередь Input System,
   сам строит/качает башни, берёт перки, жмёт E у боссов, запускает волны (поля `speed`, `difficulty`, `endlessWaves`).
   Добавлять в Play Mode отдельным вызовом ПОСЛЕ входа в Play Mode. Отчёт — строки `BOT_WAVE` в Editor.log.

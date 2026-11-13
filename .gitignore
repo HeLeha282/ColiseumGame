@@ -70,3 +70,6 @@ desktop.ini
 
 # ���������� Blender
 *.blend1
+
+# Черновики звуков (SoundLab) — не коммитим, в игру идут только выбранные
+ArtSource/Audio/Drafts/

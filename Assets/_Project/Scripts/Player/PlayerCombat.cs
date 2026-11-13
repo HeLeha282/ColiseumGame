@@ -24,7 +24,6 @@ namespace ColiseumGame
         [SerializeField] private Transform hammerVisual;
         [SerializeField] private Transform arrowSpawn;
         [SerializeField] private Arrow arrowPrefab;
-        [SerializeField] private float swingDuration = 0.15f;
         [SerializeField] private float comboWindow = 1.1f;
 
         public WeaponType Weapon { get; private set; } = WeaponType.Sword;
@@ -37,7 +36,8 @@ namespace ColiseumGame
         private TowerPlacer placer;
         private float cooldown, chargeTime, comboTimer;
         private int combo;
-        private Quaternion swordRestRotation, hammerRestRotation;
+        private Quaternion hammerRestRotation;
+        private SwordSwing swordSwing;
 
         private float ChargeTime => config.bowChargeTime * Prog(p => p.BowChargeMultiplier);
         private float BerserkMultiplier =>
@@ -51,7 +51,7 @@ namespace ColiseumGame
         {
             player = GetComponent<PlayerController>();
             placer = GetComponent<TowerPlacer>();
-            if (swordVisual != null) swordRestRotation = swordVisual.localRotation;
+            if (swordVisual != null) swordSwing = swordVisual.GetComponent<SwordSwing>();
             if (hammerVisual != null) hammerRestRotation = hammerVisual.localRotation;
             SetWeapon(WeaponType.Sword);
         }
@@ -125,7 +125,8 @@ namespace ColiseumGame
             combo = comboTimer > 0f ? combo + 1 : 1;
             comboTimer = comboWindow;
             player.FaceDirection(AimUtil.CameraForwardFlat());
-            if (swordVisual != null) StartCoroutine(SwingAnimation(swordVisual, swordRestRotation));
+            int index = Mathf.Clamp(combo, 1, 3) - 1;
+            if (swordSwing != null) swordSwing.Play(index);
 
             float dmg = SwordDamage;
             bool third = combo >= 3;
@@ -135,6 +136,14 @@ namespace ColiseumGame
                 dmg *= 1.5f;
                 if (SwordLevel >= 3) player.Dash(transform.forward, 4f, 0.15f);
             }
+            // Урон — в середине реза (под анимацию и будущий звук попадания)
+            StartCoroutine(DelayedSwordHit(SwordSwing.Attacks[index].HitTime, dmg));
+        }
+
+        private IEnumerator DelayedSwordHit(float delay, float dmg)
+        {
+            yield return new WaitForSeconds(delay);
+            if (!player.IsAlive) yield break;
             MeleeArc(dmg, config.swordRange, config.swordArc);
             if (SwordLevel >= 5) BladeWave(dmg * 0.7f);
         }
@@ -186,19 +195,6 @@ namespace ColiseumGame
                 if (along < 1f || along > 7f || (p - dir * along).magnitude > 1.2f + e.Radius) continue;
                 HitEnemy(e, dmg);
             }
-        }
-
-        private IEnumerator SwingAnimation(Transform t, Quaternion rest)
-        {
-            float time = 0f;
-            while (time < swingDuration)
-            {
-                time += Time.deltaTime;
-                float angle = Mathf.Lerp(-70f, 70f, time / swingDuration);
-                t.localRotation = rest * Quaternion.Euler(0f, angle, 0f);
-                yield return null;
-            }
-            t.localRotation = rest;
         }
 
         /// <summary>Удар молотком при установке башни.</summary>

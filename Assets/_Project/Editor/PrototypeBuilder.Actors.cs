@@ -110,6 +110,98 @@ namespace ColiseumGame.EditorTools
             return root;
         }
 
+        /// <summary>Катана Рэна (модель из ArtSource/Hero/Katana) + анимация ударов SwordSwing + шлейф.</summary>
+        private static Transform BuildKatana(Transform holder)
+        {
+            var sword = Empty("Sword", holder, Vector3.zero);
+            sword.localRotation = SwordSwing.RestRotation;
+            const string fbx = "Assets/_Project/Art/Hero/Katana.fbx";
+            var model = AssetDatabase.LoadAssetAtPath<GameObject>(fbx);
+            if (model != null)
+            {
+                var importer = (ModelImporter)AssetImporter.GetAtPath(fbx);
+                if (importer.materialImportMode != ModelImporterMaterialImportMode.None || importer.importAnimation)
+                {
+                    importer.materialImportMode = ModelImporterMaterialImportMode.None;
+                    importer.importAnimation = false;
+                    importer.animationType = ModelImporterAnimationType.None;
+                    importer.SaveAndReimport();
+                    model = AssetDatabase.LoadAssetAtPath<GameObject>(fbx);
+                }
+                var go = (GameObject)Object.Instantiate(model, sword);
+                go.name = "Katana";
+                go.transform.localPosition = Vector3.zero;
+                go.transform.localRotation = Quaternion.Euler(0f, 180f, 0f);   // в FBX клинок смотрит в -Z
+                var r = go.GetComponentInChildren<MeshRenderer>();
+                var mats = new Material[r.sharedMaterials.Length];
+                // порядок — как в MATS в build_katana.py
+                var defs = new (string name, Color c, float metal, float smooth)[]
+                {
+                    ("Steel", new Color(0.66f, 0.69f, 0.74f), 1f, 0.82f),
+                    ("Edge", new Color(0.93f, 0.95f, 0.98f), 1f, 0.93f),
+                    ("Gold", new Color(0.9f, 0.66f, 0.25f), 1f, 0.7f),
+                    ("Iron", new Color(0.11f, 0.1f, 0.1f), 0.9f, 0.45f),
+                    ("Wrap", new Color(0.06f, 0.06f, 0.08f), 0f, 0.25f),
+                    ("Same", new Color(0.88f, 0.85f, 0.78f), 0f, 0.35f),
+                    ("Red", new Color(0.5f, 0.05f, 0.05f), 0f, 0.4f),
+                };
+                for (int i = 0; i < mats.Length && i < defs.Length; i++)
+                {
+                    var m = Material(MatDir, "Katana_" + defs[i].name, defs[i].c, 0f, defs[i].smooth);
+                    m.SetFloat("_Metallic", defs[i].metal);
+                    mats[i] = m;
+                }
+                r.sharedMaterials = mats;
+                r.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+            }
+            else
+            {
+                Box("Blade", sword, new Vector3(0f, 0f, 0.55f), new Vector3(0.025f, 0.06f, 0.9f), Mats["Steel"]);
+                Box("Guard", sword, new Vector3(0f, 0f, 0.08f), new Vector3(0.09f, 0.09f, 0.012f), Mats["Wood"]);
+            }
+
+            // Шлейф: светлая лента за кончиком клинка, только во время реза
+            var tip = Empty("TrailPoint", sword, new Vector3(0f, -0.01f, 0.72f));
+            var trail = tip.gameObject.AddComponent<TrailRenderer>();
+            trail.time = 0.12f;
+            trail.minVertexDistance = 0.02f;
+            trail.widthCurve = new AnimationCurve(new Keyframe(0f, 0.32f), new Keyframe(1f, 0f));
+            trail.colorGradient = new Gradient
+            {
+                colorKeys = new[] { new GradientColorKey(new Color(0.85f, 0.92f, 1f), 0f), new GradientColorKey(new Color(0.6f, 0.75f, 1f), 1f) },
+                alphaKeys = new[] { new GradientAlphaKey(0.55f, 0f), new GradientAlphaKey(0f, 1f) },
+            };
+            trail.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+            trail.emitting = false;
+            trail.sharedMaterial = TrailMaterial();
+
+            var swing = sword.gameObject.AddComponent<SwordSwing>();
+            Assign(swing, ("trail", trail));
+            return sword;
+        }
+
+        private static Material TrailMaterial()
+        {
+            string path = MatDir + "/M_SwordTrail.mat";
+            var mat = AssetDatabase.LoadAssetAtPath<Material>(path);
+            if (mat == null)
+            {
+                mat = new Material(Shader.Find("Universal Render Pipeline/Particles/Unlit"));
+                AssetDatabase.CreateAsset(mat, path);
+            }
+            mat.SetFloat("_Surface", 1f);
+            mat.SetFloat("_Blend", 2f);              // Additive
+            mat.SetFloat("_SrcBlend", (float)UnityEngine.Rendering.BlendMode.SrcAlpha);
+            mat.SetFloat("_DstBlend", (float)UnityEngine.Rendering.BlendMode.One);
+            mat.SetFloat("_ZWrite", 0f);
+            mat.SetOverrideTag("RenderType", "Transparent");
+            mat.EnableKeyword("_SURFACE_TYPE_TRANSPARENT");
+            mat.renderQueue = (int)UnityEngine.Rendering.RenderQueue.Transparent;
+            mat.SetColor("_BaseColor", Color.white);
+            EditorUtility.SetDirty(mat);
+            return mat;
+        }
+
         private static GameObject BuildPlayer(PlayerConfig config, HeroConfig hero, GameObject arrowPrefab)
         {
             var root = new GameObject("Player") { tag = "Player" };
@@ -130,10 +222,7 @@ namespace ColiseumGame.EditorTools
             var head = Empty("Head", root.transform, new Vector3(0f, 1.65f, 0f));
             var holder = Empty("WeaponHolder", head, new Vector3(0.35f, -0.35f, 0.45f));
 
-            var sword = Empty("Sword", holder, Vector3.zero);
-            Box("Blade", sword, new Vector3(0f, 0f, 0.55f), new Vector3(0.06f, 0.12f, 1f), Mats["Steel"]);
-            Box("Guard", sword, new Vector3(0f, 0f, 0.05f), new Vector3(0.3f, 0.06f, 0.06f), Mats["Wood"]);
-            sword.localRotation = Quaternion.Euler(-10f, -15f, 0f);
+            var sword = BuildKatana(holder);
 
             // Лук строится и анимируется кодом (BowVisual), здесь только объект и материалы
             var bow = Empty("Bow", holder, new Vector3(-0.1f, 0.1f, 0.15f));
